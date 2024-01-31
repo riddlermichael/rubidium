@@ -15,19 +15,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         build-type: [Release]
-        cxx-compiler: [gcc, clang, cl]
-        include:
-          - os: windows-latest
-            cxx-compiler: cl
-          - os: ubuntu-latest
-            cxx-compiler: g++
-          - os: ubuntu-latest
-            cxx-compiler: clang++
+        cxx-compiler: [g++, clang++, cl]
         exclude:
-          - os: windows-latest
-            cxx-compiler: g++
-          - os: windows-latest
-            cxx-compiler: clang++
           - os: ubuntu-latest
             cxx-compiler: cl
 
