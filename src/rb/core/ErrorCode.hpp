@@ -1,0 +1,96 @@
+#pragma once
+
+#include <cerrno>
+
+namespace rb::core {
+
+/// Twin of [`std::errc`](https://en.cppreference.com/w/cpp/error/errc) and C++ counterpart of #rbc_error.
+/// @see https://docs.microsoft.com/en-us/cpp/c-runtime-library/errno-constants?view=msvc-170
+enum class ErrorCode {
+	kNotImplemented = -2,
+	kUnknown = -1,
+	kOk = 0,
+	kAddressFamilyNotSupported = EAFNOSUPPORT,
+	kAddressInUse = EADDRINUSE,
+	kAddressNotAvailable = EADDRNOTAVAIL,
+	kAlreadyConnected = EISCONN,
+	kArgumentListTooLong = E2BIG,
+	kArgumentOutOfDomain = EDOM,
+	kBadAddress = EFAULT,
+	kBadFileDescriptor = EBADF,
+	kBadMessage = EBADMSG,
+	kBrokenPipe = EPIPE,
+	kConnectionAborted = ECONNABORTED,
+	kConnectionAlreadyInProgress = EALREADY,
+	kConnectionRefused = ECONNREFUSED,
+	kConnectionReset = ECONNRESET,
+	kCrossDeviceLink = EXDEV,
+	kDestinationAddressRequired = EDESTADDRREQ,
+	kDeviceOrResourceBusy = EBUSY,
+	kDirectoryNotEmpty = ENOTEMPTY,
+	kExecutableFormatError = ENOEXEC,
+	kFileExists = EEXIST,
+	kFileTooLarge = EFBIG,
+	kFilenameTooLong = ENAMETOOLONG,
+	kFunctionNotSupported = ENOSYS,
+	kHostUnreachable = EHOSTUNREACH,
+	kIdentifierRemoved = EIDRM,
+	kIllegalByteSequence = EILSEQ,
+	kInappropriateIoControlOperation = ENOTTY,
+	kInterrupted = EINTR,
+	kInvalidArgument = EINVAL,
+	kInvalidSeek = ESPIPE,
+	kIoError = EIO,
+	kIsADirectory = EISDIR,
+	kMessageSize = EMSGSIZE,
+	kNetworkDown = ENETDOWN,
+	kNetworkReset = ENETRESET,
+	kNetworkUnreachable = ENETUNREACH,
+	kNoBufferSpace = ENOBUFS,
+	kNoChildProcess = ECHILD,
+	kNoLink = ENOLINK,
+	kNoLockAvailable = ENOLCK,
+	kNoMessage = ENOMSG,
+	kNoProtocolOption = ENOPROTOOPT,
+	kNoSpaceOnDevice = ENOSPC,
+	kNoSuchDeviceOrAddress = ENXIO,
+	kNoSuchDevice = ENODEV,
+	kNoSuchFileOrDirectory = ENOENT,
+	kNoSuchProcess = ESRCH,
+	kNotADirectory = ENOTDIR,
+	kNotASocket = ENOTSOCK,
+	kNotConnected = ENOTCONN,
+	kNotEnoughMemory = ENOMEM,
+	kNotSupported = ENOTSUP,
+	kOperationCanceled = ECANCELED,
+	kOperationInProgress = EINPROGRESS,
+	kOperationNotPermitted = EPERM,
+	kOperationNotSupported = EOPNOTSUPP,
+	kOperationWouldBlock = EWOULDBLOCK,
+	kOwnerDead = EOWNERDEAD,
+	kPermissionDenied = EACCES,
+	kProtocolError = EPROTO,
+	kProtocolNotSupported = EPROTONOSUPPORT,
+	kReadOnlyFileSystem = EROFS,
+	kResourceDeadlockWouldOccur = EDEADLK,
+	kResourceUnavailableTryAgain = EAGAIN,
+	kResultOutOfRange = ERANGE,
+	kStateNotRecoverable = ENOTRECOVERABLE,
+	kTextFileBusy = ETXTBSY,
+	kTimedOut = ETIMEDOUT,
+	kTooManyFilesOpenInSystem = ENFILE,
+	kTooManyFilesOpen = EMFILE,
+	kTooManyLinks = EMLINK,
+	kTooManySymbolicLinkLevels = ELOOP,
+	kValueTooLarge = EOVERFLOW,
+	kWrongProtocolType = EPROTOTYPE,
+};
+
+/**
+ * Returns textual description of the @p errorCode.
+ * The contents of the string are *locale-independent*.
+ * @return pointer to a null-terminated string corresponding to the @p errorCode
+ */
+char const* toString(ErrorCode errorCode) noexcept;
+
+} // namespace rb::core

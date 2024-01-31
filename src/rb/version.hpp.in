@@ -1,0 +1,4 @@
+#define RB_VERSION_MAJOR @rubidium_VERSION_MAJOR@
+#define RB_VERSION_MINOR @rubidium_VERSION_MINOR@
+#define RB_VERSION_PATCH @rubidium_VERSION_PATCH@
+#define RB_VERSION_STR "@rubidium_VERSION@"
