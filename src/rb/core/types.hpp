@@ -29,8 +29,6 @@ inline namespace literals {
 
 	// C++23's size suffixes
 
-	// NOLINTBEGIN(google-runtime-int)
-
 	constexpr isize operator""_z(unsigned long long value) noexcept {
 		return static_cast<isize>(value);
 	}
@@ -54,8 +52,6 @@ inline namespace literals {
 	constexpr usize operator""_UZ(unsigned long long value) noexcept {
 		return static_cast<usize>(value);
 	}
-
-	// NOLINTEND(google-runtime-int)
 
 	// C++'23 floating-point literal suffixes
 
