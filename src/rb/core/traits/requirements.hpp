@@ -2,7 +2,6 @@
 
 #include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/detectors.hpp>
-#include <rb/core/traits/ops.hpp>
 #include <rb/core/traits/TypeIdentity.hpp>
 
 // named requirements

@@ -29,8 +29,8 @@ AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
 AttributeMacros: [ ]
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true
+BinPackParameters: true
 BitFieldColonSpacing: Both
 BracedInitializerIndentWidth: 4 # 17
 # BreakAdjacentStringLiterals: true # 18
@@ -115,6 +115,6 @@ StatementAttributeLikeMacros: [ ]
 StatementMacros: [ ]
 TabWidth: 4
 TypeNames: [ ] # 17
-TypenameMacros: [ ]
+TypenameMacros: [ 'RB_REQUIRES_RETURN', 'RB_REQUIRES_RETURN_T' ]
 UseTab: ForIndentation
 WhitespaceSensitiveMacros: [ 'RB_STRINGIFY' ]

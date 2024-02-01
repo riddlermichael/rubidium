@@ -62,6 +62,10 @@
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
   - [ ] disable RTTI
+- [ ] `memory`
+  - [ ] `pointer_traits` (see `memory::toAddress`)
+  - [ ] `allocator_traits` (see `memory::destroy`)
+- [ ] fix noexcept in `OwnerPtr`
 
 ### `data`
 

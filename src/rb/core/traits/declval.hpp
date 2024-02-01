@@ -1,9 +1,8 @@
 #pragma once
 
-namespace rb::core {
+#include <rb/core/traits/alwaysFalse.hpp>
 
-template <class T = void>
-inline constexpr bool alwaysFalse = false;
+namespace rb::core {
 
 namespace impl {
 

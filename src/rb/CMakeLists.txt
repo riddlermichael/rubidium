@@ -20,9 +20,11 @@ include(features)
 # collect sources
 set(MODULES
     core
+    core/memory
     core/meta
     core/traits
-    fmt)
+    fmt
+    sync)
 set(HEADERS)
 set(SOURCES)
 foreach(X ${MODULES})

@@ -28,4 +28,5 @@
 	RB_DISABLE_MOVE(T)
 
 ///
+// NOLINTNEXTLINE(bugprone-sizeof-expression)
 #define RB_CHECK_COMPLETENESS(T) static_assert(sizeof(T) > 0, "incomplete type")
