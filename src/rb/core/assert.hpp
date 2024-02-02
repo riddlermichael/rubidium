@@ -4,6 +4,13 @@
 
 namespace rb::core {
 
+class RB_HIDDEN TerminateHandlerSetter {
+public:
+	TerminateHandlerSetter() noexcept;
+};
+
+[[maybe_unused]] inline TerminateHandlerSetter const terminateHandlerSetter;
+
 [[noreturn]] RB_EXPORT void throwAssert(char const* msg, RB_SOURCE_LOCATION_DECL);
 
 } // namespace rb::core

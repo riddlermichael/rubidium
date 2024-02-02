@@ -14,7 +14,8 @@ inline namespace error {
 		static RawCode lastError() noexcept;
 		static OsError lastOsError(RB_SOURCE_LOCATION_DECL) noexcept;
 
-		explicit OsError(ErrorCode errorCode, RawCode rawCode = -1, RB_SOURCE_LOCATION_DECL);
+		explicit OsError(ErrorCode errorCode, RB_SOURCE_LOCATION_DECL);
+		OsError(ErrorCode errorCode, RawCode rawCode, RB_SOURCE_LOCATION_DECL);
 
 		ErrorCode errorCode() const noexcept;
 		RawCode rawCode() const noexcept;

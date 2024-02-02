@@ -24,6 +24,10 @@ OsError OsError::lastOsError(SourceLocation const& location) noexcept {
 	return fromRawCode(lastError(), location);
 }
 
+OsError::OsError(ErrorCode errorCode, SourceLocation const& location)
+    : OsError(errorCode, -1, location) {
+}
+
 OsError::OsError(ErrorCode errorCode, RawCode rawCode, SourceLocation const& location)
     : Error(toString(errorCode), location)
     , errorCode_(errorCode)

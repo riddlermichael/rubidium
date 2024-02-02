@@ -1,5 +1,6 @@
 #include "ErrorCode.hpp"
 
+#include <rb/core/compiler.hpp>
 #include <rb/core/os.hpp>
 #ifdef RB_OS_WIN
 	#include <winerror.h>
@@ -211,7 +212,7 @@ ErrorCode fromRawError(unsigned rawCode) {
 		case ERROR_FILE_TOO_LARGE            : return ErrorCode::kFileTooLarge;
 		case WAIT_TIMEOUT                    : return ErrorCode::kTimedOut;
 
-	#ifndef RBC_COMPILER_GCC_LIKE
+	#ifndef RB_COMPILER_GCC_LIKE
 		case ERROR_DEVICE_SUPPORT_IN_PROGRESS: return ErrorCode::kOperationInProgress;
 	#endif
 

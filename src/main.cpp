@@ -7,6 +7,7 @@
 using std::cout;
 using std::endl;
 
+using namespace rb;
 using namespace rb::core;
 
 int main() {

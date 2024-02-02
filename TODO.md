@@ -66,6 +66,7 @@
   - [ ] `pointer_traits` (see `memory::toAddress`)
   - [ ] `allocator_traits` (see `memory::destroy`)
 - [ ] fix noexcept in `OwnerPtr`
+- [ ] `core::error`: POSIX error codes are implementation-dependent
 
 ### `data`
 

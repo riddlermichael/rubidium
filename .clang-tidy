@@ -17,16 +17,19 @@ Checks: >
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-macro-usage,
   -cppcoreguidelines-missing-std-forward,
+  -cppcoreguidelines-noexcept-destructor,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-rvalue-reference-param-not-moved,
   -cppcoreguidelines-special-member-functions,
   -google-build-using-namespace,
   -google-runtime-int,
+  -hicpp-exception-baseclass,
   -modernize-avoid-c-arrays,
   -modernize-use-nodiscard,
   -modernize-use-trailing-return-type,
   -performance-avoid-endl,
   -performance-enum-size,
+  -performance-noexcept-destructor,
   -readability-identifier-length,
   -readability-implicit-bool-conversion,
   -readability-magic-numbers
@@ -65,4 +68,5 @@ CheckOptions:
   - { key: readability-identifier-naming.TypedefPrefix, value: rb_ }
   - { key: readability-identifier-naming.UnionCase, value: CamelCase }
   - { key: readability-identifier-naming.VariableCase, value: camelBack }
+  - { key: cppcoreguidelines-avoid-do-while.IgnoreMacros, value: 1 }
   - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: 1 }
