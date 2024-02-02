@@ -7,6 +7,7 @@
 #include <rb/core/export.hpp>
 #include <rb/core/features.hpp>
 #include <rb/core/keywords.hpp>
+#include <rb/core/strings.hpp>
 
 namespace rb::core {
 
@@ -14,9 +15,9 @@ class RB_EXPORT SourceLocation final {
 public:
 	// intentionally `constexpr` for using in `constexpr` context
 	static constexpr SourceLocation from(
-	    char const* file = RB_BUILTIN_FILE,
+	    LiteralString file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    char const* func = RB_BUILTIN_FUNCSIG,
+	    LiteralString func = RB_BUILTIN_FUNCSIG,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		SourceLocation location;
 		location.file_ = file != nullptr ? file : "";
@@ -27,9 +28,9 @@ public:
 	}
 
 	static RB_CONSTEVAL SourceLocation current(
-	    char const* file = RB_BUILTIN_FILE,
+	    LiteralString file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    char const* func = RB_BUILTIN_FUNCSIG,
+	    LiteralString func = RB_BUILTIN_FUNCSIG,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		return from(file, line, func, column);
 	}
@@ -49,7 +50,7 @@ public:
 		return !(*this == rhs);
 	}
 
-	constexpr char const* file() const noexcept {
+	constexpr LiteralString file() const noexcept {
 		return file_;
 	}
 
@@ -57,7 +58,7 @@ public:
 		return line_;
 	}
 
-	constexpr char const* func() const noexcept {
+	constexpr LiteralString func() const noexcept {
 		return func_;
 	}
 
@@ -66,8 +67,8 @@ public:
 	}
 
 private:
-	char const* file_ = "";
-	char const* func_ = ""; // unnatural order here due to alignment
+	LiteralString file_ = "";
+	LiteralString func_ = ""; // unnatural order here due to alignment
 	unsigned line_ = 0;
 	unsigned column_ = 0;
 };
@@ -92,4 +93,5 @@ inline std::ostream& operator<<(std::ostream& os, SourceLocation loc) {
 		rb::core::SourceLocation::current(__FILE__, __LINE__, RB_BUILTIN_FUNCSIG, RB_BUILTIN_COLUMN)
 #endif
 
-#define RB_SOURCE_LOCATION_DECL rb::core::SourceLocation location = rb::core::SourceLocation::current()
+#define RB_SOURCE_LOCATION_DECL \
+	rb::core::SourceLocation const& location = rb::core::SourceLocation::current()

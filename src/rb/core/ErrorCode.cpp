@@ -1,6 +1,13 @@
 #include "ErrorCode.hpp"
 
-char const* rb::core::toString(ErrorCode errorCode) noexcept {
+#include <rb/core/os.hpp>
+#ifdef RB_OS_WIN
+	#include <winerror.h>
+#endif
+
+namespace rb::core {
+
+LiteralString toString(ErrorCode errorCode) noexcept {
 	// EOPNOTSUPP and ENOTSUP may be identical
 	if (errorCode == ErrorCode::kNotSupported) {
 		return "Operation not supported";
@@ -95,3 +102,128 @@ char const* rb::core::toString(ErrorCode errorCode) noexcept {
 		default                                         : return "Undefined error";
 	}
 }
+
+ErrorCode fromRawError(unsigned rawCode) {
+#ifdef RB_OS_WIN
+	// There is no direct relationship between `GetLastError()` and `errno`,
+	// so some of these choices are arbitrary (and adapted from cygwin header); see
+	// https://cygwin.com/git/gitweb.cgi?p=newlib-cygwin.git;a=blob;f=winsup/cygwin/errno.cc
+	switch (rawCode) {
+		case ERROR_SUCCESS                   : return ErrorCode::kOk;
+
+		case ERROR_FILE_NOT_FOUND            :
+		case ERROR_PATH_NOT_FOUND            :
+		case ERROR_BAD_NETPATH               :
+		case ERROR_DEV_NOT_EXIST             :
+		case ERROR_NETNAME_DELETED           :
+		case ERROR_BAD_NET_NAME              :
+		case ERROR_INVALID_NAME              :
+		case ERROR_MOD_NOT_FOUND             :
+		case ERROR_BAD_PATHNAME              : return ErrorCode::kNoSuchFileOrDirectory;
+
+		case ERROR_TOO_MANY_OPEN_FILES       :
+		case ERROR_NO_MORE_SEARCH_HANDLES    : return ErrorCode::kTooManyFilesOpenInSystem;
+
+		case ERROR_ACCESS_DENIED             :
+		case ERROR_NETWORK_ACCESS_DENIED     : return ErrorCode::kPermissionDenied;
+
+		case ERROR_INVALID_HANDLE            : return ErrorCode::kBadFileDescriptor;
+
+		case ERROR_NOT_ENOUGH_MEMORY         :
+		case ERROR_OUTOFMEMORY               : return ErrorCode::kNotEnoughMemory;
+
+		case ERROR_INVALID_DATA              :
+		case ERROR_SEEK                      :
+		case ERROR_SECTOR_NOT_FOUND          :
+		case ERROR_INVALID_PARAMETER         :
+		case ERROR_NEGATIVE_SEEK             :
+		case ERROR_BAD_ARGUMENTS             :
+		case ERROR_INVALID_FLAG_NUMBER       :
+		case ERROR_META_EXPANSION_TOO_LONG   :
+		case ERROR_INVALID_SIGNAL_NUMBER     :
+		case ERROR_THREAD_1_INACTIVE         :
+		case ERROR_INVALID_EA_NAME           :
+		case ERROR_EA_LIST_INCONSISTENT      : return ErrorCode::kInvalidArgument;
+
+		case ERROR_INVALID_DRIVE             :
+		case ERROR_BAD_UNIT                  : return ErrorCode::kNoSuchDevice;
+
+		case ERROR_WRITE_PROTECT             : return ErrorCode::kReadOnlyFileSystem;
+
+		case ERROR_CRC                       :
+		case ERROR_WRITE_FAULT               :
+		case ERROR_READ_FAULT                :
+		case ERROR_UNEXP_NET_ERR             :
+		case ERROR_NET_WRITE_FAULT           :
+		case ERROR_OPEN_FAILED               :
+		case ERROR_LOCK_FAILED               : return ErrorCode::kIoError;
+
+		case ERROR_SHARING_VIOLATION         :
+		case ERROR_LOCK_VIOLATION            :
+		case ERROR_NETWORK_BUSY              :
+		case ERROR_BUSY_DRIVE                :
+		case ERROR_PATH_BUSY                 :
+		case ERROR_SIGNAL_PENDING            :
+		case ERROR_BUSY                      :
+		case ERROR_PIPE_BUSY                 : return ErrorCode::kDeviceOrResourceBusy;
+
+		case ERROR_SHARING_BUFFER_EXCEEDED   : return ErrorCode::kNoLockAvailable;
+
+		case ERROR_HANDLE_DISK_FULL          :
+		case ERROR_DISK_FULL                 : return ErrorCode::kNoSpaceOnDevice;
+
+		case ERROR_NOT_SUPPORTED             :
+		case ERROR_BAD_NET_RESP              :
+		case ERROR_CALL_NOT_IMPLEMENTED      : return ErrorCode::kFunctionNotSupported;
+
+		case ERROR_FILE_EXISTS               :
+		case ERROR_ALREADY_EXISTS            : return ErrorCode::kFileExists;
+
+		case ERROR_CANNOT_MAKE               : return ErrorCode::kOperationNotPermitted;
+		case ERROR_NO_PROC_SLOTS             : return ErrorCode::kResourceUnavailableTryAgain;
+
+		case ERROR_BROKEN_PIPE               :
+		case ERROR_BAD_PIPE                  :
+		case ERROR_NO_DATA                   :
+		case ERROR_PIPE_NOT_CONNECTED        : return ErrorCode::kBrokenPipe;
+
+		case ERROR_BUFFER_OVERFLOW           : // hm okay
+		case ERROR_LABEL_TOO_LONG            :
+		case ERROR_FILENAME_EXCED_RANGE      : return ErrorCode::kFilenameTooLong;
+
+		case ERROR_INSUFFICIENT_BUFFER       : return ErrorCode::kNoBufferSpace;
+		case ERROR_WAIT_NO_CHILDREN          : return ErrorCode::kNoChildProcess;
+		case ERROR_DIR_NOT_EMPTY             : return ErrorCode::kDirectoryNotEmpty;
+		case ERROR_ATOMIC_LOCKS_NOT_SUPPORTED: return ErrorCode::kNotSupported;
+
+		case ERROR_INVALID_EXE_SIGNATURE     :
+		case ERROR_EXE_MARKED_INVALID        :
+		case ERROR_BAD_EXE_FORMAT            :
+		case ERROR_ITERATED_DATA_EXCEEDS_64k :
+		case ERROR_INVALID_MINALLOCSIZE      :
+		case ERROR_IOPL_NOT_ENABLED          :
+		case ERROR_INVALID_SEGDPL            :
+		case ERROR_AUTODATASEG_EXCEEDS_64k   :
+		case ERROR_RELOC_CHAIN_XEEDS_SEGLIM  :
+		case ERROR_INFLOOP_IN_RELOC_CHAIN    :
+		case ERROR_EXE_MACHINE_TYPE_MISMATCH : return ErrorCode::kExecutableFormatError;
+
+		case ERROR_FILE_TOO_LARGE            : return ErrorCode::kFileTooLarge;
+		case WAIT_TIMEOUT                    : return ErrorCode::kTimedOut;
+
+	#ifndef RBC_COMPILER_GCC_LIKE
+		case ERROR_DEVICE_SUPPORT_IN_PROGRESS: return ErrorCode::kOperationInProgress;
+	#endif
+
+			// too many posts were made to a semaphore;
+			// in accordance with POSIX return EOVERFLOW
+		case ERROR_TOO_MANY_POSTS: return ErrorCode::kValueTooLarge;
+
+		default                  : return ErrorCode::kUnknown;
+	}
+#else
+	return static_cast<ErrorCode>(rawCode);
+#endif
+}
+
+} // namespace rb::core

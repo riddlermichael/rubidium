@@ -2,6 +2,7 @@
 
 #include <rb/rb_version.hpp>
 
+#include <rb/core/error/package.hpp>
 #include <rb/core/memory/package.hpp>
 #include <rb/core/meta/package.hpp>
 #include <rb/core/traits/package.hpp>
@@ -27,6 +28,7 @@
 #include <rb/core/requires.hpp>
 #include <rb/core/sanitizers.hpp>
 #include <rb/core/SourceLocation.hpp>
+#include <rb/core/strings.hpp>
 #include <rb/core/swap.hpp>
 #include <rb/core/types.hpp>
 #include <rb/core/Version.hpp>

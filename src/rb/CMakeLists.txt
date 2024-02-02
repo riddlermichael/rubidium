@@ -20,16 +20,18 @@ include(features)
 # collect sources
 set(MODULES
     core
+    core/error
     core/memory
     core/meta
     core/traits
-    fmt
-    sync)
+    fmt)
 set(HEADERS)
 set(SOURCES)
 foreach(X ${MODULES})
     add_cxx_module(${X} ${RB_ROOT_DIR})
 endforeach()
+add_subdirectory(sync)
+
 source_group(TREE "${ROOT_DIR}" FILES ${HEADERS} ${SOURCES})
 
 # create lib

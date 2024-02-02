@@ -2,6 +2,8 @@
 
 #include <cerrno>
 
+#include <rb/core/strings.hpp>
+
 namespace rb::core {
 
 /// Twin of [`std::errc`](https://en.cppreference.com/w/cpp/error/errc) and C++ counterpart of #rbc_error.
@@ -91,6 +93,9 @@ enum class ErrorCode {
  * The contents of the string are *locale-independent*.
  * @return pointer to a null-terminated string corresponding to the @p errorCode
  */
-char const* toString(ErrorCode errorCode) noexcept;
+LiteralString toString(ErrorCode errorCode) noexcept;
+
+/// @return error code converted from OS' ("raw") error @p rawCode.
+ErrorCode fromRawError(unsigned rawCode);
 
 } // namespace rb::core
