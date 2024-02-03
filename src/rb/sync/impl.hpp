@@ -10,14 +10,16 @@
 	#include <Windows.h>
 #endif
 
-#define RB_SYNC_CHECK(expr)                            \
-	do {                                               \
-		int const err = expr;                          \
-		if (err) {                                     \
-			throw rb::core::OsError(                   \
-			    static_cast<rb::core::ErrorCode>(err), \
-			    RB_SOURCE_LOCATION);                   \
-		}                                              \
+#define RB_SYNC_CHECK(expr)                                         \
+	do {                                                            \
+		int const _err = expr;                                      \
+		if (_err) {                                                 \
+			auto const ec = static_cast<rb::core::ErrorCode>(_err); \
+			throw rb::core::OsError(                                \
+			    ec,                                                 \
+			    _err,                                               \
+			    RB_SOURCE_LOCATION);                                \
+		}                                                           \
 	} while (0)
 
 #ifdef RB_OS_WIN
@@ -35,3 +37,5 @@
 			return _err ? errno : 0;       \
 		} while (0)
 #endif
+
+#define RB_SYNC_IMPL &(*pImpl_).impl

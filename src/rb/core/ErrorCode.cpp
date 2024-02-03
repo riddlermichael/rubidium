@@ -3,7 +3,7 @@
 #include <rb/core/compiler.hpp>
 #include <rb/core/os.hpp>
 #ifdef RB_OS_WIN
-	#include <winerror.h>
+	#include <Windows.h>
 #endif
 
 namespace rb::core {
@@ -212,15 +212,17 @@ ErrorCode fromRawError(unsigned rawCode) {
 		case ERROR_FILE_TOO_LARGE            : return ErrorCode::kFileTooLarge;
 		case WAIT_TIMEOUT                    : return ErrorCode::kTimedOut;
 
+		case ERROR_POSSIBLE_DEADLOCK         : return ErrorCode::kResourceDeadlockWouldOccur;
+
+		// too many posts were made to a semaphore;
+		// in accordance with POSIX return EOVERFLOW
+		case ERROR_TOO_MANY_POSTS            : return ErrorCode::kValueTooLarge;
+
 	#ifndef RB_COMPILER_GCC_LIKE
 		case ERROR_DEVICE_SUPPORT_IN_PROGRESS: return ErrorCode::kOperationInProgress;
 	#endif
 
-			// too many posts were made to a semaphore;
-			// in accordance with POSIX return EOVERFLOW
-		case ERROR_TOO_MANY_POSTS: return ErrorCode::kValueTooLarge;
-
-		default                  : return ErrorCode::kUnknown;
+		default: return ErrorCode::kUnknown;
 	}
 #else
 	return static_cast<ErrorCode>(rawCode);

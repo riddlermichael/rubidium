@@ -12,15 +12,15 @@ struct Barrier::Impl {
 
 Barrier::Barrier(unsigned count)
     : pImpl_(core::makeUnique<Impl>()) {
-	RB_SYNC_CHECK(pthread_barrier_init(&pImpl_->impl, nullptr, count));
+	RB_SYNC_CHECK(pthread_barrier_init(RB_SYNC_IMPL, nullptr, count));
 }
 
 Barrier::~Barrier() noexcept(false) {
-	RB_SYNC_CHECK(pthread_barrier_destroy(&pImpl_->impl));
+	RB_SYNC_CHECK(pthread_barrier_destroy(RB_SYNC_IMPL));
 }
 
 void Barrier::wait() noexcept(false) {
-	int const error = pthread_barrier_wait(&pImpl_->impl);
+	int const error = pthread_barrier_wait(RB_SYNC_IMPL);
 	if (error && error != PTHREAD_BARRIER_SERIAL_THREAD) {
 		throw core::OsError::fromRawCode(error);
 	}
@@ -48,17 +48,17 @@ Barrier::Barrier(unsigned count)
 	 * with SYNCHRONIZATION_BARRIER_FLAGS_SPIN_ONLY.
 	 */
 	// NOLINTNEXTLINE(*-narrowing-conversions)
-	RB_SYNC_CHECK_LAST_ERROR(InitializeSynchronizationBarrier(&pImpl_->impl, count, -1));
+	RB_SYNC_CHECK_LAST_ERROR(InitializeSynchronizationBarrier(RB_SYNC_IMPL, count, -1));
 }
 
 Barrier::~Barrier() {
-	DeleteSynchronizationBarrier(&pImpl_->impl); // always returns TRUE
+	DeleteSynchronizationBarrier(RB_SYNC_IMPL); // always returns TRUE
 }
 
 void Barrier::wait() noexcept {
 	// TRUE for the last thread to signal the barrier.
 	// Threads that signal the barrier before the last thread signals it receive a return value of FALSE.
-	EnterSynchronizationBarrier(&pImpl_->impl, 0);
+	EnterSynchronizationBarrier(RB_SYNC_IMPL, 0);
 }
 
 #endif

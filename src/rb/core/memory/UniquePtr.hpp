@@ -119,8 +119,6 @@ inline namespace memory {
 		    : UniquePtr() {
 		}
 
-		UniquePtr(UniquePtr const&) = delete;
-
 		template <class DD = D, RB_REQUIRES(isMoveConstructible<DD>)>
 		UniquePtr(UniquePtr&& rhs) noexcept
 		    : storage_(kInPlaceIndex<1>, RB_FWD(rhs.deleter()), rhs.release()) {
@@ -138,7 +136,7 @@ inline namespace memory {
 			reset();
 		}
 
-		UniquePtr& operator=(UniquePtr const&) = delete;
+		RB_DISABLE_COPY(UniquePtr);
 
 		// NOLINTBEGIN(*-c-copy-assignment-signature,*-unconventional-assign-operator)
 
