@@ -5,7 +5,7 @@
 
 namespace rb::sync {
 
-class Barrier final {
+class RB_EXPORT Barrier final {
 public:
 	explicit Barrier(unsigned count);
 	~Barrier() noexcept(RB_USE(WIN32_THREADS));

@@ -6,7 +6,7 @@ namespace impl {
 
 	/// Provides the member typedef `Type` that names `T` (i.e., the identity transformation).
 	template <class T>
-	struct TypeIdentity { using Type = T; };
+	struct TypeIdentityImpl { using Type = T; };
 
 } // namespace impl
 
@@ -18,7 +18,7 @@ inline namespace traits {
 	/// </a>
 	/// in template argument deduction.
 	template <class T>
-	using TypeIdentity = typename impl::TypeIdentity<T>::Type;
+	using TypeIdentity = typename impl::TypeIdentityImpl<T>::Type;
 
 } // namespace traits
 } // namespace rb::core

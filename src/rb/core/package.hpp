@@ -9,6 +9,7 @@
 
 #include <rb/core/assert.hpp>
 #include <rb/core/attributes.hpp>
+#include <rb/core/bits.hpp>
 #include <rb/core/builtins.hpp>
 #include <rb/core/compiler.hpp>
 #include <rb/core/endian.hpp>

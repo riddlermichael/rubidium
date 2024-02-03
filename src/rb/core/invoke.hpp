@@ -138,7 +138,7 @@ template <class R, class F, class... Args,
     RB_REQUIRES(isInvocableR<R, F, Args...>)>
 constexpr R invokeR(F&& f, Args&&... args) noexcept(isNothrowInvocableR<R, F, Args...>) {
 	if constexpr (isVoid<R>) {
-		invoke(RB_FWD(f), RB_FWD(args)...);
+		RB_UNUSED(invoke(RB_FWD(f), RB_FWD(args)...));
 		return;
 	} else {
 		return invoke(RB_FWD(f), RB_FWD(args)...);
