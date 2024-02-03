@@ -13,7 +13,7 @@ inline namespace error {
 		explicit Error(RB_SOURCE_LOCATION_DECL) noexcept;
 
 		/// Construct Error with @p msg and @p location.
-		explicit Error(char const* msg, RB_SOURCE_LOCATION_DECL);
+		explicit Error(LiteralString msg, RB_SOURCE_LOCATION_DECL);
 
 		Error(Error const&) noexcept = default;
 		Error(Error&&) noexcept = default;
@@ -27,7 +27,7 @@ inline namespace error {
 		Error& withLocation(RB_SOURCE_LOCATION_DECL) noexcept;
 
 		/// @return string description of @c this.
-		char const* message() const noexcept;
+		LiteralString message() const noexcept;
 
 		/// @return location of @c this in source code.
 		SourceLocation const& location() const noexcept;

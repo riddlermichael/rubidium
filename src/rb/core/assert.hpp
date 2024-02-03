@@ -1,8 +1,13 @@
 #pragma once
 
-#include <rb/core/SourceLocation.hpp>
+#include <rb/core/error/Error.hpp>
 
 namespace rb::core {
+
+class RB_EXPORT AssertError final : public Error {
+public:
+	using Error::Error;
+};
 
 class RB_HIDDEN TerminateHandlerSetter {
 public:
@@ -11,7 +16,7 @@ public:
 
 [[maybe_unused]] inline TerminateHandlerSetter const terminateHandlerSetter;
 
-[[noreturn]] RB_EXPORT void throwAssert(char const* msg, RB_SOURCE_LOCATION_DECL);
+[[noreturn]] RB_EXPORT void throwAssert(LiteralString msg, RB_SOURCE_LOCATION_DECL);
 
 } // namespace rb::core
 
