@@ -14,8 +14,6 @@ public:
 	Mutex();
 	~Mutex() noexcept(RB_USE(WIN32_THREADS));
 
-	RB_DISABLE_COPY(Mutex);
-
 	void lock() RB_ACQUIRE_CAPABILITY();
 	bool tryLock() noexcept RB_TRY_ACQUIRE_CAPABILITY(true);
 	void unlock() noexcept(RB_USE(WIN32_THREADS)) RB_RELEASE_CAPABILITY();

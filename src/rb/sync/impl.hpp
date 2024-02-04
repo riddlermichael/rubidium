@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rb/core/error/OsError.hpp>
+#include <rb/core/helpers.hpp>
 #include <rb/core/os.hpp>
 #include <rb/sync.hpp>
 
@@ -10,18 +11,19 @@
 	#include <Windows.h>
 #endif
 
-#define RB_SYNC_CHECK(expr)                                         \
-	do {                                                            \
-		int const _err = expr;                                      \
-		if (_err) {                                                 \
-			auto const ec = static_cast<rb::core::ErrorCode>(_err); \
-			throw rb::core::OsError(                                \
-			    ec,                                                 \
-			    _err,                                               \
-			    RB_SOURCE_LOCATION);                                \
-		}                                                           \
+/// Check expression as an errno value.
+#define RB_SYNC_CHECK(expr)                \
+	do {                                   \
+		int const _err = expr;             \
+		if (_err) {                        \
+			throw rb::core::OsError(       \
+			    rb::core::fromErrno(_err), \
+			    _err,                      \
+			    RB_SOURCE_LOCATION);       \
+		}                                  \
 	} while (0)
 
+/// Check expression as a result of a system function call.
 #ifdef RB_OS_WIN
 	#define RB_SYNC_CHECK_LAST_ERROR(expr)                                \
 		do {                                                              \

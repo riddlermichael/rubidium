@@ -6,4 +6,5 @@
 #include <rb/sync/Mutex.hpp>
 #include <rb/sync/RecursiveMutex.hpp>
 #include <rb/sync/Semaphore.hpp>
+#include <rb/sync/SharedMutex.hpp>
 #include <rb/sync/traits.hpp>
