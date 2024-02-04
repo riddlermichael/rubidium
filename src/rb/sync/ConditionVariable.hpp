@@ -30,4 +30,6 @@ private:
 	core::UniquePtr<Impl> pImpl_;
 };
 
+using CondVar = ConditionVariable;
+
 } // namespace rb::sync
