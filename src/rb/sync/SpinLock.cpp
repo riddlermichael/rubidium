@@ -38,7 +38,8 @@ void SpinLock::unlock() {
 struct SpinLock::Impl {
 };
 
-SpinLock::SpinLock() {
+SpinLock::SpinLock()
+    : pImpl_(core::makeUnique<Impl>()) {
 	RB_NOT_IMPLEMENTED;
 }
 

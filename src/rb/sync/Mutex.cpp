@@ -127,3 +127,7 @@ void Mutex::unlock() noexcept {
 }
 
 #endif
+
+void* Mutex::rawImpl() noexcept {
+	return &pImpl_->impl;
+}

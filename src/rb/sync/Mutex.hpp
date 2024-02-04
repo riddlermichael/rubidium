@@ -21,6 +21,9 @@ public:
 private:
 	struct Impl;
 
+	/// @return pointer to internal (native) representation of this; used by ConditionVariable
+	void* rawImpl() noexcept;
+
 	core::UniquePtr<Impl> pImpl_;
 };
 
