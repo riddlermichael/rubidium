@@ -10,6 +10,7 @@ inline namespace error {
 	public:
 		using RawCode = unsigned;
 
+		static OsError fromErrno(int error = errno, RB_SOURCE_LOCATION_DECL);
 		static OsError fromRawCode(RawCode rawCode, RB_SOURCE_LOCATION_DECL);
 		static RawCode lastError() noexcept;
 		static OsError lastOsError(RB_SOURCE_LOCATION_DECL) noexcept;

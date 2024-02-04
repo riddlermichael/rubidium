@@ -7,7 +7,7 @@ Error::Error(SourceLocation const& location) noexcept
     : loc_(location) {
 }
 
-Error::Error(LiteralString msg, SourceLocation const& location)
+Error::Error(LiteralString msg, SourceLocation const& location) noexcept
     : msg_(msg)
     , loc_(location) {
 }

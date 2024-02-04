@@ -95,8 +95,8 @@ constexpr u16 bswap(u16 value) noexcept {
 
 #else
 
-// These definitions are written so that they are recognized by most compilers
-// as `bswap` and replaced with single instruction builtins if available
+// These definitions are written so that they are recognized by most compilers as `bswap`
+// and replaced with single instruction builtins if available.
 
 constexpr u64 bswap(u64 value) noexcept {
 	return 0

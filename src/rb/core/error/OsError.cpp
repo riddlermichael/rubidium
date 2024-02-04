@@ -8,6 +8,10 @@
 using namespace rb::core;
 using namespace rb::core::error;
 
+OsError OsError::fromErrno(int error, rb::core::SourceLocation const& location) {
+	return OsError{::fromErrno(error), location};
+}
+
 OsError OsError::fromRawCode(RawCode rawCode, SourceLocation const& location) {
 	return OsError{fromRawError(rawCode), rawCode, location};
 }

@@ -1,6 +1,7 @@
 #include "ErrorCode.hpp"
 
 #include <rb/core/compiler.hpp>
+#include <rb/core/error/NotImplementedError.hpp>
 #include <rb/core/os.hpp>
 #ifdef RB_OS_WIN
 	#include <Windows.h>
@@ -104,7 +105,7 @@ LiteralString toString(ErrorCode errorCode) noexcept {
 	}
 }
 
-ErrorCode fromRawError(unsigned rawCode) {
+ErrorCode fromRawError(unsigned rawCode) noexcept {
 #ifdef RB_OS_WIN
 	// There is no direct relationship between `GetLastError()` and `errno`,
 	// so some of these choices are arbitrary (and adapted from cygwin header); see
@@ -210,9 +211,13 @@ ErrorCode fromRawError(unsigned rawCode) {
 		case ERROR_EXE_MACHINE_TYPE_MISMATCH : return ErrorCode::kExecutableFormatError;
 
 		case ERROR_FILE_TOO_LARGE            : return ErrorCode::kFileTooLarge;
+
+		case ERROR_SEM_TIMEOUT               :
 		case WAIT_TIMEOUT                    : return ErrorCode::kTimedOut;
 
 		case ERROR_POSSIBLE_DEADLOCK         : return ErrorCode::kResourceDeadlockWouldOccur;
+
+		case ERROR_SEM_OWNER_DIED            : return ErrorCode::kOwnerDead;
 
 		// too many posts were made to a semaphore;
 		// in accordance with POSIX return EOVERFLOW
@@ -226,6 +231,18 @@ ErrorCode fromRawError(unsigned rawCode) {
 	}
 #else
 	return static_cast<ErrorCode>(rawCode);
+#endif
+}
+
+ErrorCode fromErrno(int error) noexcept {
+	return static_cast<ErrorCode>(error);
+}
+
+int rawErrorToErrno(unsigned rawCode) noexcept {
+#ifdef RB_OS_WIN
+	RB_NOT_IMPLEMENTED;
+#else
+	return rawCode;
 #endif
 }
 

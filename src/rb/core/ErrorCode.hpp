@@ -6,7 +6,7 @@
 
 namespace rb::core {
 
-/// Twin of [`std::errc`](https://en.cppreference.com/w/cpp/error/errc) and C++ counterpart of #rbc_error.
+/// Twin of [`std::errc`](https://en.cppreference.com/w/cpp/error/errc).
 /// @see https://docs.microsoft.com/en-us/cpp/c-runtime-library/errno-constants?view=msvc-170
 enum class ErrorCode {
 	kNotImplemented = -2,
@@ -96,6 +96,11 @@ enum class ErrorCode {
 LiteralString toString(ErrorCode errorCode) noexcept;
 
 /// @return error code converted from OS' ("raw") error @p rawCode.
-ErrorCode fromRawError(unsigned rawCode);
+ErrorCode fromRawError(unsigned rawCode) noexcept;
+
+/// @return error code converted from error number @p error.
+ErrorCode fromErrno(int error = errno) noexcept;
+
+int rawErrorToErrno(unsigned rawCode) noexcept;
 
 } // namespace rb::core

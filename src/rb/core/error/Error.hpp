@@ -13,7 +13,7 @@ inline namespace error {
 		explicit Error(RB_SOURCE_LOCATION_DECL) noexcept;
 
 		/// Construct Error with @p msg and @p location.
-		explicit Error(LiteralString msg, RB_SOURCE_LOCATION_DECL);
+		explicit Error(LiteralString msg, RB_SOURCE_LOCATION_DECL) noexcept;
 
 		Error(Error const&) noexcept = default;
 		Error(Error&&) noexcept = default;
