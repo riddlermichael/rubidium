@@ -10,4 +10,5 @@
 #include <rb/sync/Semaphore.hpp>
 #include <rb/sync/SharedMutex.hpp>
 #include <rb/sync/SpinLock.hpp>
+#include <rb/sync/Thread.hpp>
 #include <rb/sync/traits.hpp>
