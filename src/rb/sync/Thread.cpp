@@ -107,6 +107,7 @@ struct Thread::Impl {
 		}
 
 		reset();
+		RB_SYNC_CHECK_LAST_ERROR(CloseHandle(impl));
 	}
 
 	void finish() RB_LOCKS_EXCLUDED(mutex) {
@@ -123,8 +124,6 @@ struct Thread::Impl {
 		finished = true;
 		running = false;
 		id = 0;
-		RB_SYNC_CHECK_LAST_ERROR(CloseHandle(impl));
-		impl = nullptr;
 	}
 
 	void setPriority(Priority priority) RB_REQUIRES_CAPABILITY(mutex) {
@@ -145,7 +144,17 @@ struct Thread::Impl {
 			    .withMessage("Thread is not joinable");
 		}
 
-		RB_SYNC_CHECK_LAST_ERROR(!WaitForSingleObject(impl, milliseconds));
+		locker.lockable().unlock();
+		OsError::RawCode rawCode = 0;
+		if (WaitForSingleObject(impl, milliseconds)) {
+			rawCode = GetLastError();
+		}
+		locker.lockable().lock();
+
+		if (rawCode) {
+			throw OsError::fromRawCode(rawCode);
+		}
+
 		if (exitCode) {
 			DWORD code = 0;
 			RB_SYNC_CHECK_LAST_ERROR(GetExitCodeThread(impl, &code));
@@ -153,6 +162,7 @@ struct Thread::Impl {
 		}
 
 		reset();
+		RB_SYNC_CHECK_LAST_ERROR(CloseHandle(impl));
 	}
 };
 
