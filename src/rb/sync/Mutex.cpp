@@ -108,7 +108,7 @@ Mutex::Mutex()
 	}
 }
 
-Mutex::~Mutex() {
+Mutex::~Mutex() noexcept(true) {
 	DeleteCriticalSection(RB_SYNC_IMPL);
 }
 

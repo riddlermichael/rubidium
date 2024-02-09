@@ -83,7 +83,7 @@ SharedMutex::SharedMutex(Policy policy)
 
 // an unlocked SRW lock with no waiting threads is in its initial state and can be copied, moved,
 // and forgotten without being explicitly destroyed
-SharedMutex::~SharedMutex() = default;
+SharedMutex::~SharedMutex() noexcept(true) = default;
 
 void SharedMutex::lock() {
 	AcquireSRWLockExclusive(RB_SYNC_IMPL);

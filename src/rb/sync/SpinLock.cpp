@@ -35,28 +35,4 @@ void SpinLock::unlock() {
 
 #elif RB_USE(WIN32_THREADS)
 
-struct SpinLock::Impl {
-};
-
-SpinLock::SpinLock()
-    : pImpl_(core::makeUnique<Impl>()) {
-	RB_NOT_IMPLEMENTED;
-}
-
-SpinLock::~SpinLock() {
-	RB_NOT_IMPLEMENTED;
-}
-
-void SpinLock::lock() {
-	RB_NOT_IMPLEMENTED;
-}
-
-bool SpinLock::tryLock() noexcept {
-	RB_NOT_IMPLEMENTED;
-}
-
-void SpinLock::unlock() {
-	RB_NOT_IMPLEMENTED;
-}
-
 #endif

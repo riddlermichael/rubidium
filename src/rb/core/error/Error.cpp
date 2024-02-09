@@ -1,5 +1,7 @@
 #include "Error.hpp"
 
+#include <rb/core/move.hpp>
+
 using namespace rb::core;
 using namespace rb::core::error;
 
@@ -15,6 +17,16 @@ Error::Error(LiteralString msg, SourceLocation const& location) noexcept
 Error& Error::withLocation(SourceLocation const& location) noexcept {
 	loc_ = location;
 	return *this;
+}
+
+Error& Error::withMessage(LiteralString msg) & noexcept {
+	msg_ = msg;
+	return *this;
+}
+
+Error&& Error::withMessage(LiteralString msg) && noexcept {
+	msg_ = msg;
+	return RB_MOVE(*this);
 }
 
 LiteralString Error::message() const noexcept {
@@ -45,9 +57,16 @@ void Error::printTo(std::ostream& os) const {
 	os << std::endl;
 }
 
+void Error::printMessage(std::ostream& os) const {
+	if (message()) {
+		os << message();
+	}
+}
+
 std::ostream& error::operator<<(std::ostream& os, Error const& error) {
 	if (error.message()) {
-		os << error.message() << " at ";
+		error.printMessage(os);
+		os << " at ";
 	}
 	return os << error.location();
 }

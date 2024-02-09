@@ -51,7 +51,7 @@ Barrier::Barrier(unsigned count)
 	RB_SYNC_CHECK_LAST_ERROR(InitializeSynchronizationBarrier(RB_SYNC_IMPL, count, -1));
 }
 
-Barrier::~Barrier() {
+Barrier::~Barrier() noexcept(true) {
 	DeleteSynchronizationBarrier(RB_SYNC_IMPL); // always returns TRUE
 }
 

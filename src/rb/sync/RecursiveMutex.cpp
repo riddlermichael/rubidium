@@ -108,7 +108,7 @@ RecursiveMutex::RecursiveMutex()
 	}
 }
 
-RecursiveMutex::~RecursiveMutex() {
+RecursiveMutex::~RecursiveMutex() noexcept(true) {
 	DeleteCriticalSection(RB_SYNC_IMPL);
 }
 

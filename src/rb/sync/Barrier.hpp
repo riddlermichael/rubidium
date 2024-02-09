@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
 #include <rb/sync.hpp>
 

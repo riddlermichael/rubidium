@@ -180,7 +180,7 @@ inline namespace memory {
 			return *ptr();
 		}
 
-		pointer operator->() const noexcept {
+		constexpr pointer operator->() const noexcept {
 			RB_ENSURE_NONNULL;
 			return ptr();
 		}

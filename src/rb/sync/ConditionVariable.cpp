@@ -44,7 +44,7 @@ ConditionVariable::ConditionVariable()
 }
 
 // https://joeduffyblog.com/2006/11/28/windows-keyed-events-critical-sections-and-new-vista-synchronization-features/
-ConditionVariable::~ConditionVariable() = default;
+ConditionVariable::~ConditionVariable() noexcept(true) = default;
 
 void ConditionVariable::notify() {
 	WakeConditionVariable(RB_SYNC_IMPL);

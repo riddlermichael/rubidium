@@ -10,7 +10,7 @@ namespace rb::sync {
 class RB_EXPORT RB_CAPABILITY("rb::sync::SpinLock") SpinLock final {
 public:
 	SpinLock();
-	~SpinLock() noexcept(RB_USE(WIN32_THREADS));
+	~SpinLock();
 
 	void lock() RB_ACQUIRE_CAPABILITY();
 	bool tryLock() noexcept RB_TRY_ACQUIRE_CAPABILITY(true);

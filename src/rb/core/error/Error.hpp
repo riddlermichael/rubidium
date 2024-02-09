@@ -26,6 +26,14 @@ inline namespace error {
 		/// @return @c *this.
 		Error& withLocation(RB_SOURCE_LOCATION_DECL) noexcept;
 
+		/// Initializes the description of this error to the specified value.
+		/// @return @c *this.
+		Error& withMessage(LiteralString msg) & noexcept;
+
+		/// Initializes the description of this error to the specified value.
+		/// @return @c *this.
+		Error&& withMessage(LiteralString msg) && noexcept;
+
 		/// @return string description of @c this.
 		LiteralString message() const noexcept;
 
@@ -38,7 +46,12 @@ inline namespace error {
 		/// Print @c this with all its causes to stream @p os.
 		void printTo(std::ostream& os) const;
 
+	protected:
+		virtual void printMessage(std::ostream& os) const;
+
 	private:
+		friend std::ostream& operator<<(std::ostream& os, Error const& error);
+
 		LiteralString msg_ = nullptr;
 		SourceLocation loc_;
 	};

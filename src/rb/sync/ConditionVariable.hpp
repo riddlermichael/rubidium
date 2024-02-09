@@ -13,7 +13,7 @@ public:
 	void notifyAll();
 	void wait(Mutex& mutex) RB_REQUIRES_CAPABILITY(mutex);
 
-	void wait(MutexLocker& locker) {
+	void wait(MutexLocker& locker) RB_REQUIRES_CAPABILITY(locker.lockable()) {
 		wait(locker.lockable());
 	}
 

@@ -21,6 +21,9 @@ inline namespace error {
 		ErrorCode errorCode() const noexcept;
 		RawCode rawCode() const noexcept;
 
+	protected:
+		void printMessage(std::ostream& os) const override;
+
 	private:
 		ErrorCode errorCode_;
 		RawCode rawCode_;
