@@ -165,11 +165,14 @@
 
 ### `sync`
 
+- [ ] adopted threads
+- [ ] thread name
 - [ ] `rb_once_flag` static init
 - [ ] implement `StdThread` using `OsThread`
 - [ ] `std::jthread`
 - [ ] [test for mutex](https://demin.ws/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/)
-- [ ] impl `once` via pimpl
+- [ ] impl `once` via pimpl?
+- [ ] make `Thread::start` `noexcept`
 - [ ] Windows
   - [ ] condition variable wait for/until
   - [ ] nonrecursive mutex
