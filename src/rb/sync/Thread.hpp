@@ -65,10 +65,10 @@ public:
 		return joinable();
 	}
 
-	[[nodiscard]] bool joinable() const noexcept;
 	Id id() const noexcept;
 	bool isFinished() const;
 	bool isRunning() const;
+	[[nodiscard]] bool joinable() const noexcept;
 
 	void detach();
 	[[noreturn]] void exit(int exitCode = 0);

@@ -1,7 +1,6 @@
 #include "ErrorCode.hpp"
 
 #include <rb/core/compiler.hpp>
-#include <rb/core/error/NotImplementedError.hpp>
 #include <rb/core/os.hpp>
 #ifdef RB_OS_WIN
 	#include <Windows.h>
@@ -236,14 +235,6 @@ ErrorCode fromRawError(unsigned rawCode) noexcept {
 
 ErrorCode fromErrno(int error) noexcept {
 	return static_cast<ErrorCode>(error);
-}
-
-int rawErrorToErrno(unsigned rawCode) noexcept {
-#ifdef RB_OS_WIN
-	RB_NOT_IMPLEMENTED;
-#else
-	return rawCode;
-#endif
 }
 
 } // namespace rb::core

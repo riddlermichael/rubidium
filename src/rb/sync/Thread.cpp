@@ -1,33 +1,158 @@
 #include "Thread.hpp"
 
 #include <rb/core/error/InvalidArgumentError.hpp>
+#include <rb/core/traits/IsIntegral.hpp>
+#include <rb/core/traits/IsPointer.hpp>
 #include <rb/sync/impl.hpp>
+#include <rb/sync/Mutex.hpp>
+
+#include <rb/core/requires.hpp>
 
 using namespace rb::core;
 using namespace rb::sync;
 
+#define RB_GUARD MutexLocker locker(pImpl_->mutex)
+
+namespace {
+
+thread_local Thread* thisThread;
+
+} // namespace
+
 #if RB_USE(PTHREADS)
 
-Thread* Thread::current() noexcept {
+static_assert(sizeof(pthread_t) <= sizeof(usize));
+
+	#include <unistd.h>
+
+	#if !defined(RB_OS_ANDROID)                             \
+	        && !defined(RB_OS_OPENBSD)                      \
+	        && defined(_POSIX_THREAD_PRIORITY_SCHEDULING)   \
+	        && (_POSIX_THREAD_PRIORITY_SCHEDULING - 0 >= 0) \
+	    || defined(RB_OS_DARWIN)
+		#define RB_HAS_THREAD_PRIORITY_SCHEDULING 1
+	#else
+		#define RB_HAS_THREAD_PRIORITY_SCHEDULING (-1)
+	#endif
+
+	#if defined(RB_OS_LINUX) && !defined(SCHED_IDLE)
+		#define SCHED_IDLE 5
+	#endif
+
+struct AttributeGuard {
+	pthread_attr_t& attr;
+
+	explicit AttributeGuard(pthread_attr_t& attr)
+	    : attr(attr) {
+		RB_SYNC_CHECK(pthread_attr_init(&attr));
+	}
+
+	~AttributeGuard() noexcept(false) {
+		RB_SYNC_CHECK(pthread_attr_destroy(&attr));
+	}
+};
+
+bool getRawPriority(Thread::Priority priority, int& policy, int& rawPriority) {
+	#ifdef SCHED_IDLE
+	if (priority == Thread::Priority::kIdle) {
+		policy = SCHED_IDLE;
+		rawPriority = 0;
+		return true;
+	}
+
+	constexpr int lowestPriority = static_cast<int>(Thread::Priority::kLowest);
+	#else
+	constexpr int lowestPriority = static_cast<int>(Thread::Priority::kIdle);
+	#endif
+
+	constexpr int highestPriority = static_cast<int>(Thread::Priority::kTimeCritical);
+
+	int const priorityMin = sched_get_priority_min(policy);
+	int const priorityMax = sched_get_priority_max(policy);
+	if (priorityMin == -1 || priorityMax == -1) {
+		return false;
+	}
+
+	if (priorityMin == priorityMax) {
+		rawPriority = priorityMin;
+		return true;
+	}
+
+	double const scaledPriority = //
+	    priorityMin
+	    + (static_cast<int>(priority) - lowestPriority) * (priorityMax - priorityMin)
+	          / static_cast<double>(highestPriority - lowestPriority);
+
+	rawPriority = static_cast<int>(scaledPriority + 0.5); // NOLINT(*-incorrect-roundings)
+	return true;
 }
 
-Thread::Id Thread::currentId() noexcept {
+template <class T>
+constexpr auto toUsize(T value) noexcept
+    -> RB_REQUIRES_RETURN(usize, isIntegral<T>) {
+	return static_cast<usize>(value);
 }
+
+template <class T>
+constexpr auto toUsize(T value) noexcept
+    -> RB_REQUIRES_RETURN(usize, isPointer<T>) {
+	return reinterpret_cast<usize>(value); // NOLINT(*-pro-type-reinterpret-cast)
+}
+
+struct Thread::Impl {
+	pthread_t impl = {};
+	// StartFn fn = nullptr;
+	// void* arg = nullptr;
+	usize stackSize RB_GUARDED_BY(mutex) = 0;
+	Priority priority RB_GUARDED_BY(mutex) = Priority::kInherit;
+
+	Mutex mutex;
+	bool finished RB_GUARDED_BY(mutex) = false;
+	bool running RB_GUARDED_BY(mutex) = false;
+
+	static void* startThread(void* arg) {
+		return nullptr;
+	}
+
+	bool joinable() const noexcept RB_REQUIRES_CAPABILITY(mutex) {
+		return running && !finished;
+	}
+
+	void setPriority(Priority priority) RB_REQUIRES_CAPABILITY(mutex) {
+		this->priority = priority;
+	#if RB_HAS(THREAD_PRIORITY_SCHEDULING) // NOLINT(*-redundant-preprocessor)
+		int policy = 0;
+		sched_param param = {};
+		if (pthread_getschedparam(impl, &policy, &param)) {
+			return;
+		}
+
+		int prio = 0;
+		if (!getRawPriority(priority, policy, prio)) {
+			return;
+		}
+
+		param.sched_priority = prio;
+		int status = pthread_setschedparam(impl, policy, &param);
+		#ifdef SCHED_IDLE
+		if (status == -1 && policy == SCHED_IDLE && errno == EINVAL) {
+			pthread_getschedparam(impl, &policy, &param);
+			param.sched_priority = sched_get_priority_min(policy);
+			pthread_setschedparam(impl, policy, &param);
+		}
+		#else
+		RB_UNUSED(status);
+		#endif
+	#endif
+	}
+};
 
 void Thread::yield() noexcept {
-}
-
-Thread::Thread()
-    : pImpl_(core::makeUnique<Impl>()) {
-}
-
-Thread::~Thread() {
+	sched_yield();
 }
 
 Thread::Id Thread::id() const noexcept {
-}
-
-usize Thread::stackSize() const noexcept {
+	return Id{toUsize(pImpl_->impl)};
 }
 
 void Thread::detach() {
@@ -42,16 +167,41 @@ void Thread::join() {
 void Thread::join(int& exitCode) {
 }
 
-void Thread::setStackSize(usize stackSize) {
+void Thread::start(StartFn fn, void* arg, Priority priority) {
+	if (!fn) {
+		throw InvalidArgumentError("Null thread function");
+	}
+
+	RB_GUARD;
+	if (pImpl_->running) {
+		return; // throw?
+	}
+
+	// pImpl_->fn = fn;
+	// pImpl_->arg = arg;
+
+	pthread_attr_t attr{};
+	AttributeGuard _(attr);
+	pImpl_->priority = priority; // FIXME
+
+	if (pImpl_->stackSize > 0) {
+	#if defined(_POSIX_THREAD_ATTR_STACKSIZE) && (_POSIX_THREAD_ATTR_STACKSIZE - 0 > 0)
+		int const code = pthread_attr_setstacksize(&attr, pImpl_->stackSize);
+	#else
+		constexpr int code = ENOSYS;
+	#endif
+		// ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
+		if (code) {
+			throw OsError::fromErrno(code);
+		}
+	}
+
+	pImpl_->running = true;
 }
 
 #elif RB_USE(WIN32_THREADS)
 
 	#include <process.h>
-
-	#include <rb/sync/Mutex.hpp>
-
-	#define RB_GUARD MutexLocker locker(pImpl_->mutex)
 
 namespace {
 
@@ -69,8 +219,6 @@ int toRawPriority(Thread::Priority priority) noexcept {
 		default                     : RB_UNREACHABLE();
 	}
 }
-
-thread_local Thread* thisThread;
 
 } // namespace
 
@@ -166,84 +314,13 @@ struct Thread::Impl {
 	}
 };
 
-Thread* Thread::currentThread() noexcept {
-	// TODO adopted thread
-	return thisThread;
-}
-
-Thread::Id Thread::currentThreadId() noexcept {
-	if (auto const* thread = currentThread()) {
-		return thread->id();
-	}
-	return Id{};
-}
-
 void Thread::yield() noexcept {
 	// https://stackoverflow.com/a/1383966/4884522
 	Sleep(0);
 }
 
-Thread::Thread()
-    : pImpl_(core::makeUnique<Impl>()) {
-}
-
-Thread::~Thread() noexcept(false) {
-	if (joinable()) {
-		throw OsError(ErrorCode::kOperationInProgress);
-	}
-}
-
-bool Thread::joinable() const noexcept {
-	RB_GUARD;
-	return pImpl_->joinable();
-}
-
 Thread::Id Thread::id() const noexcept {
 	return Id{pImpl_->id};
-}
-
-bool Thread::isFinished() const {
-	RB_GUARD;
-	return pImpl_->finished;
-}
-
-bool Thread::isRunning() const {
-	RB_GUARD;
-	return pImpl_->running;
-}
-
-Thread::Priority Thread::priority() const noexcept {
-	RB_GUARD;
-	return pImpl_->priority;
-}
-
-void Thread::setPriority(Priority priority) {
-	if (priority == Priority::kInherit) {
-		throw OsError(ErrorCode::kInvalidArgument);
-	}
-
-	RB_GUARD;
-	if (!pImpl_->running) {
-		throw OsError(ErrorCode::kOperationNotPermitted, ERROR_INVALID_HANDLE)
-		    .withMessage("Cannot set priority, thread is not running");
-	}
-
-	pImpl_->setPriority(priority);
-}
-
-usize Thread::stackSize() const noexcept {
-	RB_GUARD;
-	return pImpl_->stackSize;
-}
-
-void Thread::setStackSize(usize stackSize) {
-	RB_GUARD;
-	if (pImpl_->running) {
-		throw OsError(ErrorCode::kOperationNotPermitted)
-		    .withMessage("Cannot change stack size while the thread is running");
-	}
-
-	pImpl_->stackSize = stackSize;
 }
 
 void Thread::detach() {
@@ -265,7 +342,7 @@ void Thread::join(int& exitCode) {
 
 void Thread::start(StartFn fn, void* arg, Priority priority) {
 	if (!fn) {
-		throw InvalidArgumentError("null thread function");
+		throw InvalidArgumentError("Null thread function");
 	}
 
 	RB_GUARD;
@@ -296,3 +373,78 @@ void Thread::start(StartFn fn, void* arg, Priority priority) {
 }
 
 #endif
+
+Thread* Thread::currentThread() noexcept {
+	return thisThread;
+}
+
+Thread::Id Thread::currentThreadId() noexcept {
+	if (auto const* thread = currentThread()) {
+		return thread->id();
+	}
+	return Id{};
+}
+
+Thread::Thread()
+    : pImpl_(core::makeUnique<Impl>()) {
+}
+
+Thread::~Thread() noexcept(false) {
+	if (joinable()) {
+		throw OsError(ErrorCode::kOperationInProgress);
+	}
+}
+
+Thread::Priority Thread::priority() const noexcept {
+	RB_GUARD;
+	return pImpl_->priority;
+}
+
+void Thread::setPriority(Priority priority) {
+	if (priority == Priority::kInherit) {
+		throw OsError(ErrorCode::kInvalidArgument);
+	}
+
+	RB_GUARD;
+	if (!pImpl_->running) {
+		throw OsError(ErrorCode::kOperationNotPermitted
+#if RB_USE(WIN32_THREADS)
+		    ,
+		    ERROR_INVALID_HANDLE
+#endif
+		    )
+		    .withMessage("Cannot set priority, thread is not running");
+	}
+
+	pImpl_->setPriority(priority);
+}
+
+usize Thread::stackSize() const noexcept {
+	RB_GUARD;
+	return pImpl_->stackSize;
+}
+
+void Thread::setStackSize(usize stackSize) {
+	RB_GUARD;
+	if (pImpl_->running) {
+		throw OsError(ErrorCode::kOperationNotPermitted)
+		    .withMessage("Cannot change stack size while the thread is running");
+	}
+
+	pImpl_->stackSize = stackSize;
+}
+
+bool Thread::isFinished() const {
+	RB_GUARD;
+	return pImpl_->finished;
+}
+
+bool Thread::isRunning() const {
+	RB_GUARD;
+	return pImpl_->running;
+}
+
+bool Thread::joinable() const noexcept {
+	RB_GUARD;
+	return pImpl_->joinable();
+}

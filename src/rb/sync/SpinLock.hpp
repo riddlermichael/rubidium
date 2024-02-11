@@ -2,7 +2,6 @@
 
 #include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
-#include <rb/sync.hpp>
 #include <rb/sync/LockGuard.hpp>
 
 namespace rb::sync {
@@ -10,7 +9,7 @@ namespace rb::sync {
 class RB_EXPORT RB_CAPABILITY("rb::sync::SpinLock") SpinLock final {
 public:
 	SpinLock();
-	~SpinLock();
+	~SpinLock() noexcept(false);
 
 	void lock() RB_ACQUIRE_CAPABILITY();
 	bool tryLock() noexcept RB_TRY_ACQUIRE_CAPABILITY(true);

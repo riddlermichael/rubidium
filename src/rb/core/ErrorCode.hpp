@@ -101,6 +101,4 @@ ErrorCode fromRawError(unsigned rawCode) noexcept;
 /// @return error code converted from error number @p error.
 ErrorCode fromErrno(int error = errno) noexcept;
 
-int rawErrorToErrno(unsigned rawCode) noexcept;
-
 } // namespace rb::core
