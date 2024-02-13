@@ -1,21 +1,16 @@
 #pragma once
 
-#include <memory>
-
-#include <rb/core/traits/detection.hpp>
+#include <rb/core/memory/PointerTraits.hpp>
 #include <rb/core/traits/IsFunction.hpp>
 
 namespace rb::core {
 
 namespace impl {
 	template <class T>
-	using ToAddressDetector = decltype(std::pointer_traits<T>::to_address(RB_DECLVAL(T const&)));
+	using ToAddressDetector = decltype(PointerTraits<T>::toAddress(RB_DECLVAL(T const&)));
 
 	template <class T>
 	using HasToAddress = IsDetected<ToAddressDetector, T>;
-
-	template <class T>
-	inline constexpr bool hasToAddress = HasToAddress<T>::value;
 } // namespace impl
 
 inline namespace memory {
@@ -27,13 +22,13 @@ inline namespace memory {
 		return ptr;
 	}
 
-	/// If the expression @c std::pointer_traits<T>::to_address(ptr) is well-formed,
+	/// If the expression <tt>core::PointerTraits<T>::toAddress(ptr)</tt> is well-formed,
 	/// returns the result of that expression.
-	/// Otherwise, returns `std::to_address(ptr.operator->())`.
-	template <class T>
-	constexpr auto toAddress(T const& ptr) noexcept {
-		if constexpr (impl::hasToAddress<T>) {
-			return std::pointer_traits<T>::to_address(ptr);
+	/// Otherwise, returns <tt>toAddress(ptr.operator->())</tt>.
+	template <class P>
+	constexpr auto toAddress(P const& ptr) noexcept {
+		if constexpr (impl::HasToAddress<P>::value) {
+			return PointerTraits<P>::toAddress(ptr);
 		} else {
 			return toAddress(ptr.operator->());
 		}

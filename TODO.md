@@ -56,16 +56,18 @@
   - [ ] type traits
 - [ ] Clang's nullability attributes for types
 - [ ] exception spec for expressions `new T(args...)` (infer `noexcept` if&nbsp;`std::bad_alloc` is the only one)
-  - [ ] correct exception spec for `UniquePtr` and `Any`
+  - [ ] `UniquePtr`
+  - [ ] `OwnerPtr`
+  - [ ] `Any`
 - [x] `Any`
   - [ ] small-object optimization
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
   - [ ] disable RTTI
 - [ ] `memory`
-  - [ ] `pointer_traits` (see `memory::toAddress`)
+  - [x] `pointer_traits` (see `memory::toAddress`)
   - [ ] `allocator_traits` (see `memory::destroy`)
-- [ ] fix noexcept in `OwnerPtr`
+  - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
 - [ ] `core::error`: POSIX error codes are implementation-dependent
 
 ### `data`

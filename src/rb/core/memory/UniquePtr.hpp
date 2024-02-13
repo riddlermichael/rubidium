@@ -173,7 +173,7 @@ inline namespace memory {
 
 		AddLValueRef<T const> operator*() const RB_NOEXCEPT_LIKE(*ptr()) {
 			RB_ENSURE_NONNULL;
-			return *ptr(); // NullablePointer?
+			return *ptr();
 		}
 
 		AddLValueRef<T> operator*() RB_NOEXCEPT_LIKE(*ptr()) {
