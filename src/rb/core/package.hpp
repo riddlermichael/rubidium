@@ -11,6 +11,7 @@
 #include <rb/core/attributes.hpp>
 #include <rb/core/bits.hpp>
 #include <rb/core/builtins.hpp>
+#include <rb/core/byte.hpp>
 #include <rb/core/compiler.hpp>
 #include <rb/core/endian.hpp>
 #include <rb/core/enums.hpp>
