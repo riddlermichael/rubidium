@@ -3,6 +3,7 @@
 #include <ostream>
 
 #include <rb/core/requires.hpp>
+#include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/IsBaseOf.hpp>
 #include <rb/core/traits/ops.hpp>
 #include <rb/core/types.hpp>
@@ -514,6 +515,15 @@ namespace impl::ts {
 		using Back = typename Back<TS>::Type;
 	};
 
+	template <class _>
+	struct TypeArgsOf {
+	};
+
+	template <template <class...> class Template, class... Args>
+	struct TypeArgsOf<Template<Args...>> {
+		using Type = TypeSeq<Args...>;
+	};
+
 } // namespace impl::ts
 
 inline namespace meta {
@@ -554,7 +564,7 @@ inline namespace meta {
 		using Append = typename impl::ts::Append<This, TS>::Type;
 
 		template <class T>
-		inline static constexpr isize kIndexOf = impl::ts::IndexOf<This, T>::kValue;
+		static constexpr isize kIndexOf = impl::ts::IndexOf<This, T>::kValue;
 
 		template <class T>
 		using Erase = typename impl::ts::Erase<This, T>::Type;
@@ -629,6 +639,12 @@ inline namespace meta {
 	std::ostream& operator<<(std::ostream& os, TypeSeq<T, Ts...> /*unused*/) {
 		return os << "[" << typeid(T).name(), ((os << ", " << typeid(Ts).name()), ...), os << "]";
 	}
+
+	template <class T>
+	using TypeArgsOf = typename impl::ts::TypeArgsOf<T>::Type;
+
+	template <class T>
+	using IsTemplate = IsDetected<TypeArgsOf, T>;
 
 } // namespace meta
 

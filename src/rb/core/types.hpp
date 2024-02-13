@@ -27,6 +27,7 @@ static_assert(sizeof(f64) == 8);
 namespace rb::core {
 inline namespace literals {
 
+	// ReSharper disable CppRedundantCastExpression
 	// C++23's size suffixes
 
 	constexpr isize operator""_z(unsigned long long value) noexcept {

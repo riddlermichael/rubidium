@@ -1,5 +1,8 @@
 #pragma once
 
+#include <rb/core/swap.hpp>
+#include <rb/core/traits/assignable.hpp>
+#include <rb/core/traits/destructible.hpp>
 #include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/detectors.hpp>
 #include <rb/core/traits/TypeIdentity.hpp>
@@ -41,6 +44,20 @@ inline namespace traits {
 
 	template <class T, class U>
 	inline constexpr bool isReadableFrom = IsReadableFrom<T, U>::value;
+
+	template <class T>
+	using IsNullablePointer = And<
+	    // requirements
+	    IsDefaultConstructible<T>,
+	    IsCopyConstructible<T>,
+	    IsDestructible<T>,
+	    IsCopyAssignable<T>,
+	    IsEqualityComparableStrict<T>,
+	    IsSwappable<T>,
+	    // expressions
+	    IsConstructible<T, std::nullptr_t>,
+	    IsDetectedExact<T&, OpAssignDetector, T&, std::nullptr_t>,
+	    IsEqualityComparableStrict<T, std::nullptr_t>>;
 
 	template <class T, class F, class... Args>
 	using MethodDetector = decltype((RB_DECLVAL(T).*RB_DECLVAL(F))(RB_DECLVAL(Args)...));

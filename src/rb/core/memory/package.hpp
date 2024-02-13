@@ -8,6 +8,7 @@
 #include <rb/core/memory/EmptyBase.hpp>
 #include <rb/core/memory/helpers.hpp>
 #include <rb/core/memory/OwnerPtr.hpp>
+#include <rb/core/memory/PointerTraits.hpp>
 #include <rb/core/memory/toAddress.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
 #include <rb/core/memory/Wrapper.hpp>

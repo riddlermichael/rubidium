@@ -1,12 +1,11 @@
 #include "Thread.hpp"
 
 #include <rb/core/error/InvalidArgumentError.hpp>
+#include <rb/core/requires.hpp>
 #include <rb/core/traits/IsIntegral.hpp>
 #include <rb/core/traits/IsPointer.hpp>
 #include <rb/sync/impl.hpp>
 #include <rb/sync/Mutex.hpp>
-
-#include <rb/core/requires.hpp>
 
 using namespace rb::core;
 using namespace rb::sync;
@@ -232,7 +231,7 @@ struct Thread::Impl {
 	unsigned id = 0;
 	Priority priority RB_GUARDED_BY(mutex) = Priority::kInherit;
 
-	Mutex mutex;
+	Mutex mutable mutex;
 	bool finished RB_GUARDED_BY(mutex) = false;
 	bool running RB_GUARDED_BY(mutex) = false;
 

@@ -21,6 +21,9 @@ inline namespace traits {
 	using RValueRefDetector = T&&;
 
 	template <class T, class U = T>
+	using OpAssignDetector = decltype(RB_DECLVAL(T) = RB_DECLVAL(U));
+
+	template <class T, class U = T>
 	using OpEqualDetector = decltype(RB_DECLVAL(T) == RB_DECLVAL(U));
 
 	template <class T, class U = T>

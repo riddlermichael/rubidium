@@ -1,5 +1,6 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <tuple>
 
 #include <rb/core/in_place.hpp>
