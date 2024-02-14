@@ -71,6 +71,7 @@
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
 - [ ] `core::error`: POSIX error codes are implementation-dependent
 - [ ] `std::is_constant_evaluated` (see `memory::construct`)
+- [ ] `std::iterator_traits` (see `core/iter.hpp`)
 
 ### `data`
 

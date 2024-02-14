@@ -22,6 +22,7 @@
 #include <rb/core/helpers.hpp>
 #include <rb/core/in_place.hpp>
 #include <rb/core/invoke.hpp>
+#include <rb/core/iter.hpp>
 #include <rb/core/keywords.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/core/move.hpp>
