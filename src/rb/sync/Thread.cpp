@@ -22,8 +22,6 @@ thread_local Thread* thisThread;
 
 static_assert(sizeof(pthread_t) <= sizeof(usize));
 
-	#include <unistd.h>
-
 	#if !defined(RB_OS_ANDROID)                             \
 	        && !defined(RB_OS_OPENBSD)                      \
 	        && defined(_POSIX_THREAD_PRIORITY_SCHEDULING)   \
@@ -105,7 +103,7 @@ struct Thread::Impl {
 	usize stackSize RB_GUARDED_BY(mutex) = 0;
 	Priority priority RB_GUARDED_BY(mutex) = Priority::kInherit;
 
-	Mutex mutex;
+	Mutex mutable mutex;
 	bool finished RB_GUARDED_BY(mutex) = false;
 	bool running RB_GUARDED_BY(mutex) = false;
 

@@ -69,3 +69,9 @@ inline namespace traits {
                                                                 \
 	template <class... Args>                                    \
 	using Has##name = rb::core::IsDetected<name##Detector, Args...>;
+
+#define RB_TYPE_DETECTOR_NAME(type, name) \
+	template <class T>                    \
+	using name##Detector = typename T::type;
+
+#define RB_TYPE_DETECTOR(type) RB_TYPE_DETECTOR_NAME(type, type)

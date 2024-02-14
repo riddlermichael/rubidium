@@ -11,21 +11,21 @@ namespace impl {
 	auto testReturnable(int) -> decltype(void(static_cast<T (*)()>(nullptr)), True{});
 
 	template <class>
-	auto testReturnable(...) -> False;
+	[[maybe_unused]] auto testReturnable(...) -> False;
 
 	template <class From, class To>
 	auto testImplicitlyConvertible(int)
 	    -> decltype(void(RB_DECLVAL(void (&)(To))(RB_DECLVAL(From))), True{});
 
 	template <class, class>
-	auto testImplicitlyConvertible(...) -> False;
+	[[maybe_unused]] auto testImplicitlyConvertible(...) -> False;
 
 	template <class From, class To>
 	auto testImplicitlyConvertibleNoexcept(int)
 	    -> Bool<noexcept(RB_DECLVAL(void (&)(To) noexcept)(RB_DECLVAL(From)))>;
 
 	template <class, class>
-	auto testImplicitlyConvertibleNoexcept(...) -> False;
+	[[maybe_unused]] auto testImplicitlyConvertibleNoexcept(...) -> False;
 } // namespace impl
 
 inline namespace traits {

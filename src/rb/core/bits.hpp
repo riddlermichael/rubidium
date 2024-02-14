@@ -27,7 +27,7 @@ namespace rb::core {
 
 template <class T>
 constexpr T bitMask(usize pos) noexcept {
-	using U = UnsignedType<T>;
+	using U = Unsigned<T>;
 	return U{1} << pos;
 }
 

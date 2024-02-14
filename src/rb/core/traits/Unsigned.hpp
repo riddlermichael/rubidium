@@ -32,27 +32,27 @@ namespace impl {
 	};
 
 	template <class T, bool = isIntegral<T> || isEnum<T>>
-	struct Unsigned {};
+	struct UnsignedImpl {};
 
 	template <class T>
-	struct Unsigned<T, true> {
+	struct UnsignedImpl<T, true> {
 		using Type = typename UnsignedOfSize<sizeof(T)>::Type;
 	};
 
 	template <>
-	struct Unsigned<bool> {
+	struct UnsignedImpl<bool> {
 	};
 
 	template <>
-	struct Unsigned<bool const> {
+	struct UnsignedImpl<bool const> {
 	};
 
 	template <>
-	struct Unsigned<bool volatile> {
+	struct UnsignedImpl<bool volatile> {
 	};
 
 	template <>
-	struct Unsigned<bool const volatile> {
+	struct UnsignedImpl<bool const volatile> {
 	};
 
 } // namespace impl
@@ -60,10 +60,7 @@ namespace impl {
 inline namespace traits {
 
 	template <class T>
-	using Unsigned = impl::Unsigned<T>;
-
-	template <class T>
-	using UnsignedType = typename Unsigned<T>::Type;
+	using Unsigned = typename impl::UnsignedImpl<T>::Type;
 
 } // namespace traits
 } // namespace rb::core

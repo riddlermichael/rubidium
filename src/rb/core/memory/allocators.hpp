@@ -4,8 +4,8 @@
 
 #include <rb/core/attributes.hpp>
 #include <rb/core/helpers.hpp>
+#include <rb/core/memory/AllocationResult.hpp>
 #include <rb/core/traits/detection.hpp>
-#include <rb/core/types.hpp>
 
 namespace rb::core {
 
@@ -48,17 +48,6 @@ using HasOperatorDeleteArray = IsDetectedExact<void, impl::OperatorDeleteArrayDe
 
 template <class T, class... Args>
 inline constexpr bool hasOperatorDeleteArray = HasOperatorDeleteArray<T, Args...>::value;
-
-/// AllocationResult specializations are return types of the `allocateAtLeast` member function
-/// of appropriate [Allocator](https://en.cppreference.com/w/cpp/named_req/Allocator) types.
-/// Twin of `std::allocation_result` (from C++23).
-/// Every specialization of AllocationResult has no base classes or declared members other than @a ptr and @a count,
-/// thus it is suitable for aggregate initialization and structured binding.
-template <class Pointer>
-struct AllocationResult {
-	Pointer ptr;
-	usize count;
-};
 
 template <class T,
     bool useClassSpecificNewDelete = hasOperatorNewArray<T> && hasOperatorDeleteArray<T>>

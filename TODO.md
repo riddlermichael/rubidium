@@ -67,8 +67,10 @@
 - [ ] `memory`
   - [x] `pointer_traits` (see `memory::toAddress`)
   - [ ] `allocator_traits` (see `memory::destroy`)
+  - [ ] `Allocator`
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
 - [ ] `core::error`: POSIX error codes are implementation-dependent
+- [ ] `std::is_constant_evaluated` (see `memory::construct`)
 
 ### `data`
 
