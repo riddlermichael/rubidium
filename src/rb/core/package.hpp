@@ -16,6 +16,7 @@
 #include <rb/core/endian.hpp>
 #include <rb/core/enums.hpp>
 #include <rb/core/ErrorCode.hpp>
+#include <rb/core/exchange.hpp>
 #include <rb/core/export.hpp>
 #include <rb/core/features.hpp>
 #include <rb/core/Flags.hpp>
