@@ -11,5 +11,6 @@ using namespace rb;
 using namespace rb::core;
 
 int main() {
+	cout << CompilerInfo::kThis << endl;
 	return 0;
 }

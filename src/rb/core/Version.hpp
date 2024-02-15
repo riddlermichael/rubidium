@@ -116,6 +116,6 @@ inline std::ostream& operator<<(std::ostream& os, Version const& v) {
 	return os << v.major() << '.' << v.minor() << '.' << v.patch();
 }
 
-constexpr Version kRbVersion{RB_VERSION_MAJOR, RB_VERSION_MINOR, RB_VERSION_PATCH};
+inline constexpr Version kRbVersion{RB_VERSION_MAJOR, RB_VERSION_MINOR, RB_VERSION_PATCH};
 
 } // namespace rb::core
