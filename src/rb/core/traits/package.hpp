@@ -24,6 +24,7 @@
 #include <rb/core/traits/IsConst.hpp>
 #include <rb/core/traits/IsConstexprCall.hpp>
 #include <rb/core/traits/IsConvertible.hpp>
+#include <rb/core/traits/IsEnumerable.hpp>
 #include <rb/core/traits/IsFloatingPoint.hpp>
 #include <rb/core/traits/IsFunction.hpp>
 #include <rb/core/traits/IsIntegral.hpp>
