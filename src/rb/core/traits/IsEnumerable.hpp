@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rb/core/iter.hpp>
+#include <rb/core/iter/primitives.hpp>
 #include <rb/core/traits/requirements.hpp>
 
 namespace rb::core {

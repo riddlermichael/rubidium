@@ -1,8 +1,7 @@
 #pragma once
 
-#include <rb/rb_version.hpp>
-
 #include <rb/core/error/package.hpp>
+#include <rb/core/iter/package.hpp>
 #include <rb/core/memory/package.hpp>
 #include <rb/core/meta/package.hpp>
 #include <rb/core/traits/package.hpp>
@@ -22,7 +21,6 @@
 #include <rb/core/helpers.hpp>
 #include <rb/core/in_place.hpp>
 #include <rb/core/invoke.hpp>
-#include <rb/core/iter.hpp>
 #include <rb/core/keywords.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/core/move.hpp>
@@ -35,3 +33,5 @@
 #include <rb/core/swap.hpp>
 #include <rb/core/types.hpp>
 #include <rb/core/Version.hpp>
+
+#include <rb/rb_version.hpp>

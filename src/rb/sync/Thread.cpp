@@ -108,6 +108,7 @@ struct Thread::Impl {
 	bool running RB_GUARDED_BY(mutex) = false;
 
 	static void* startThread(void* arg) {
+		RB_UNUSED(arg);
 		return nullptr;
 	}
 
@@ -156,15 +157,19 @@ void Thread::detach() {
 }
 
 void Thread::exit(int exitCode) {
+	RB_UNUSED(exitCode);
+	RB_UNREACHABLE();
 }
 
 void Thread::join() {
 }
 
 void Thread::join(int& exitCode) {
+	RB_UNUSED(exitCode);
 }
 
 void Thread::start(StartFn fn, void* arg, Priority priority) {
+	RB_UNUSED(arg);
 	if (!fn) {
 		throw InvalidArgumentError("Null thread function");
 	}

@@ -21,6 +21,7 @@ include(features)
 set(MODULES
     core
     core/error
+    core/iter
     core/memory
     core/meta
     core/traits

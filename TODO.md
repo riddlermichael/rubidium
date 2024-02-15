@@ -20,7 +20,7 @@
 - [ ] `Error`
   - [ ] immutable string
   - [ ] ref-counted pointer instead of `std::shared_ptr`
-- [x] `Optional` like in C++23
+- [ ] `Optional` like in C++23
   - [ ] `Option<T&&>`?
 - [ ] `Variant`
 - [ ] type of container (random-access, associative, tuple-like)
@@ -28,12 +28,12 @@
 - [ ] `constexpr` in C++20
   - [ ] `UniquePtr`
 - [ ] concepts
-- [x] `i128`/`u128`
+- [ ] `i128`/`u128`
   - [ ] floating-point ops: `*`, `/`
-- [x] `quorem`
+- [ ] `quorem`
   - [ ] use single asm instruction
   - [ ] look at `<cmath>` for behavior details
-- [x] `QFlag`
+- [ ] `QFlag`
   - [ ] `BitMask` trait
 - [ ] `TypeInfo`
   - [ ] static
@@ -59,19 +59,16 @@
   - [ ] `UniquePtr`
   - [ ] `OwnerPtr`
   - [ ] `Any`
-- [x] `Any`
+- [ ] `Any`
   - [ ] small-object optimization
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
   - [ ] disable RTTI
 - [ ] `memory`
-  - [x] `pointer_traits` (see `memory::toAddress`)
-  - [ ] `allocator_traits` (see `memory::destroy`)
   - [ ] `Allocator`
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
 - [ ] `core::error`: POSIX error codes are implementation-dependent
 - [ ] `std::is_constant_evaluated` (see `memory::construct`)
-- [ ] `std::iterator_traits` (see `core/iter.hpp`)
 
 ### `data`
 
