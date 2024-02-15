@@ -15,6 +15,8 @@ namespace rb::core {
 namespace impl {
 
 	// ReSharper disable CppFunctionIsNotImplemented
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
 
 	template <class T>
 	struct InvokeSelector {
@@ -44,6 +46,8 @@ namespace impl {
 		static auto call(P C::*f, Arg&& arg) RB_NOEXCEPT_LIKE(get(RB_FWD(arg)).*f)
 		    -> decltype(get(RB_FWD(arg)).*f);
 	};
+
+#pragma clang diagnostic pop
 
 	template <class C, class P, class Arg, class... Args>
 	constexpr decltype(auto) invokeMemberPointer(P C::*f, Arg&& arg, Args&&... args) {

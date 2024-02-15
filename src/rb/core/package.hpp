@@ -28,6 +28,7 @@
 #include <rb/core/move.hpp>
 #include <rb/core/os.hpp>
 #include <rb/core/processor.hpp>
+#include <rb/core/quorem.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/sanitizers.hpp>
 #include <rb/core/SourceLocation.hpp>
