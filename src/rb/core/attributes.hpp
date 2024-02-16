@@ -64,11 +64,11 @@
  * (or, for a parameter of a constructor, by the value of the constructed object).
  */
 #if RB_HAS_CPP_ATTRIBUTE(clang::lifetimebound)
-	#define RB_ATTR_LIFETIME_BOUND [[clang::lifetimebound]]
+	#define RB_LIFETIME_BOUND [[clang::lifetimebound]]
 #elif RB_HAS_ATTRIBUTE(lifetimebound)
-	#define RB_ATTR_LIFETIME_BOUND __attribute__((lifetimebound))
+	#define RB_LIFETIME_BOUND __attribute__((lifetimebound))
 #else
-	#define RB_ATTR_LIFETIME_BOUND
+	#define RB_LIFETIME_BOUND
 #endif
 
 #if defined(RB_COMPILER_GCC_LIKE)

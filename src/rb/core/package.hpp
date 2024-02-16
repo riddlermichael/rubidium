@@ -27,6 +27,7 @@
 #include <rb/core/keywords.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/core/move.hpp>
+#include <rb/core/Option.hpp>
 #include <rb/core/os.hpp>
 #include <rb/core/processor.hpp>
 #include <rb/core/quorem.hpp>
