@@ -70,3 +70,11 @@
 #else
 	#define RB_ATTR_LIFETIME_BOUND
 #endif
+
+#if defined(RB_COMPILER_GCC_LIKE)
+	#define RB_ALWAYS_INLINE __attribute__((always_inline))
+#elif defined(RB_COMPILER_MSVC)
+	#define RB_ALWAYS_INLINE __forceinline
+#else
+	#define RB_ALWAYS_INLINE inline
+#endif

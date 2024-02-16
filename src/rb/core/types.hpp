@@ -27,7 +27,38 @@ static_assert(sizeof(f64) == 8);
 namespace rb::core {
 inline namespace literals {
 
-	// ReSharper disable CppRedundantCastExpression
+	constexpr i8 operator""_i8(unsigned long long value) noexcept {
+		return static_cast<i8>(value);
+	}
+
+	constexpr i16 operator""_i16(unsigned long long value) noexcept {
+		return static_cast<i16>(value);
+	}
+
+	constexpr i32 operator""_i32(unsigned long long value) noexcept {
+		return static_cast<i32>(value);
+	}
+
+	constexpr i64 operator""_i64(unsigned long long value) noexcept {
+		return static_cast<i64>(value);
+	}
+
+	constexpr u8 operator""_u8(unsigned long long value) noexcept {
+		return static_cast<u8>(value);
+	}
+
+	constexpr u16 operator""_u16(unsigned long long value) noexcept {
+		return static_cast<u16>(value);
+	}
+
+	constexpr u32 operator""_u32(unsigned long long value) noexcept {
+		return static_cast<u32>(value);
+	}
+
+	constexpr u64 operator""_u64(unsigned long long value) noexcept {
+		return static_cast<u64>(value);
+	}
+
 	// C++23's size suffixes
 
 	constexpr isize operator""_z(unsigned long long value) noexcept {

@@ -38,3 +38,9 @@ public:
 	#define RB_DEBUG_ASSERT_MSG RB_ASSERT_MSG
 	#define RB_DEBUG_ASSERT_CUSTOM_MSG RB_ASSERT_CUSTOM_MSG
 #endif
+
+#define RB_UNREACHABLE_ASSERT()                         \
+	do {                                                \
+		RB_ASSERT_MSG(0, "RB_UNREACHABLE was reached"); \
+		RB_UNREACHABLE();                               \
+	} while (false)

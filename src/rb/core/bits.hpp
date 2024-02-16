@@ -208,4 +208,104 @@ constexpr T fromBigEndian(T value) noexcept {
 
 #endif
 
+namespace impl {
+
+	template <unsigned nbBytes>
+	struct CountLeadingZeroes;
+
+	template <>
+	struct CountLeadingZeroes<4> {
+		RB_ALWAYS_INLINE static constexpr unsigned apply(u32 x) noexcept {
+#if RB_HAS_BUILTIN(__builtin_clz)
+			return x == 0 ? 32 : __builtin_clz(x);
+#elif defined(RB_COMPILER_MSVC)
+			unsigned long result = 0;
+			return _BitScanReverse(&result, x) ? (31 - result) : 32;
+#else
+			int zeroes = 28;
+			if (x >> 16) {
+				zeroes -= 16;
+				x >>= 16;
+			}
+			if (x >> 8) {
+				zeroes -= 8;
+				x >>= 8;
+			}
+			if (x >> 4) {
+				zeroes -= 4;
+				x >>= 4;
+			}
+			return "\4\3\2\2\1\1\1\1\0\0\0\0\0\0\0"[x] + zeroes;
+#endif
+		}
+	};
+
+	template <>
+	struct CountLeadingZeroes<2> {
+		RB_ALWAYS_INLINE static constexpr unsigned apply(u16 x) noexcept {
+#if RB_HAS_BUILTIN(__builtin_clzs)
+			return x == 0 ? 16 : __builtin_clzs(x);
+#else
+			return CountLeadingZeroes<4>::apply(x) - 16;
+#endif
+		}
+	};
+
+	template <>
+	struct CountLeadingZeroes<1> {
+		RB_ALWAYS_INLINE static constexpr unsigned apply(u8 x) noexcept {
+			return CountLeadingZeroes<2>::apply(x) - 8;
+		}
+	};
+
+	template <>
+	struct CountLeadingZeroes<8> {
+		RB_ALWAYS_INLINE static constexpr unsigned apply(u64 x) noexcept {
+#if RB_HAS_BUILTIN(__builtin_clzll)
+			return x == 0 ? 64 : __builtin_clzll(x);
+#elif defined(RB_COMPILER_MSVC)
+	#if RB_IS_64BIT
+			unsigned long result = 0;
+			return _BitScanReverse64(&result, x) ? (63 - result) : 64;
+	#elif RB_IS_32BIT
+			unsigned long result = 0;
+			if ((x >> 32) && _BitScanReverse(&result, static_cast<unsigned long>(x >> 32))) {
+				return 31 - result;
+			}
+			if (_BitScanReverse(&result, static_cast<unsigned long>(x))) {
+				return 63 - result;
+			}
+			return 64;
+	#endif
+#else
+			int zeroes = 60;
+			if (x >> 32) {
+				zeroes -= 32;
+				x >>= 32;
+			}
+			if (x >> 16) {
+				zeroes -= 16;
+				x >>= 16;
+			}
+			if (x >> 8) {
+				zeroes -= 8;
+				x >>= 8;
+			}
+			if (x >> 4) {
+				zeroes -= 4;
+				x >>= 4;
+			}
+			return "\4\3\2\2\1\1\1\1\0\0\0\0\0\0\0"[x] + zeroes;
+#endif
+		}
+	};
+
+} // namespace impl
+
+/// Returns the number of consecutive 0 bits in the value of x, starting from the most significant bit ("left")
+template <class T>
+RB_ALWAYS_INLINE constexpr EnableIf<isIntegral<T>, unsigned> countLeadingZeroes(T x) noexcept {
+	return impl::CountLeadingZeroes<sizeof(T)>::apply(x);
+}
+
 } // namespace rb::core

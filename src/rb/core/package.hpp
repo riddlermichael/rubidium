@@ -22,6 +22,7 @@
 #include <rb/core/Flags.hpp>
 #include <rb/core/helpers.hpp>
 #include <rb/core/in_place.hpp>
+#include <rb/core/int128.hpp>
 #include <rb/core/invoke.hpp>
 #include <rb/core/keywords.hpp>
 #include <rb/core/limits.hpp>

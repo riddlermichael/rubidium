@@ -28,8 +28,9 @@
 - [ ] `constexpr` in C++20
   - [ ] `UniquePtr`
 - [ ] concepts
-- [ ] `i128`/`u128`
+- [x] `i128`/`u128`
   - [ ] floating-point ops: `*`, `/`
+  - [ ] conversions from/to string
 - [ ] `quorem`
   - [ ] use single asm instruction
   - [ ] look at `<cmath>` for behavior details
