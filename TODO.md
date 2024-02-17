@@ -60,17 +60,21 @@
   - [ ] `UniquePtr`
   - [ ] `OwnerPtr`
   - [ ] `Any`
-- [ ] `Any`
+- [x] `Any`
   - [ ] small-object optimization
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
   - [ ] disabled RTTI
 - [ ] `memory`
-  - [ ] `Allocator`
+  - [ ] full impl of `Allocator`
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
 - [ ] `core::error`: POSIX error codes are implementation-dependent
 - [ ] `std::is_constant_evaluated` (see `memory::construct`)
 - [ ] C++20's `IteratorTraits`
+- [x] `Expected`
+  - [ ] revise `RB_NOEXCEPT_LIKE`
+  - [ ] use `Variant`
+  - [ ] reference support?
 
 ### `data`
 
