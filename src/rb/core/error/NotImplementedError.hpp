@@ -5,7 +5,7 @@
 namespace rb::core {
 inline namespace error {
 
-	class NotImplementedError final : public Error {
+	class RB_EXPORT NotImplementedError final : public Error {
 	public:
 		explicit NotImplementedError(RB_SOURCE_LOCATION_DECL) noexcept
 		    : Error("Not implemented yet", location) {

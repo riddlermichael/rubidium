@@ -8,7 +8,7 @@
 namespace rb::core {
 inline namespace error {
 
-	class RangeError final : public Error {
+	class RB_EXPORT RangeError final : public Error {
 		static constexpr LiteralString kDefaultMessage = "Out of range";
 
 	public:

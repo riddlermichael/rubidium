@@ -8,7 +8,7 @@
 namespace rb::core {
 
 /// The class Any describes a type-safe container for single values of any copy constructible type.
-class Any final {
+class RB_EXPORT Any final {
 public:
 	template <class T>
 	using Storable = IsCopyConstructible<Decay<T>>;
