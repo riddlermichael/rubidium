@@ -25,6 +25,7 @@ set(MODULES
     core/memory
     core/meta
     core/traits
+    ext
     fmt)
 set(HEADERS)
 set(SOURCES)
