@@ -6,6 +6,7 @@
 #include <rb/core/meta/package.hpp>
 #include <rb/core/traits/package.hpp>
 
+#include <rb/core/Any.hpp>
 #include <rb/core/assert.hpp>
 #include <rb/core/attributes.hpp>
 #include <rb/core/bits.hpp>

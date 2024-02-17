@@ -64,7 +64,7 @@
   - [ ] small-object optimization
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
-  - [ ] disable RTTI
+  - [ ] disabled RTTI
 - [ ] `memory`
   - [ ] `Allocator`
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)

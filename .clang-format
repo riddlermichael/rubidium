@@ -78,7 +78,7 @@ NamespaceMacros: [ ]
 PackConstructorInitializers: Never # 14
 PointerAlignment: Left
 QualifierAlignment: Custom # 14
-QualifierOrder: [ 'friend', 'inline', 'static', 'constexpr', 'type', 'const', 'volatile', 'restrict' ] # 14
+QualifierOrder: [ 'friend', 'static', 'inline', 'constexpr', 'type', 'const', 'volatile', 'restrict' ] # 14
 ReferenceAlignment: Pointer
 ReflowComments: false
 RemoveParentheses: ReturnStatement # 17 WARN
