@@ -46,6 +46,21 @@ inline namespace iter {
 	template <class It, class = void>
 	struct IteratorTraits : impl::IteratorTraitsImpl<It> {};
 
+	template <class It>
+	struct IteratorTraits<It,
+	    Void<
+	        typename It::iterator_category,
+	        typename It::difference_type,
+	        typename It::pointer,
+	        typename It::reference,
+	        typename It::value_type>> {
+		using Category = FromStdTag<typename It::iterator_category>;
+		using Difference = typename It::difference_type;
+		using Pointer = typename It::pointer;
+		using Reference = typename It::reference;
+		using Value = typename It::value_type;
+	};
+
 	template <class T>
 	struct IteratorTraits<T*, EnableIf<isObject<T>>> {
 		using Category = RandomAccessIteratorTag;

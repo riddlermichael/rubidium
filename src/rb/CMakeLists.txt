@@ -24,6 +24,7 @@ set(MODULES
     core/iter
     core/memory
     core/meta
+    core/slices
     core/traits
     ext
     fmt)

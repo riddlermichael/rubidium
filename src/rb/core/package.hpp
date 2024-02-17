@@ -4,6 +4,7 @@
 #include <rb/core/iter/package.hpp>
 #include <rb/core/memory/package.hpp>
 #include <rb/core/meta/package.hpp>
+#include <rb/core/slices/package.hpp>
 #include <rb/core/traits/package.hpp>
 
 #include <rb/core/Any.hpp>
