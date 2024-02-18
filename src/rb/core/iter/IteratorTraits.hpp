@@ -7,30 +7,6 @@
 #include <rb/core/types.hpp>
 
 namespace rb::core {
-
-namespace impl {
-
-	template <class It, class = void>
-	struct IteratorTraitsImpl {
-	};
-
-	template <class It>
-	struct IteratorTraitsImpl<It,
-	    Void<
-	        typename It::Category,
-	        typename It::Difference,
-	        typename It::Pointer,
-	        typename It::Reference,
-	        typename It::Value>> {
-		using Category = typename It::Category;
-		using Difference = typename It::Difference;
-		using Pointer = typename It::Pointer;
-		using Reference = typename It::Reference;
-		using Value = typename It::Value;
-	};
-
-} // namespace impl
-
 inline namespace iter {
 
 	/**
@@ -43,17 +19,37 @@ inline namespace iter {
 	 *
 	 * @tparam It   the iterator type to retrieve properties for
 	 */
-	template <class It, class = void>
-	struct IteratorTraits : impl::IteratorTraitsImpl<It> {};
+	template <class It, class = void, class = void>
+	struct IteratorTraits {
+	};
 
 	template <class It>
 	struct IteratorTraits<It,
+	    Void<
+	        typename It::Category,
+	        typename It::Difference,
+	        typename It::Pointer,
+	        typename It::Reference,
+	        typename It::Value>,
+	    void> //
+	{
+		using Category = typename It::Category;
+		using Difference = typename It::Difference;
+		using Pointer = typename It::Pointer;
+		using Reference = typename It::Reference;
+		using Value = typename It::Value;
+	};
+
+	template <class It, class _>
+	struct IteratorTraits<It,
+	    _,
 	    Void<
 	        typename It::iterator_category,
 	        typename It::difference_type,
 	        typename It::pointer,
 	        typename It::reference,
-	        typename It::value_type>> {
+	        typename It::value_type>> //
+	{
 		using Category = FromStdTag<typename It::iterator_category>;
 		using Difference = typename It::difference_type;
 		using Pointer = typename It::pointer;
@@ -72,5 +68,4 @@ inline namespace iter {
 	};
 
 } // namespace iter
-
 } // namespace rb::core

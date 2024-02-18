@@ -4,3 +4,4 @@
 #include <rb/core/slices/Slice.hpp>
 #include <rb/core/slices/StepIterator.hpp>
 #include <rb/core/slices/StepSlice.hpp>
+#include <rb/core/slices/ViewImpl.hpp>
