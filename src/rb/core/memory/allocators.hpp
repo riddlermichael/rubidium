@@ -52,12 +52,9 @@ inline constexpr bool hasOperatorDeleteArray = HasOperatorDeleteArray<T, Args...
 template <class T,
     bool useClassSpecificNewDelete = hasOperatorNewArray<T> && hasOperatorDeleteArray<T>>
 struct ArrayAllocator final {
-	// NOLINTBEGIN(readability-identifier-naming)
-	using value_type = T;
-	using size_type = usize;
-	using difference_type = isize;
-	using propagate_on_container_move_assignment = True;
-	// NOLINTEND(readability-identifier-naming)
+	using Value = T;
+	using Size = usize;
+	using Sifference = isize;
 
 	constexpr ArrayAllocator() noexcept = default;
 	constexpr ArrayAllocator(ArrayAllocator const&) noexcept = default;
