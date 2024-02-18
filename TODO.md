@@ -75,6 +75,7 @@
   - [ ] revise `RB_NOEXCEPT_LIKE`
   - [ ] use `Variant`
   - [ ] reference support?
+- [ ] SAL annotations
 
 ### `data`
 

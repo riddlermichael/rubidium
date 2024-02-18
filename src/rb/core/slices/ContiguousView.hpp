@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rb/core/memory/toAddress.hpp>
 #include <rb/core/slices/Sliceable.hpp>
 
 namespace rb::core {
