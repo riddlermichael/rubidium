@@ -37,6 +37,7 @@
 #include <rb/core/requires.hpp>
 #include <rb/core/sanitizers.hpp>
 #include <rb/core/SourceLocation.hpp>
+#include <rb/core/Span.hpp>
 #include <rb/core/strings.hpp>
 #include <rb/core/swap.hpp>
 #include <rb/core/types.hpp>

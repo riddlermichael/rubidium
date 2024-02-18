@@ -5,14 +5,6 @@
 #include <rb/core/traits/remove.hpp>
 #include <rb/core/types.hpp>
 
-namespace std { // NOLINT(cert-dcl58-cpp)
-template <usize idx, class T>
-struct tuple_element;
-
-template <class T>
-struct tuple_size;
-} // namespace std
-
 namespace rb::core {
 namespace impl {
 
@@ -20,7 +12,7 @@ namespace impl {
 	using TupleElementDetector = std::tuple_element_t<usize{0}, T>;
 
 	template <class T>
-	using TupleSizeDetector = decltype(std::tuple_size_v<T>);
+	using TupleSizeDetector = decltype(std::tuple_size<T>::value);
 
 	template <class T>
 	using ClassSpecificGetDetector = decltype(RB_DECLVAL(T).template get<usize{0}>());
@@ -51,7 +43,7 @@ namespace impl {
 
 	template <class T>
 	struct IsTupleLike<T, Void<TupleSizeDetector<T>>> {
-		using Type = typename IsTupleLikeImpl<T, std::tuple_size_v<T> == 0>::Type;
+		using Type = typename IsTupleLikeImpl<T, std::tuple_size<T>::value == 0>::Type;
 	};
 
 } // namespace impl
