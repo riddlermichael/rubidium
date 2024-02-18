@@ -28,7 +28,7 @@ public:
 
 	template <class T,
 	    RB_REQUIRES(!isSame<Decay<T>, Any> && !impl::isInPlaceType<Decay<T>> && kStorable<T>)>
-	Any(T&& value) // NOLINT(*-explicit-constructor, *-forwarding-reference-overload)
+	explicit Any(T&& value) // NOLINT(*-forwarding-reference-overload)
 	    : Any(kInPlaceType<T>, RB_FWD(value)) {
 	}
 
