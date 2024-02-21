@@ -15,11 +15,11 @@ inline namespace slices {
 		using Traits = ContainerTraits<T>;
 
 	public:
-		using Value = typename Traits::Value;
-		using Iterator = typename Traits::Iterator;
 		using ConstIterator = typename Traits::ConstIterator;
 		using Difference = typename Traits::Difference;
+		using Iterator = typename Traits::Iterator;
 		using Size = typename Traits::Size;
+		using Value = typename Traits::Value;
 
 		static_assert(isBaseOf<RandomAccessIteratorTag, typename IteratorTraits<Iterator>::Category>,
 		    "Iterator must be random-access");
