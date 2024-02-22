@@ -1,7 +1,8 @@
 #pragma once
 
 namespace rb::core {
-inline namespace iter {
+
+namespace impl {
 
 	template <class C, class = void, class = void>
 	struct ContainerTraits {
@@ -41,5 +42,13 @@ inline namespace iter {
 		using Value = typename C::value_type;
 	};
 
+} // namespace impl
+
+inline namespace iter {
+
+	template <class C>
+	struct ContainerTraits : impl::ContainerTraits<C> {};
+
 } // namespace iter
+
 } // namespace rb::core

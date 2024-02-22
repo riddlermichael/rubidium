@@ -93,6 +93,7 @@
 - [ ] scoped enums
 - [ ] fix `iterables.hpp` (`<<` is very eager)
 - [ ] `charconv` for floating-point
+- [ ] `quoted` for `char const*` (compare with `std::quoted`)
 
 ### `fs`
 
