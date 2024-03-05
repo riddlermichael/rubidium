@@ -14,10 +14,10 @@ namespace rb::core {
 class RB_EXPORT SourceLocation final {
 public:
 	// intentionally `constexpr` for using in `constexpr` context
-	static constexpr SourceLocation from(
+	static constexpr SourceLocation here(
 	    LiteralString file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    LiteralString func = RB_BUILTIN_FUNCSIG,
+	    LiteralString func = RB_BUILTIN_FUNCTION,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		SourceLocation location;
 		location.file_ = file != nullptr ? file : "";
@@ -30,9 +30,9 @@ public:
 	static RB_CONSTEVAL SourceLocation current(
 	    LiteralString file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    LiteralString func = RB_BUILTIN_FUNCSIG,
+	    LiteralString func = RB_BUILTIN_FUNCTION,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
-		return from(file, line, func, column);
+		return here(file, line, func, column);
 	}
 
 	constexpr SourceLocation() noexcept = default;
