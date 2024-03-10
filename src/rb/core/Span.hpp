@@ -46,8 +46,6 @@ public:
 	using Pointer = T*;
 	using ConstPointer = T const*;
 
-	static constexpr usize kExtent = n;
-
 	// ctor.1
 	template <bool _ = true, RB_REQUIRES(_ && (n == kDynExtent || n == 0))>
 	constexpr Span() noexcept
