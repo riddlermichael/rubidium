@@ -2,6 +2,15 @@
 
 ## `C++`
 
+### `adt`
+
+- [ ] hash table
+- [ ] heap
+- [ ] tree
+  - [ ] AVL tree
+  - [ ] B-tree
+  - [ ] red-black tree
+
 ### `algo`
 
 - [ ] `constexpr` algorithms
@@ -11,7 +20,15 @@
 
 ### `containers`
 
-- [ ] construct `Vector` from range efficiently
+- [ ] `Deque`
+- [ ] `List`
+- [ ] `Map`
+- [ ] `PriorityQueue`
+- [ ] `Set`
+- [ ] `Stack`
+- [ ] `Queue`
+- [ ] `Vector`
+  - [ ] construct from range efficiently
 
 ### `core`
 
@@ -185,7 +202,7 @@
 - [ ] make `Thread::start` `noexcept`
 - [ ] Windows
   - [ ] condition variable wait for/until
-  - [ ] nonrecursive mutex
+  - [ ] non-recursive mutex
   - [ ] spinlock
   - [ ] timed mutex
 
@@ -194,6 +211,7 @@
 - [ ] move to `msg`? or introduce `os`?
 - [ ] fibers
   - [ ] fiber/thread scheduler like in D?
+- [ ] `ThreadGroup`
 
 ### `time`
 
@@ -214,5 +232,20 @@
 
 ## Unsorted
 
+- [ ] processes
 - [ ] `getopt`
   - [ ] see Abseil flags
+- [ ] custom floating-point (see `CustomFloat` in D)
+- [ ] big integers
+- [ ] graphs
+- [ ] hash functions
+  - [ ] CRC
+  - [ ] MD5
+  - [ ] MurmurHash
+  - [ ] SHA
+- [ ] zip
+- [ ] CSV
+- [ ] Base64
+- [ ] environment
+- [ ] sockets
+- [ ] regular expressions
