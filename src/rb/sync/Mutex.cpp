@@ -71,7 +71,7 @@ bool initCS(CRITICAL_SECTION* cs) noexcept {
 	 * Starting with Windows Vista, this exception was eliminated and InitializeCriticalSection always succeeds,
 	 * even in low memory situations.
 	 */
-	#if _WIN32_WINNT >= _WIN32_WINNT_VISTA // NOLINT(*-redundant-preprocessor)
+	#if _WIN32_WINNT >= 0x0600 // NOLINT(*-redundant-preprocessor)
 	InitializeCriticalSection(cs);
 	#else
 	__try {
