@@ -46,7 +46,7 @@ namespace impl {
 		template <class U>
 		using Rebind = typename RebindImpl<P, U>::Type;
 
-		[[nodiscard]] static P pointerTo(E& ref) RB_NOEXCEPT_LIKE(P::pointerTo(ref)) {
+		[[nodiscard]] static P pointerTo(E& ref) {
 			return P::pointerTo(ref);
 		}
 	};

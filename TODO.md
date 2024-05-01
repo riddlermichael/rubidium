@@ -93,6 +93,8 @@
   - [ ] use `Variant`
   - [ ] reference support?
 - [ ] SAL annotations
+- [ ] make `countLeadingZeroes` `constexpr` on MSVC
+- [ ] `RB_DEFINE_FLAG`?
 
 ### `data`
 

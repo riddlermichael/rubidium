@@ -8,8 +8,10 @@
 
 #include <rb/core/assert.hpp>
 #include <rb/core/bits.hpp>
+#include <rb/core/error/RangeError.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/core/quorem.hpp>
+#include <rb/core/traits/IsSigned.hpp>
 #include <rb/core/traits/IsUnsigned.hpp>
 
 template <bool>

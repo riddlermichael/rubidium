@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #include <rb/core/attributes.hpp>
 #include <rb/core/enable_special_members.hpp>
 #include <rb/core/in_place.hpp>
