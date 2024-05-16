@@ -41,7 +41,7 @@ namespace impl {
 		using Type = RandomAccessIteratorTag;
 	};
 
-#if __cplusplus > 201'703L
+#if __cplusplus > 201703L
 	template <>
 	struct FromStdTagImpl<std::contiguous_iterator_tag> {
 		using Type = ContiguousIteratorTag;

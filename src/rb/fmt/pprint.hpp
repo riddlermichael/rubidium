@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 #include <rb/core/iter/primitives.hpp>
 #include <rb/core/meta/ValueSeq.hpp>
 #include <rb/core/move.hpp>

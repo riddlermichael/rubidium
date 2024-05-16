@@ -7,6 +7,7 @@
 #include <rb/core/types.hpp>
 
 namespace rb::core {
+
 inline namespace iter {
 
 	/**
@@ -68,4 +69,15 @@ inline namespace iter {
 	};
 
 } // namespace iter
+
+namespace impl {
+	template <class T>
+	using ValueTypeDetector = typename IteratorTraits<T>::Value;
+} // namespace impl
+
+inline namespace iter {
+	template <class T>
+	using IsIteratorType = IsDetected<impl::ValueTypeDetector, T>;
+} // namespace iter
+
 } // namespace rb::core

@@ -28,7 +28,8 @@ set(MODULES
     core/str
     core/traits
     ext
-    fmt)
+    fmt
+    ranges)
 set(HEADERS)
 set(SOURCES)
 foreach(X ${MODULES})

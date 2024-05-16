@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <rb/core/memory/toAddress.hpp>
 #include <rb/core/slices/Sliceable.hpp>
 
