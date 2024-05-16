@@ -14,11 +14,6 @@ using namespace rb;
 using namespace rb::core;
 
 int main() {
-	using namespace rb::time::literals;
-
-	auto const dur = 0_min;
-	cout << dur.isPositive() << endl;
-	cout << dur.isNaN() << endl;
-	cout << (dur / 0).isNaN() << endl;
+	cout << CompilerInfo::kThis << endl;
 	return 0;
 }

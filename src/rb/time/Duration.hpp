@@ -3,6 +3,11 @@
 #include <ratio>
 #include <vector>
 
+#include <rb/core/features.hpp>
+#if RB_ENABLED(DURATION_NAN)
+	#include <limits>
+#endif
+
 #include <rb/core/Expected.hpp>
 #include <rb/core/int128.hpp>
 #include <rb/core/Span.hpp>
@@ -468,7 +473,7 @@ constexpr auto Duration::div(Duration rhs) const noexcept
 	    || isZero() && rhs.isZero()
 	    || isInf() && rhs.isInf()) //
 	{
-		return static_cast<T>(0) / static_cast<T>(0);
+		return std::numeric_limits<T>::quiet_NaN();
 	}
 #endif
 
@@ -543,12 +548,13 @@ constexpr Duration hours(T value) noexcept {
 	return impl::fromInt(value, std::ratio<Duration::kSecondsPerHour>{});
 }
 
-inline constexpr Duration Duration::kNanosecond = nanoseconds(1);
-inline constexpr Duration Duration::kMicrosecond = microseconds(1);
-inline constexpr Duration Duration::kMillisecond = milliseconds(1);
-inline constexpr Duration Duration::kSecond = seconds(1);
-inline constexpr Duration Duration::kMinute = minutes(1);
-inline constexpr Duration Duration::kHour = hours(1);
+// FIXME cannot be constexpr due to MSVC
+inline const Duration Duration::kNanosecond = nanoseconds(1);
+inline const Duration Duration::kMicrosecond = microseconds(1);
+inline const Duration Duration::kMillisecond = milliseconds(1);
+inline const Duration Duration::kSecond = seconds(1);
+inline const Duration Duration::kMinute = minutes(1);
+inline const Duration Duration::kHour = hours(1);
 
 inline namespace literals {
 
@@ -588,7 +594,7 @@ inline namespace literals {
 
 struct Unit {
 	Duration duration;
-	core::LiteralString symbol = "";
+	std::string symbol;
 };
 
 template <class T>
