@@ -29,6 +29,7 @@ set(MODULES
     core/traits
     ext
     fmt
+    ranges
     time)
 set(HEADERS)
 set(SOURCES)

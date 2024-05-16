@@ -3,6 +3,7 @@
 #include <rb/core/package.hpp>
 #include <rb/ext/package.hpp>
 #include <rb/fmt/package.hpp>
+#include <rb/ranges/package.hpp>
 #include <rb/sync/package.hpp>
 #include <rb/time/package.hpp>
 

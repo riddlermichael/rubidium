@@ -2,6 +2,7 @@
 
 #include <ostream>
 
+#include <rb/core/assert.hpp>
 #include <rb/core/attributes.hpp>
 #include <rb/core/enable_special_members.hpp>
 #include <rb/core/in_place.hpp>
@@ -326,7 +327,7 @@ namespace impl {
 		// The construct operation has !engaged() as a precondition while destruct has engaged() as a precondition
 		template <class... Args>
 		constexpr void construct(Args&&... args)
-		    RB_NOEXCEPT_LIKE(static_cast<U*>(this) -> payload.construct(RB_FWD(args)...)) {
+		    RB_NOEXCEPT_LIKE(static_cast<U*>(this)->payload.construct(RB_FWD(args)...)) {
 			static_cast<U*>(this)->payload.construct(RB_FWD(args)...);
 		}
 
