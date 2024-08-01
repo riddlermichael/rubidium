@@ -20,10 +20,6 @@ list(APPEND CMAKE_MODULE_PATH "${MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE INTERNAL "CMake module path" FORCE)
 include(utils)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Install prefix" FORCE)
-endif()
-
 # **MUST** be placed before **ANY** `add_subdirectory`
 include(CTest)
 dump(BUILD_TESTING)
