@@ -76,7 +76,9 @@ inline std::ostream& operator<<(std::ostream& os, CompilerInfo::Id id) {
 
 inline std::ostream& operator<<(std::ostream& os, CompilerInfo const& compiler) {
 	os << compiler.id() << ' ';
-	return compiler.desc() ? (os << compiler.desc()) : (os << compiler.version());
+	return compiler.desc()
+	         ? (os << compiler.desc())
+	         : (os << compiler.version());
 }
 
 } // namespace rb::core

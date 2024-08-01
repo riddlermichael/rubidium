@@ -2,15 +2,6 @@
 
 ## `C++`
 
-### `adt`
-
-- [ ] hash table
-- [ ] heap
-- [ ] tree
-  - [ ] AVL tree
-  - [ ] B-tree
-  - [ ] red-black tree
-
 ### `algo`
 
 - [ ] `constexpr` algorithms
@@ -33,6 +24,12 @@
 ### `core`
 
 - [ ] `opCmp`
+- [ ] `reflect`
+  - [ ] enums
+  - [ ] `TypeInfo`
+    - [ ] static
+    - [ ] dynamic
+    - [ ] demangle
 - [ ] `OsError`: introduce mapping from real system error codes
 - [ ] `Error`
   - [ ] immutable string
@@ -53,11 +50,6 @@
   - [ ] look at `<cmath>` for behavior details
 - [ ] `QFlag`
   - [ ] `BitMask` trait
-- [ ] `TypeInfo`
-  - [ ] static
-  - [ ] dynamic
-  - [ ] demangle
-- [ ] enums with reflection
 - [ ] `CompressedPair` for both template args
 - [ ] own string class
 - [ ] allocator-aware library wrappers for dynamic allocation
@@ -93,8 +85,19 @@
   - [ ] use `Variant`
   - [ ] reference support?
 - [ ] SAL annotations
+- [ ] make `countLeadingZeroes` `constexpr` on MSVC
+- [ ] `RB_DEFINE_FLAG`?
 
-### `data`
+### Data structures
+
+- [ ] hash table
+- [ ] heap
+- [ ] tree
+  - [ ] AVL tree
+  - [ ] B-tree
+  - [ ] red-black tree
+
+### Data exchange formats
 
 #### `json`
 

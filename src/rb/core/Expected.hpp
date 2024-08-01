@@ -113,7 +113,15 @@ namespace impl {
 	}
 
 	template <class Template, class U>
-	using ReplaceFirstTypeUnqual = ReplaceFirstType<RemoveCvRef<Template>, U>;
+	struct ReplaceFirstTypeHelper;
+
+	template <template <class, class...> class Template, class T, class... Args, class U>
+	struct ReplaceFirstTypeHelper<Template<T, Args...>, U> {
+		using Type = Template<U, Args...>;
+	};
+
+	template <class Template, class U>
+	using ReplaceFirstTypeUnqual = typename ReplaceFirstTypeHelper<RemoveCvRef<Template>, U>::Type;
 
 	template <
 	    class Exp,
@@ -491,7 +499,7 @@ private:
 };
 
 template <class E>
-class RB_EXPORT Expected<void, E> {
+class RB_EXPORT Expected<void, E> final {
 	static_assert(!isVoid<E>, "Error type must not be void");
 
 	using Impl = Option<E>;
