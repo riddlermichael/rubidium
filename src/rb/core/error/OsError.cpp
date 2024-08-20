@@ -8,7 +8,7 @@
 using namespace rb::core;
 using namespace rb::core::error;
 
-OsError OsError::fromErrno(int error, rb::core::SourceLocation const& location) {
+OsError OsError::fromErrno(int error, SourceLocation const& location) {
 	return OsError{::fromErrno(error), location};
 }
 

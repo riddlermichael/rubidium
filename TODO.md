@@ -105,12 +105,14 @@
 ### `fmt`
 
 - [ ] pretty printing
+  - [ ] [AbslStringify](https://abseil.io/docs/cpp/guides/abslstringify)
 - [ ] debug printing a-la Rust or Python
 - [ ] autodetect container type (tuple-like, random access, associative)
 - [ ] scoped enums
 - [ ] fix `iterables.hpp` (`<<` is very eager)
 - [ ] `charconv` for floating-point
 - [ ] `quoted` for `char const*` (compare with `std::quoted`)
+- [ ] [Abseil strings library](https://abseil.io/docs/cpp/guides/strings)
 
 ### `fs`
 
