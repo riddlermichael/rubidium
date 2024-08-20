@@ -10,9 +10,11 @@ include(CMakeDependentOption)
 
 # regular features
 option(FULL_SOURCE_LOCATION_INFO "Print full source location info" ON)
+option(DURATION_NAN "time::Duration has NaN value" ON)
 
 set(FEATURES
-    FULL_SOURCE_LOCATION_INFO)
+    FULL_SOURCE_LOCATION_INFO
+    DURATION_NAN)
 
 foreach(FEATURE ${FEATURES})
     if(${FEATURE})

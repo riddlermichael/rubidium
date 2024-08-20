@@ -1,8 +1,11 @@
 #pragma once
 
+#include <rb/core/attributes.hpp>
 #include <rb/core/builtins.hpp>
 #include <rb/core/endian.hpp>
+#include <rb/core/requires.hpp>
 #include <rb/core/traits/builtins.hpp>
+#include <rb/core/traits/constructible.hpp>
 #include <rb/core/traits/TypeIdentity.hpp>
 #include <rb/core/traits/Unsigned.hpp>
 
@@ -304,7 +307,8 @@ namespace impl {
 
 /// Returns the number of consecutive 0 bits in the value of x, starting from the most significant bit ("left")
 template <class T>
-RB_ALWAYS_INLINE constexpr EnableIf<isIntegral<T>, unsigned> countLeadingZeroes(T x) noexcept {
+RB_ALWAYS_INLINE constexpr auto countLeadingZeroes(T x) noexcept
+    -> EnableIf<isIntegral<T>, unsigned> {
 	return impl::CountLeadingZeroes<sizeof(T)>::apply(x);
 }
 

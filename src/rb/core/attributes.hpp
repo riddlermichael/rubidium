@@ -78,3 +78,56 @@
 #else
 	#define RB_ALWAYS_INLINE inline
 #endif
+
+#if defined(RB_COMPILER_GCC_LIKE)
+    /**
+     * Calls to functions whose return value is not affected by changes to the observable state of the program
+     * and that have no observable effects on such state other than to return a value may lend themselves to optimizations
+     * such as common subexpression elimination.
+     * Declaring such functions with the `const` attribute allows to avoid emitting some calls
+     * in repeated invocations of the function with the same argument values.
+     *
+     * The `const` attribute prohibits a function from reading objects that affect its return value
+     * between successive invocations.
+     * However, functions declared with the attribute can safely read objects that do not change their return value,
+     * such as non-volatile constants.
+     *
+     * The `const` attribute imposes greater restrictions on a function’s definition than the similar `pure` attribute.
+     * Because a `const` function cannot have any observable side effects it does not make sense for it to return `void`.
+     *
+     * Note that a function that has pointer arguments and examines the data pointed to **must not be** declared `const`
+     * if the pointed-to data might change between successive invocations of the function.
+     * In general, since a function cannot distinguish data that might change from data that cannot,
+     * `const` functions should never take pointer or, in C++, reference arguments.
+     * Likewise, a function that calls a non-const function usually must not be `const` itself.
+     */
+	#define RB_CONST __attribute__((const))
+
+    /**
+     * Calls to functions that have no observable effects on the state of the program other than to return a value
+     * may lend themselves to optimizations such as common subexpression elimination.
+     * Declaring such functions with the `pure` attribute allows to avoid emitting some calls
+     * in repeated invocations of the function with the same argument values.
+     *
+     * The `pure` attribute prohibits a function from modifying the state of the program that is observable
+     * by means other than inspecting the function’s return value.
+     * However, functions declared with the `pure` attribute can safely read any non-volatile objects,
+     * and modify the value of objects in a way that does not affect their return value
+     * or the observable state of the program.
+     *
+     * Some common examples of pure functions are `strlen` or `memcmp`.
+     * Interesting non-`pure` functions are functions with infinite loops or those depending on volatile memory
+     * or other system resource, that may change between consecutive calls
+     * (such as the standard C `feof` function in a multithreading environment).
+     *
+     * The pure attribute imposes similar but looser restrictions on a function’s definition than the `const` attribute:
+     * `pure` allows the function to read any non-volatile memory, even if it changes in between successive invocations
+     * of the function.
+     * Because a `pure` function cannot have any observable side effects it does not make sense for such a function
+     * to return `void`.
+     */
+	#define RB_PURE __attribute__((pure))
+#else
+	#define RB_CONST
+	#define RB_PURE
+#endif
