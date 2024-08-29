@@ -47,6 +47,9 @@ constexpr bool getBit(T x, usize pos) noexcept {
 	    && ((x >> pos) & 1U);
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "Simplify"
+
 template <class From, class To>
 inline constexpr bool isBitCastable = //
     sizeof(From) == sizeof(To)
@@ -56,6 +59,8 @@ inline constexpr bool isBitCastable = //
     && isDefaultConstructible<To>
 #endif
     ;
+
+#pragma clang diagnostic pop
 
 // Test: bitCast<i32>(3.14159265358979F) == 0x40490fdb
 

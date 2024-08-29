@@ -122,7 +122,7 @@ public:
 		return data_[idx];
 	}
 
-	// STL container stuff below
+#pragma region STL
 
 	constexpr Iterator begin() noexcept {
 		return data_;
@@ -163,6 +163,8 @@ public:
 	[[nodiscard]] constexpr bool empty() const noexcept {
 		return size_ == 0;
 	}
+
+#pragma endregion STL
 
 private:
 	// unfortunately, we cannot use syntax `Array<Op::kCopy>(...)` with constructors

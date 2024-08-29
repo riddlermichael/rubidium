@@ -85,7 +85,7 @@ inline namespace literals {
 		return static_cast<usize>(value);
 	}
 
-	// C++'23 floating-point literal suffixes
+	// C++23's floating-point literal suffixes
 
 	constexpr f32 operator""_f32(long double value) noexcept {
 		return static_cast<f32>(value);

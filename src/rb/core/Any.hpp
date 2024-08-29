@@ -14,7 +14,7 @@ public:
 	using Storable = IsCopyConstructible<Decay<T>>;
 
 	template <class T>
-	static inline constexpr bool kStorable = Storable<T>::value;
+	static constexpr bool kStorable = Storable<T>::value;
 
 	using TypeInfo = std::type_info;
 

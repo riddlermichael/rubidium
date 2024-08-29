@@ -63,13 +63,6 @@ IndentRequiresClause: true # 15
 IndentWidth: 4
 IndentWrappedFunctionNames: false
 InsertNewlineAtEOF: true # 16
-IntegerLiteralSeparator: # 16
-  Binary: 4
-  BinaryMinDigits: 6
-  Decimal: 3
-  DecimalMinDigits: 5
-  Hex: 4
-  HexMinDigits: 6
 KeepEmptyLinesAtTheStartOfBlocks: false
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 1

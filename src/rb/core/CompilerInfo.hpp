@@ -31,11 +31,16 @@ public:
 
 	static CompilerInfo const kThis;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "ConstantParameter"
+
 	constexpr CompilerInfo(Id id, Version version, LiteralString desc = nullptr) noexcept
 	    : id_(id)
 	    , version_(version)
 	    , desc_(desc) {
 	}
+
+#pragma clang diagnostic pop
 
 	constexpr Id id() const noexcept {
 		return id_;
