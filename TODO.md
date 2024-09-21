@@ -34,7 +34,7 @@
 - [ ] `Error`
   - [ ] immutable string
   - [ ] ref-counted pointer instead of `std::shared_ptr`
-- [ ] `Optional` like in C++23
+- [ ] `Option` like in C++23
   - [ ] `Option<T&&>`?
 - [ ] `Variant`
 - [ ] type of container (random-access, associative, tuple-like)
