@@ -7,7 +7,7 @@
 #include <rb/core/export.hpp>
 #include <rb/core/features.hpp>
 #include <rb/core/keywords.hpp>
-#include <rb/core/strings.hpp>
+#include <rb/core/types.hpp>
 
 namespace rb::core {
 
@@ -15,9 +15,9 @@ class RB_EXPORT SourceLocation final {
 public:
 	// intentionally `constexpr` for using in `constexpr` context
 	static constexpr SourceLocation here(
-	    LiteralString file = RB_BUILTIN_FILE,
+	    czstring file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    LiteralString func = RB_BUILTIN_FUNCTION,
+	    czstring func = RB_BUILTIN_FUNCTION,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		SourceLocation location;
 		location.file_ = file != nullptr ? file : "";
@@ -28,9 +28,9 @@ public:
 	}
 
 	static RB_CONSTEVAL SourceLocation current(
-	    LiteralString file = RB_BUILTIN_FILE,
+	    czstring file = RB_BUILTIN_FILE,
 	    unsigned line = RB_BUILTIN_LINE,
-	    LiteralString func = RB_BUILTIN_FUNCTION,
+	    czstring func = RB_BUILTIN_FUNCTION,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		return here(file, line, func, column);
 	}
@@ -50,7 +50,7 @@ public:
 		return !(*this == rhs);
 	}
 
-	constexpr LiteralString file() const noexcept {
+	constexpr czstring file() const noexcept {
 		return file_;
 	}
 
@@ -58,7 +58,7 @@ public:
 		return line_;
 	}
 
-	constexpr LiteralString func() const noexcept {
+	constexpr czstring func() const noexcept {
 		return func_;
 	}
 
@@ -67,8 +67,8 @@ public:
 	}
 
 private:
-	LiteralString file_ = "";
-	LiteralString func_ = ""; // unnatural order here due to alignment
+	czstring file_ = "";
+	czstring func_ = ""; // unnatural order here due to alignment
 	unsigned line_ = 0;
 	unsigned column_ = 0;
 };

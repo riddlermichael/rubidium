@@ -16,7 +16,7 @@ public:
 
 [[maybe_unused]] inline TerminateHandlerSetter const terminateHandlerSetter;
 
-[[noreturn]] RB_EXPORT void throwAssert(LiteralString msg, RB_SOURCE_LOCATION_DECL);
+[[noreturn]] RB_EXPORT void throwAssert(czstring msg, RB_SOURCE_LOCATION_DECL);
 
 } // namespace rb::core
 

@@ -9,12 +9,12 @@ namespace rb::core {
 inline namespace error {
 
 	class RB_EXPORT RangeError final : public Error {
-		static constexpr LiteralString kDefaultMessage = "Out of range";
+		static constexpr czstring kDefaultMessage = "Out of range";
 
 	public:
 		// TODO
 		template <class T>
-		static LiteralString makeMessage(T const& value, TypeIdentity<T> const& begin, TypeIdentity<T> const& end,
+		static czstring makeMessage(T const& value, TypeIdentity<T> const& begin, TypeIdentity<T> const& end,
 		    bool excludeEnd = true) {
 			RB_UNUSED(value);
 			RB_UNUSED(begin);
@@ -23,7 +23,7 @@ inline namespace error {
 			return kDefaultMessage;
 		}
 
-		explicit RangeError(LiteralString message = kDefaultMessage, RB_SOURCE_LOCATION_DECL) noexcept
+		explicit RangeError(czstring message = kDefaultMessage, RB_SOURCE_LOCATION_DECL) noexcept
 		    : Error(message, location) {
 		}
 

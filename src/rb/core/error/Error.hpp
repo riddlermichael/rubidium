@@ -13,7 +13,7 @@ inline namespace error {
 		explicit Error(RB_SOURCE_LOCATION_DECL) noexcept;
 
 		/// Construct Error with @p msg and @p location.
-		explicit Error(LiteralString msg, RB_SOURCE_LOCATION_DECL) noexcept;
+		explicit Error(czstring msg, RB_SOURCE_LOCATION_DECL) noexcept;
 
 		Error(Error const&) noexcept = default;
 		Error(Error&&) noexcept = default;
@@ -28,14 +28,14 @@ inline namespace error {
 
 		/// Initializes the description of this error to the specified value.
 		/// @return @c *this.
-		Error& withMessage(LiteralString msg) & noexcept;
+		Error& withMessage(czstring msg) & noexcept;
 
 		/// Initializes the description of this error to the specified value.
 		/// @return @c *this.
-		Error&& withMessage(LiteralString msg) && noexcept;
+		Error&& withMessage(czstring msg) && noexcept;
 
 		/// @return string description of @c this.
-		LiteralString message() const noexcept;
+		czstring message() const noexcept;
 
 		/// @return location of @c this in source code.
 		SourceLocation const& location() const noexcept;
@@ -52,7 +52,7 @@ inline namespace error {
 	private:
 		friend std::ostream& operator<<(std::ostream& os, Error const& error);
 
-		LiteralString msg_ = nullptr;
+		czstring msg_ = nullptr;
 		SourceLocation loc_;
 	};
 

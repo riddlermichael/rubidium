@@ -29,7 +29,7 @@ TerminateHandlerSetter::TerminateHandlerSetter() noexcept {
 	std::set_terminate(terminateHandler);
 }
 
-void throwAssert(LiteralString msg, SourceLocation const& location) {
+void throwAssert(czstring msg, SourceLocation const& location) {
 	throw AssertError(msg, location);
 }
 

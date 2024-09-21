@@ -9,7 +9,7 @@ Error::Error(SourceLocation const& location) noexcept
     : loc_(location) {
 }
 
-Error::Error(LiteralString msg, SourceLocation const& location) noexcept
+Error::Error(czstring msg, SourceLocation const& location) noexcept
     : msg_(msg)
     , loc_(location) {
 }
@@ -19,17 +19,17 @@ Error& Error::withLocation(SourceLocation const& location) noexcept {
 	return *this;
 }
 
-Error& Error::withMessage(LiteralString msg) & noexcept {
+Error& Error::withMessage(czstring msg) & noexcept {
 	msg_ = msg;
 	return *this;
 }
 
-Error&& Error::withMessage(LiteralString msg) && noexcept {
+Error&& Error::withMessage(czstring msg) && noexcept {
 	msg_ = msg;
 	return RB_MOVE(*this);
 }
 
-LiteralString Error::message() const noexcept {
+czstring Error::message() const noexcept {
 	return msg_;
 }
 

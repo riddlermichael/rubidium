@@ -8,7 +8,7 @@
 
 namespace rb::core {
 
-LiteralString toString(ErrorCode errorCode) noexcept {
+czstring toString(ErrorCode errorCode) noexcept {
 	// EOPNOTSUPP and ENOTSUP may be identical
 	if (errorCode == ErrorCode::kNotSupported) {
 		return "Operation not supported";

@@ -2,7 +2,7 @@
 
 #include <cerrno>
 
-#include <rb/core/strings.hpp>
+#include <rb/core/types.hpp>
 
 namespace rb::core {
 
@@ -93,7 +93,7 @@ enum class ErrorCode {
  * The contents of the string are *locale-independent*.
  * @return pointer to a null-terminated string corresponding to the @p errorCode
  */
-LiteralString toString(ErrorCode errorCode) noexcept;
+czstring toString(ErrorCode errorCode) noexcept;
 
 /// @return error code converted from OS' ("raw") error @p rawCode.
 ErrorCode fromRawError(unsigned rawCode) noexcept;

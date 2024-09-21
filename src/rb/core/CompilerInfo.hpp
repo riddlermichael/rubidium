@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rb/core/compiler.hpp>
-#include <rb/core/strings.hpp>
 #include <rb/core/Version.hpp>
 
 namespace rb::core {
@@ -34,7 +33,7 @@ public:
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "ConstantParameter"
 
-	constexpr CompilerInfo(Id id, Version version, LiteralString desc = nullptr) noexcept
+	constexpr CompilerInfo(Id id, Version version, czstring desc = nullptr) noexcept
 	    : id_(id)
 	    , version_(version)
 	    , desc_(desc) {
@@ -50,14 +49,14 @@ public:
 		return version_;
 	}
 
-	constexpr LiteralString desc() const noexcept {
+	constexpr czstring desc() const noexcept {
 		return desc_;
 	}
 
 private:
 	Id id_;
 	Version version_;
-	LiteralString desc_;
+	czstring desc_;
 };
 
 constexpr CompilerInfo CompilerInfo::kThis{CompilerInfo::Id::kThisId, CompilerInfo::kThisVersion

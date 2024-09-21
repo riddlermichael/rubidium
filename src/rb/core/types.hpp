@@ -22,6 +22,13 @@ static_assert(sizeof(f32) == 4);
 using f64 = double;
 static_assert(sizeof(f64) == 8);
 
+namespace rb::core {
+
+using czstring = char const*;
+using zstring = char*;
+
+} // namespace core
+
 // NOLINTEND(readability-identifier-naming)
 
 namespace rb::core {

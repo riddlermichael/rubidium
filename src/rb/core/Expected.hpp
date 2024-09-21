@@ -332,22 +332,22 @@ public:
 		return impl_.index() == 1;
 	}
 
-	constexpr T const& expect(LiteralString msg) const& noexcept {
+	constexpr T const& expect(czstring msg) const& noexcept {
 		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
 		return value();
 	}
 
-	constexpr T& expect(LiteralString msg) & noexcept {
+	constexpr T& expect(czstring msg) & noexcept {
 		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
 		return value();
 	}
 
-	constexpr T&& expect(LiteralString msg) && noexcept {
+	constexpr T&& expect(czstring msg) && noexcept {
 		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
 		return RB_MOVE(value());
 	}
 
-	constexpr T const&& expect(LiteralString msg) const&& noexcept {
+	constexpr T const&& expect(czstring msg) const&& noexcept {
 		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
 		return RB_MOVE(value());
 	}
