@@ -1,9 +1,12 @@
+.cache
 .idea
 .vs
+.vscode
 build*
 cmake-build*
 doc/html
 install*
+
 CMakeLists.txt.user
 
 # Prerequisites
