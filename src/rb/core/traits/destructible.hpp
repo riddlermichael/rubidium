@@ -32,8 +32,8 @@ namespace impl {
 	struct IsNothrowDestructibleImpl<T&&> : True {};
 
 	template <class T>
-	struct IsNothrowDestructibleImpl<T, Void<decltype(declval<T&>().~T())>>
-	    : Bool<noexcept(declval<T&>().~T())> {};
+	struct IsNothrowDestructibleImpl<T, Void<decltype(declval<T>().~T())>>
+	    : Bool<noexcept(declval<T>().~T())> {};
 
 	template <class T>
 	constexpr bool hasVirtualDestructorImpl() noexcept {
