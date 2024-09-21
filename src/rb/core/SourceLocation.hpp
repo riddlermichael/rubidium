@@ -78,8 +78,11 @@ inline std::ostream& operator<<(std::ostream& os, SourceLocation loc) {
 #if RB_ENABLED(FULL_SOURCE_LOCATION_INFO)
 	#if RB_HAS(BUILTIN_COLUMN) // NOLINT(*-redundant-preprocessor)
 	os << ":" << loc.column();
-	#endif
-	os << " (" << loc.func() << ")";
+    #endif
+	czstring func = loc.func();
+	if (func && func[0]) {
+		os << " (" << func << ")";
+	}
 #endif
 	return os;
 }

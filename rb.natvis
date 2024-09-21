@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="rb::core::Array&lt;*&gt;">
+        <DisplayString>{{ size={size_} }}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>size_</Size>
+                <ValuePointer>data_</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <Type Name="rb::core::CompilerInfo">
+        <DisplayString Condition="id_ == kClang">Clang {desc_}</DisplayString>
+        <DisplayString Condition="id_ == kGcc">GCC {desc_}</DisplayString>
+        <DisplayString Condition="id_ == kMingw">MinGW {desc_}</DisplayString>
+        <DisplayString Condition="id_ == kMsvc">MSVC {version_}</DisplayString>
+        <DisplayString>C++ compiler</DisplayString>
+    </Type>
+
+    <Type Name="rb::core::NoneOption">
+        <DisplayString>kNone</DisplayString>
+    </Type>
+
+    <Type Name="rb::core::Option&lt;*&gt;">
+        <Intrinsic Name="HasValue" Expression="payload.engaged_" />
+        <DisplayString Condition="HasValue()">{payload.payload.value}</DisplayString>
+        <DisplayString Condition="!HasValue()">kNone</DisplayString>
+        <Expand>
+            <Item Condition="HasValue()" Name="value">payload.payload.value</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="rb::core::SourceLocation">
+        <DisplayString>{file_,sb}:{line_}</DisplayString>
+    </Type>
+
+    <Type Name="rb::core::Version">
+        <DisplayString>{major_}.{minor_}.{patch_}</DisplayString>
+    </Type>
+</AutoVisualizer>
