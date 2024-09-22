@@ -34,6 +34,7 @@
 - [ ] `Error`
   - [ ] immutable string
   - [ ] ref-counted pointer instead of `std::shared_ptr`
+  - [ ] `cause`
 - [ ] `Option` like in C++23
   - [ ] `Option<T&&>`?
 - [ ] `Variant`

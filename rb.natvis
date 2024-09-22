@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="rb::core::error::Error">
+        <DisplayString>{msg_}</DisplayString>
+        <Expand>
+            <Item Name="message">msg_</Item>
+            <Item Name="location">loc_</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="rb::core::memory::OwnerPtr&lt;*&gt;">
+        <SmartPointer Usage="Minimal">ptr_</SmartPointer>
+        <DisplayString Condition="ptr_ == 0">null</DisplayString>
+        <DisplayString>OwnerPtr{{{*ptr_}}}</DisplayString>
+        <Expand>
+            <Item Name="[ptr]" Condition="ptr_ != 0">ptr_</Item>
+            <Item Name="[deleter]" Condition="d_ != 0">d_</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="rb::core::memory::UniquePtr&lt;*,*&gt;">
+        <SmartPointer Usage="Minimal">storage_.first_</SmartPointer>
+        <DisplayString Condition="storage_.first_ == 0">null</DisplayString>
+        <DisplayString>UniquePtr{{{*storage_.first_}}}</DisplayString>
+        <Expand>
+            <Item Name="[ptr]" Condition="storage_.first_ != 0">storage_.first_</Item>
+            <Item Name="[deleter]" Condition="storage_.first_ != 0 &amp;&amp; sizeof(*this)!=sizeof($T1*)">
+                *($T2*) &amp;storage_
+            </Item>
+        </Expand>
+    </Type>
+
     <Type Name="rb::core::Array&lt;*&gt;">
         <DisplayString>{{ size={size_} }}</DisplayString>
         <Expand>
@@ -23,16 +53,36 @@
     </Type>
 
     <Type Name="rb::core::Option&lt;*&gt;">
-        <Intrinsic Name="HasValue" Expression="payload.engaged_" />
-        <DisplayString Condition="HasValue()">{payload.payload.value}</DisplayString>
-        <DisplayString Condition="!HasValue()">kNone</DisplayString>
+        <Intrinsic Name="hasValue" Expression="payload.engaged_"/>
+        <DisplayString Condition="hasValue()">{payload.payload.value}</DisplayString>
+        <DisplayString Condition="!hasValue()">kNone</DisplayString>
         <Expand>
-            <Item Condition="HasValue()" Name="value">payload.payload.value</Item>
+            <Item Condition="hasValue()" Name="value">payload.payload.value</Item>
         </Expand>
     </Type>
 
     <Type Name="rb::core::SourceLocation">
         <DisplayString>{file_,sb}:{line_}</DisplayString>
+    </Type>
+
+    <Type Name="rb::core::Span&lt;*,-1&gt;">
+        <DisplayString>{{ dynamic,size={size_} }}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>size_</Size>
+                <ValuePointer>data_</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <Type Name="rb::core::Span&lt;*,*&gt;">
+        <DisplayString>{{ static,size={$T2} }}</DisplayString>
+        <Expand>
+            <ArrayItems>
+                <Size>$T2</Size>
+                <ValuePointer>data_</ValuePointer>
+            </ArrayItems>
+        </Expand>
     </Type>
 
     <Type Name="rb::core::Version">
