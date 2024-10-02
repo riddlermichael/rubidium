@@ -9,7 +9,7 @@
 #include <rb/core/traits/TypeIdentity.hpp>
 #include <rb/core/traits/Unsigned.hpp>
 
-#if defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201'806L
+#if defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 	#define RB_HAS_STD_BIT_CAST 1
 	#include <bit>
 #elif RB_HAS_BUILTIN(__builtin_bit_cast)             \
@@ -43,8 +43,7 @@ constexpr void setBit(T& x, usize pos, bool value = true) noexcept {
 
 template <class T>
 constexpr bool getBit(T x, usize pos) noexcept {
-	return (pos < 8 * sizeof(T))
-	    && ((x >> pos) & 1U);
+	return (pos < 8 * sizeof(T)) && ((x >> pos) & 1U);
 }
 
 #pragma clang diagnostic push
@@ -55,7 +54,7 @@ inline constexpr bool isBitCastable = //
     sizeof(From) == sizeof(To)
     && isTriviallyCopyable<From>
     && isTriviallyCopyable<To>
-#if !RB_HAS_BUILTIN(__builtin_bit_cast) // NOLINT(*-avoid-unconditional-preprocessor-if)
+#if !RB_HAS_BUILTIN_BIT_CAST // NOLINT(*-avoid-unconditional-preprocessor-if)
     && isDefaultConstructible<To>
 #endif
     ;
@@ -77,7 +76,7 @@ constexpr auto bitCast(From const& from) noexcept
 #else
 	static_assert(isTriviallyConstructible<To>, "Destination type must be trivially constructible");
 	To to;
-	std::memcpy(addressOf(to), addressOf(from), sizeof(To));
+	std::memcpy(addres sOf(to), addressOf(from), sizeof(To));
 	return to;
 #endif
 }

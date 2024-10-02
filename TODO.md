@@ -221,6 +221,7 @@
 
 ### `time`
 
+- [ ] use `absl::Duration`; move `i128` representation to `LongDuration`
 - [ ] conversions in `Duration`
 - [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
 - [ ] `HighResolutionClock`

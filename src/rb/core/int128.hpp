@@ -230,9 +230,9 @@ public:
 	template <bool _ = true, RB_REQUIRES(_&& kUnsigned)>
 	constexpr Int128 operator*(Int128 rhs) const noexcept {
 		auto const a32 = lo_ >> 32;
-		auto const a00 = lo_ & 0xffff'ffff;
+		auto const a00 = lo_ & 0xffffffff;
 		auto const b32 = rhs.lo_ >> 32;
-		auto const b00 = rhs.lo_ & 0xffff'ffff;
+		auto const b00 = rhs.lo_ & 0xffffffff;
 		Int128 result{hi_ * rhs.lo_ + lo_ * rhs.hi_ + a32 * b32, a00 * b00};
 		result += Int128{a32 * b00} << 32;
 		result += Int128{a00 * b32} << 32;
@@ -346,7 +346,7 @@ public:
 				break;
 
 			case std::ios::oct:
-				div = 01000000000000000000000; // 8^21
+				div = 010'0000'0000'0000'0000'0000; // 8^21
 				divBaseLog = 21;
 				break;
 
@@ -355,7 +355,7 @@ public:
 		}
 
 		// Now piece together the uint128 representation from three chunks of the original value,
-		// each less than "div" and therefore representable as an u64
+		// each less than "div" and therefore representable as u64
 		std::ostringstream os;
 		auto const copyMask = std::ios::basefield | std::ios::showbase | std::ios::uppercase;
 		os.setf(flags & copyMask, copyMask);
