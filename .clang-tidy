@@ -1,6 +1,7 @@
 Checks: >
   bugprone-*,
   cert-*,
+  clang-analyzer-*,
   concurrency-*,
   cppcoreguidelines-*,
   google-*,
@@ -27,7 +28,6 @@ Checks: >
   -cppcoreguidelines-special-member-functions,
   -google-build-using-namespace,
   -google-runtime-int,
-  -hicpp-exception-baseclass,
   -modernize-avoid-c-arrays,
   -modernize-use-nodiscard,
   -modernize-use-trailing-return-type,
