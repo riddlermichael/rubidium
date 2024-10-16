@@ -12,11 +12,12 @@ namespace impl {
 	using TupleElementDetector = std::tuple_element_t<usize{0}, T>;
 
 	template <class T>
-	using TupleSizeDetector = decltype(std::tuple_size<T>::value);
+	using TupleSizeDetector = decltype(std::tuple_size_v<T>);
 
 	template <class T>
 	using ClassSpecificGetDetector = decltype(RB_DECLVAL(T).template get<usize{0}>());
 
+	// ReSharper disable once CppFunctionIsNotImplemented
 	template <usize>
 	void get();
 
@@ -43,7 +44,7 @@ namespace impl {
 
 	template <class T>
 	struct IsTupleLike<T, Void<TupleSizeDetector<T>>> {
-		using Type = typename IsTupleLikeImpl<T, std::tuple_size<T>::value == 0>::Type;
+		using Type = typename IsTupleLikeImpl<T, std::tuple_size_v<T> == 0>::Type;
 	};
 
 } // namespace impl

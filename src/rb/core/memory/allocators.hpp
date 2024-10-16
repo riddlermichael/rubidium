@@ -54,11 +54,12 @@ template <class T,
 struct ArrayAllocator final {
 	using Value = T;
 	using Size = usize;
-	using Sifference = isize;
+	using Difference = isize;
 
 	constexpr ArrayAllocator() noexcept = default;
 	constexpr ArrayAllocator(ArrayAllocator const&) noexcept = default;
 
+	// ReSharper disable once CppNonExplicitConvertingConstructor
 	template <class U, bool _>
 	constexpr ArrayAllocator(ArrayAllocator<U, _> const& /*rhs*/) noexcept { // NOLINT(google-explicit-constructor)
 	}

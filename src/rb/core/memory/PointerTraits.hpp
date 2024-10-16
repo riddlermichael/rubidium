@@ -10,8 +10,7 @@ namespace impl {
 	template <class T>
 	using FirstArgOf = typename TypeArgsOf<T>::template Front<>;
 
-	template <class T>
-	using DifferenceDetector = typename T::Difference;
+	RB_TYPE_DETECTOR(Difference)
 
 	template <class Template, class To>
 	struct ReplaceFirst;

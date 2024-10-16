@@ -16,7 +16,6 @@ namespace impl {
 	RB_TYPE_DETECTOR(ConstPointer)
 	RB_TYPE_DETECTOR(VoidPointer)
 	RB_TYPE_DETECTOR(ConstVoidPointer)
-	RB_TYPE_DETECTOR(Difference)
 	RB_TYPE_DETECTOR(Size)
 	RB_TYPE_DETECTOR(IsAlwaysEqual)
 	RB_METHOD_DETECTOR_NAME(allocate, AllocateMethod)
@@ -104,7 +103,7 @@ inline namespace memory {
 			if constexpr (impl::HasConstructMethod<Alloc, T*, Args...>::value) {
 				a.construct(ptr, RB_FWD(args)...);
 			} else {
-				::rb::core::construct(ptr, RB_FWD(args)...);
+				core::construct(ptr, RB_FWD(args)...);
 			}
 		}
 
@@ -121,7 +120,7 @@ inline namespace memory {
 			if constexpr (impl::HasDestroyMethod<Alloc, T*>::value) {
 				return a.destroy(ptr);
 			} else {
-				return ::rb::core::destroy(ptr);
+				return core::destroy(ptr);
 			}
 		}
 
