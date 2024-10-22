@@ -6,13 +6,13 @@ inline namespace iter {
 
 	struct InputIteratorTag {};
 
-	struct ForwardIteratorTag : public InputIteratorTag {};
+	struct ForwardIteratorTag : InputIteratorTag {};
 
-	struct BidirectionalIteratorTag : public ForwardIteratorTag {};
+	struct BidirectionalIteratorTag : ForwardIteratorTag {};
 
-	struct RandomAccessIteratorTag : public BidirectionalIteratorTag {};
+	struct RandomAccessIteratorTag : BidirectionalIteratorTag {};
 
-	struct ContiguousIteratorTag : public RandomAccessIteratorTag {};
+	struct ContiguousIteratorTag : RandomAccessIteratorTag {};
 
 } // namespace iter
 

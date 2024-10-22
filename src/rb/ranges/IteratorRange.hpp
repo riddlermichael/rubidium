@@ -13,10 +13,11 @@ namespace impl {
 	class IteratorRange<It, End, std::input_iterator_tag> {
 	public:
 		constexpr IteratorRange() //
-		    noexcept(core::isNothrowDefaultConstructible<It>&& core::isNothrowDefaultConstructible<End>) = default;
+		    noexcept(core::isNothrowDefaultConstructible<It> && core::isNothrowDefaultConstructible<End>)
+		    = default;
 
 		constexpr IteratorRange(It begin, End end) //
-		    noexcept(core::isNothrowMoveConstructible<It>&& core::isNothrowMoveConstructible<End>)
+		    noexcept(core::isNothrowMoveConstructible<It> && core::isNothrowMoveConstructible<End>)
 		    : begin_(RB_MOVE(begin))
 		    , end_(RB_MOVE(end)) {
 		}
@@ -120,10 +121,11 @@ namespace impl {
 	class IteratorRange<It, End, std::output_iterator_tag> {
 	public:
 		constexpr IteratorRange() //
-		    noexcept(core::isNothrowDefaultConstructible<It>&& core::isNothrowDefaultConstructible<End>) = default;
+		    noexcept(core::isNothrowDefaultConstructible<It> && core::isNothrowDefaultConstructible<End>)
+		    = default;
 
 		constexpr IteratorRange(It begin, End end) //
-		    noexcept(core::isNothrowMoveConstructible<It>&& core::isNothrowMoveConstructible<End>)
+		    noexcept(core::isNothrowMoveConstructible<It> && core::isNothrowMoveConstructible<End>)
 		    : begin_(RB_MOVE(begin))
 		    , end_(RB_MOVE(end)) {
 		}
@@ -161,8 +163,7 @@ namespace impl {
 
 template <class It, class End = It>
 struct IteratorRange final
-    : public impl::IteratorRange<It, End, typename std::iterator_traits<It>::iterator_category> {
-public:
+    : impl::IteratorRange<It, End, typename std::iterator_traits<It>::iterator_category> {
 	using Super = impl::IteratorRange<It, End, typename std::iterator_traits<It>::iterator_category>;
 	using Self = IteratorRange;
 
@@ -176,7 +177,9 @@ IteratorRange(It, End) -> IteratorRange<It, End>;
 // impl inside IteratorRange would require CRTP, which is superfluous
 template <class It, class End,
     RB_REQUIRES(!core::isSame<typename std::iterator_traits<It>::iterator_category, std::input_iterator_tag>)>
-constexpr auto save(IteratorRange<It, End> const& r) noexcept(core::isNothrowCopyConstructible<IteratorRange<It, End>>) {
+constexpr auto save(IteratorRange<It, End> const& r)
+    noexcept(core::isNothrowCopyConstructible<IteratorRange<It, End>>) //
+{
 	return r;
 }
 
@@ -189,7 +192,9 @@ constexpr auto range(C& c) RB_NOEXCEPT_LIKE(IteratorRange{core::begin(c), core::
 
 template <class It, class End = It,
     RB_REQUIRES_T(core::IsIteratorType<It>)>
-constexpr auto range(It&& it, End&& end) RB_NOEXCEPT_LIKE(IteratorRange{RB_FWD(it), RB_FWD(end)}) {
+constexpr auto range(It&& it, End&& end)
+    RB_NOEXCEPT_LIKE(IteratorRange{RB_FWD(it), RB_FWD(end)}) //
+{
 	return IteratorRange{RB_FWD(it), RB_FWD(end)};
 }
 

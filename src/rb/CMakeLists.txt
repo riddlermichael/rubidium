@@ -19,6 +19,7 @@ include(features)
 
 # collect sources
 set(MODULES
+    containers
     core
     core/error
     core/iter

@@ -78,4 +78,10 @@ constexpr void popBack(R&& r) RB_NOEXCEPT_LIKE(RB_FWD(r).popBack()) {
 	RB_FWD(r).popBack();
 }
 
+struct FromRange {
+	constexpr explicit FromRange() = default;
+};
+
+inline constexpr FromRange kFromRange;
+
 } // namespace rb::ranges

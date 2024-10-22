@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rb/core/processor.hpp>
+#include <rb/core/types.hpp>
 
 // NOLINTBEGIN(*-macro-to-enum)
 

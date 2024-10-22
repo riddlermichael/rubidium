@@ -17,6 +17,7 @@ project(rb-tests LANGUAGES CXX)
 
 # collect tests
 set(MODULES_WITH_TESTS
+    containers
     core)
 set(SOURCES)
 foreach(X ${MODULES_WITH_TESTS})

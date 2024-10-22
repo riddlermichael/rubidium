@@ -2,8 +2,8 @@
 
 #include <rb/core/iter/tags.hpp>
 #include <rb/core/requires.hpp>
+#include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/IsObject.hpp>
-#include <rb/core/traits/Void.hpp>
 #include <rb/core/types.hpp>
 
 namespace rb::core {
@@ -71,13 +71,23 @@ inline namespace iter {
 } // namespace iter
 
 namespace impl {
+
 	template <class T>
 	using ValueTypeDetector = typename IteratorTraits<T>::Value;
+
+	template <class T>
+	using CategoryDetector = typename IteratorTraits<T>::Category;
+
 } // namespace impl
 
 inline namespace iter {
+
 	template <class T>
 	using IsIteratorType = IsDetected<impl::ValueTypeDetector, T>;
+
+	template <class T>
+	using IsInputIterator = IsDetectedConvertible<InputIteratorTag, impl::CategoryDetector, T>;
+
 } // namespace iter
 
 } // namespace rb::core

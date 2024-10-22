@@ -15,6 +15,7 @@ Checks: >
   readability-*,
   -bugprone-easily-swappable-parameters,
   -cert-dcl21-cpp,
+  -cert-err33-c,
   -cppcoreguidelines-avoid-c-arrays,
   -cppcoreguidelines-avoid-const-or-ref-data-members,
   -cppcoreguidelines-avoid-magic-numbers,

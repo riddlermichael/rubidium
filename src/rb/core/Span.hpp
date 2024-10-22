@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rb/core/attributes.hpp>
 #include <rb/core/byte.hpp>
 #include <rb/core/slices/ContiguousView.hpp>
 #include <rb/fmt/pprint.hpp>
