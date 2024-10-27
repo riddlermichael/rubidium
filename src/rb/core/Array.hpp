@@ -1,7 +1,8 @@
 #pragma once
 
+#include <rb/core/error/RangeError.hpp>
 #include <rb/core/memory/allocators.hpp>
-#include <rb/core/memory/destroy.hpp>
+#include <rb/core/memory/AllocatorTraits.hpp>
 #include <rb/core/Span.hpp>
 
 namespace rb::core {

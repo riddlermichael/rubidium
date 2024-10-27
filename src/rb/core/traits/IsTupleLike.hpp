@@ -11,8 +11,9 @@ namespace impl {
 	template <class T>
 	using TupleElementDetector = std::tuple_element_t<usize{0}, T>;
 
+	// ReSharper disable once CppUseTypeTraitAlias
 	template <class T>
-	using TupleSizeDetector = decltype(std::tuple_size_v<T>);
+	using TupleSizeDetector = decltype(std::tuple_size<T>::value);
 
 	template <class T>
 	using ClassSpecificGetDetector = decltype(RB_DECLVAL(T).template get<usize{0}>());

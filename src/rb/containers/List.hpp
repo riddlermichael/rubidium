@@ -222,7 +222,7 @@ public:
 	/// Constructs the container with the contents of the range @p r.
 	template <class R,
 	    RB_REQUIRES_T(ranges::IsInputRangeNonStrict<R>)>
-	explicit List(ranges::FromRange /*fromRange*/, R&& range) {
+	List(ranges::FromRange /*fromRange*/, R&& range) {
 		for (auto&& r = RB_FWD(range); !ranges::empty(r); ranges::popFront(r)) {
 			pushBack(ranges::front(r));
 		}

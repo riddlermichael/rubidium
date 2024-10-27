@@ -88,6 +88,9 @@ inline namespace iter {
 	template <class T>
 	using IsInputIterator = IsDetectedConvertible<InputIteratorTag, impl::CategoryDetector, T>;
 
+	template <class T>
+	using IsForwardIterator = IsDetectedConvertible<ForwardIteratorTag, impl::CategoryDetector, T>;
+
 } // namespace iter
 
 } // namespace rb::core
