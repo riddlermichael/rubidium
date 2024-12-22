@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <rb/containers/package.hpp>
 #include <rb/core/package.hpp>
 #include <rb/ext/package.hpp>
 #include <rb/fmt/package.hpp>
