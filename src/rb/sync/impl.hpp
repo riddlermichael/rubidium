@@ -12,7 +12,7 @@
 #endif
 
 /// Check expression as an errno value.
-#define RB_SYNC_CHECK(expr)                \
+#define RB_SYNC_CHECK_ERRNO(expr)          \
 	do {                                   \
 		int const _err = expr;             \
 		if (_err) {                        \

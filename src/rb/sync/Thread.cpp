@@ -42,48 +42,13 @@ struct AttributeGuard {
 
 	explicit AttributeGuard(pthread_attr_t& attr)
 	    : attr(attr) {
-		RB_SYNC_CHECK(pthread_attr_init(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_attr_init(&attr));
 	}
 
 	~AttributeGuard() noexcept(false) {
-		RB_SYNC_CHECK(pthread_attr_destroy(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_attr_destroy(&attr));
 	}
 };
-
-bool getRawPriority(Thread::Priority priority, int& policy, int& rawPriority) {
-	#ifdef SCHED_IDLE
-	if (priority == Thread::Priority::kIdle) {
-		policy = SCHED_IDLE;
-		rawPriority = 0;
-		return true;
-	}
-
-	constexpr int lowestPriority = static_cast<int>(Thread::Priority::kLowest);
-	#else
-	constexpr int lowestPriority = static_cast<int>(Thread::Priority::kIdle);
-	#endif
-
-	constexpr int highestPriority = static_cast<int>(Thread::Priority::kTimeCritical);
-
-	int const priorityMin = sched_get_priority_min(policy);
-	int const priorityMax = sched_get_priority_max(policy);
-	if (priorityMin == -1 || priorityMax == -1) {
-		return false;
-	}
-
-	if (priorityMin == priorityMax) {
-		rawPriority = priorityMin;
-		return true;
-	}
-
-	double const scaledPriority = //
-	    priorityMin
-	    + (static_cast<int>(priority) - lowestPriority) * (priorityMax - priorityMin)
-	          / static_cast<double>(highestPriority - lowestPriority);
-
-	rawPriority = static_cast<int>(scaledPriority + 0.5); // NOLINT(*-incorrect-roundings)
-	return true;
-}
 
 template <class T>
 constexpr auto toUsize(T value) noexcept

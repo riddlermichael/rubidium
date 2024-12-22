@@ -12,11 +12,11 @@ struct Barrier::Impl {
 
 Barrier::Barrier(unsigned count)
     : pImpl_(core::makeUnique<Impl>()) {
-	RB_SYNC_CHECK(pthread_barrier_init(RB_SYNC_IMPL, nullptr, count));
+	RB_SYNC_CHECK_ERRNO(pthread_barrier_init(RB_SYNC_IMPL, nullptr, count));
 }
 
 Barrier::~Barrier() noexcept(false) {
-	RB_SYNC_CHECK(pthread_barrier_destroy(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_barrier_destroy(RB_SYNC_IMPL));
 }
 
 void Barrier::wait() noexcept(false) {

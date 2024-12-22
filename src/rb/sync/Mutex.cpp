@@ -17,11 +17,11 @@ struct AttributeGuard {
 
 	explicit AttributeGuard(pthread_mutexattr_t& attr)
 	    : attr(attr) {
-		RB_SYNC_CHECK(pthread_mutexattr_init(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_mutexattr_init(&attr));
 	}
 
 	~AttributeGuard() noexcept(false) {
-		RB_SYNC_CHECK(pthread_mutexattr_destroy(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_mutexattr_destroy(&attr));
 	}
 };
 
@@ -31,19 +31,19 @@ Mutex::Mutex()
     : pImpl_(core::makeUnique<Impl>()) {
 	pthread_mutexattr_t attr{};
 	AttributeGuard _(attr);
-	RB_SYNC_CHECK(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
+	RB_SYNC_CHECK_ERRNO(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK));
 	#if !defined(RB_COMPILER_MINGW) && !defined(RB_OS_CYGWIN)
-	RB_SYNC_CHECK(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
+	RB_SYNC_CHECK_ERRNO(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
-	RB_SYNC_CHECK(pthread_mutex_init(RB_SYNC_IMPL, &attr));
+	RB_SYNC_CHECK_ERRNO(pthread_mutex_init(RB_SYNC_IMPL, &attr));
 }
 
 Mutex::~Mutex() noexcept(false) {
-	RB_SYNC_CHECK(pthread_mutex_destroy(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_mutex_destroy(RB_SYNC_IMPL));
 }
 
 void Mutex::lock() {
-	RB_SYNC_CHECK(pthread_mutex_lock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_mutex_lock(RB_SYNC_IMPL));
 }
 
 bool Mutex::tryLock() noexcept {
@@ -51,7 +51,7 @@ bool Mutex::tryLock() noexcept {
 }
 
 void Mutex::unlock() noexcept(false) {
-	RB_SYNC_CHECK(pthread_mutex_unlock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_mutex_unlock(RB_SYNC_IMPL));
 }
 
 #elif RB_USE(WIN32_THREADS)

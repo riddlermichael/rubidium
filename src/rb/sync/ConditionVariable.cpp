@@ -12,24 +12,24 @@ struct ConditionVariable::Impl {
 
 ConditionVariable::ConditionVariable()
     : pImpl_(core::makeUnique<Impl>()) {
-	RB_SYNC_CHECK(pthread_cond_init(RB_SYNC_IMPL, nullptr));
+	RB_SYNC_CHECK_ERRNO(pthread_cond_init(RB_SYNC_IMPL, nullptr));
 }
 
 ConditionVariable::~ConditionVariable() noexcept(false) {
-	RB_SYNC_CHECK(pthread_cond_destroy(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_cond_destroy(RB_SYNC_IMPL));
 }
 
 void ConditionVariable::notify() {
-	RB_SYNC_CHECK(pthread_cond_signal(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_cond_signal(RB_SYNC_IMPL));
 }
 
 void ConditionVariable::notifyAll() {
-	RB_SYNC_CHECK(pthread_cond_broadcast(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_cond_broadcast(RB_SYNC_IMPL));
 }
 
 void ConditionVariable::wait(Mutex& mutex) {
 	auto* mu = static_cast<pthread_mutex_t*>(mutex.rawImpl());
-	RB_SYNC_CHECK(pthread_cond_wait(RB_SYNC_IMPL, mu));
+	RB_SYNC_CHECK_ERRNO(pthread_cond_wait(RB_SYNC_IMPL, mu));
 }
 
 #elif RB_USE(WIN32_THREADS)

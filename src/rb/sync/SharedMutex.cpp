@@ -13,11 +13,11 @@ struct AttributeGuard {
 
 	explicit AttributeGuard(pthread_rwlockattr_t& attr)
 	    : attr(attr) {
-		RB_SYNC_CHECK(pthread_rwlockattr_init(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_rwlockattr_init(&attr));
 	}
 
 	~AttributeGuard() noexcept(false) {
-		RB_SYNC_CHECK(pthread_rwlockattr_destroy(&attr));
+		RB_SYNC_CHECK_ERRNO(pthread_rwlockattr_destroy(&attr));
 	}
 };
 
@@ -35,22 +35,22 @@ SharedMutex::SharedMutex(Policy policy)
 	#ifdef RB_OS_WIN
 	RB_UNUSED(policy);
 	#else
-	RB_SYNC_CHECK(pthread_rwlockattr_setkind_np(&attr, policy));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlockattr_setkind_np(&attr, policy));
 	#endif
 
-	RB_SYNC_CHECK(pthread_rwlock_init(RB_SYNC_IMPL, &attr));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_init(RB_SYNC_IMPL, &attr));
 }
 
 SharedMutex::~SharedMutex() noexcept(false) {
-	RB_SYNC_CHECK(pthread_rwlock_destroy(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_destroy(RB_SYNC_IMPL));
 }
 
 void SharedMutex::lock() {
-	RB_SYNC_CHECK(pthread_rwlock_wrlock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_wrlock(RB_SYNC_IMPL));
 }
 
 void SharedMutex::lockShared() {
-	RB_SYNC_CHECK(pthread_rwlock_rdlock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_rdlock(RB_SYNC_IMPL));
 }
 
 bool SharedMutex::tryLock() noexcept {
@@ -62,11 +62,11 @@ bool SharedMutex::tryLockShared() noexcept {
 }
 
 void SharedMutex::unlock() {
-	RB_SYNC_CHECK(pthread_rwlock_unlock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_unlock(RB_SYNC_IMPL));
 }
 
 void SharedMutex::unlockShared() {
-	RB_SYNC_CHECK(pthread_rwlock_unlock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK_ERRNO(pthread_rwlock_unlock(RB_SYNC_IMPL));
 }
 
 #elif RB_USE(WIN32_THREADS)
