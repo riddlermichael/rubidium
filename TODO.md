@@ -75,6 +75,7 @@
   - [ ] visitor (see [std::any::type](https://en.cppreference.com/w/cpp/utility/any/type))
   - [ ] `constexpr`
   - [ ] disabled RTTI
+  - [ ] `absl::Any`
 - [ ] `memory`
   - [ ] full impl of `Allocator`
   - [ ] revise requirements to `UniquePtr` (see `operator*`, `operator->` and so on)
@@ -88,6 +89,12 @@
 - [ ] SAL annotations
 - [ ] make `countLeadingZeroes` `constexpr` on MSVC
 - [ ] `RB_DEFINE_FLAG`?
+- [ ] `max` -> `kMax`
+- [ ] `UniquePtr<byte>`
+- [ ] `core::str`: ascii functions (see `absl/strings/ascii.h`)
+- [ ] look at Chromium's `base::Location`
+- [ ] compare `Array` and `absl::FixedArray`
+- [ ] see `absl::Nullable` etc.
 
 ### Data structures
 
@@ -169,6 +176,8 @@
 
 ### `random`
 
+- [ ] look at Chromium's `base::RandomBitGenerator`, `base/rand_util.h`
+  for a cryptographically secure generator
 - [ ] correct SFINAE in random traits
 - [ ] `uniform` with different types of ends
 - [ ] `Uniform`
@@ -221,7 +230,8 @@
 
 ### `time`
 
-- [ ] use `absl::Duration`; move `i128` representation to `LongDuration`
+- [ ] **use `absl::Duration`; move `i128` representation to `LongDuration`**
+- [ ] look at Rust's `std::time`: `Duration`, `Instant`, `SystemTime`
 - [ ] conversions in `Duration`
 - [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
 - [ ] `HighResolutionClock`

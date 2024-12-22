@@ -218,7 +218,7 @@ ErrorCode fromRawError(unsigned rawCode) noexcept {
 
 		case ERROR_SEM_OWNER_DIED            : return ErrorCode::kOwnerDead;
 
-		// too many posts were made to a semaphore;
+		// too many posts were made to semaphore;
 		// in accordance with POSIX return EOVERFLOW
 		case ERROR_TOO_MANY_POSTS            : return ErrorCode::kValueTooLarge;
 

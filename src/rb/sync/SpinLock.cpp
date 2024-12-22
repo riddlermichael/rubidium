@@ -18,11 +18,11 @@ SpinLock::SpinLock()
 }
 
 SpinLock::~SpinLock() noexcept(false) {
-	RB_SYNC_CHECK(pthread_spin_lock(RB_SYNC_IMPL));
+	RB_SYNC_CHECK(pthread_spin_destroy(RB_SYNC_IMPL));
 }
 
 void SpinLock::lock() {
-	RB_SYNC_CHECK(pthread_spin_destroy(RB_SYNC_IMPL));
+	RB_SYNC_CHECK(pthread_spin_lock(RB_SYNC_IMPL));
 }
 
 bool SpinLock::tryLock() noexcept {

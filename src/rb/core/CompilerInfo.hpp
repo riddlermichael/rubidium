@@ -59,7 +59,7 @@ private:
 	czstring desc_;
 };
 
-constexpr CompilerInfo CompilerInfo::kThis{CompilerInfo::Id::kThisId, CompilerInfo::kThisVersion
+constexpr CompilerInfo CompilerInfo::kThis{Id::kThisId, kThisVersion
 // there is no string description for MSVC compiler except a string version
 #ifndef RB_COMPILER_MSVC
     ,

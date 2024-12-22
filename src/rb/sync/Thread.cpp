@@ -20,6 +20,7 @@ thread_local Thread* thisThread;
 
 #if RB_USE(PTHREADS)
 
+namespace {
 static_assert(sizeof(pthread_t) <= sizeof(usize));
 
 	#if !defined(RB_OS_ANDROID)                             \
@@ -95,6 +96,8 @@ constexpr auto toUsize(T value) noexcept
     -> RB_REQUIRES_RETURN(usize, isPointer<T>) {
 	return reinterpret_cast<usize>(value); // NOLINT(*-pro-type-reinterpret-cast)
 }
+
+} // namespace
 
 struct Thread::Impl {
 	pthread_t impl = {};

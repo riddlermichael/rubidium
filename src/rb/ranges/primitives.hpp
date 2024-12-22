@@ -78,6 +78,32 @@ constexpr void popBack(R&& r) RB_NOEXCEPT_LIKE(RB_FWD(r).popBack()) {
 	RB_FWD(r).popBack();
 }
 
+template <class R,
+    RB_REQUIRES_T(core::impl::HasSizeMember<R>)>
+[[nodiscard]] constexpr decltype(auto) size(R&& r) RB_NOEXCEPT_LIKE(RB_FWD(r).size()) {
+	return RB_FWD(r).size();
+}
+
+template <class R,
+    RB_REQUIRES_T(core::And<
+        core::Not<core::IsBoundedArray<core::RemoveRef<R>>>,
+        core::Not<core::impl::HasSizeMember<R>>>)>
+[[nodiscard]] constexpr usize size(R&& r)
+    noexcept(noexcept(!empty(RB_FWD(r)) && noexcept(popFront(RB_FWD(r))))) //
+{
+	usize size = 0;
+	for (; !empty(RB_FWD(r)); popFront(RB_FWD(r))) {
+		++size;
+	}
+	return size;
+}
+
+template <class T, usize n>
+[[nodiscard]] constexpr usize size(T const (&a)[n]) noexcept {
+	RB_UNUSED(a);
+	return n;
+}
+
 struct FromRange {
 	constexpr explicit FromRange() = default;
 };

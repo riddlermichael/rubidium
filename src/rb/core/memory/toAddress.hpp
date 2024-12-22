@@ -17,8 +17,7 @@ inline namespace memory {
 
 	/// @return @p ptr unmodified if `T` is not a function type
 	template <class T>
-	constexpr T* toAddress(T* ptr) noexcept {
-		static_assert(!isFunction<T>);
+	constexpr EnableIf<!isFunction<T>, T*> toAddress(T* ptr) noexcept {
 		return ptr;
 	}
 

@@ -4,7 +4,7 @@
 
 /** @file
 
-<b>All macros in this file works in clang ONLY</b>.
+<b>All macros in this file work in clang ONLY</b>.
 
 @code
 class RB_CAPABILITY("mutex") Mutex {
