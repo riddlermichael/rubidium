@@ -6,6 +6,7 @@
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/enums.hpp>
 #include <rb/core/traits/IsArithmetic.hpp>
+#include <rb/time/I64.hpp>
 
 #define RB_REQUIRES_INTEGRAL(T) RB_REQUIRES(rb::core::isIntegral<T> || rb::core::isEnum<T>)
 #define RB_REQUIRES_FLOAT(T) RB_REQUIRES(rb::core::isFloatingPoint<T>)
@@ -60,11 +61,8 @@ public:
 	constexpr bool isInf() const noexcept;
 	constexpr bool isNeg() const noexcept;
 
-	// for internal use
-	constexpr i64 secs() const noexcept;
-	constexpr u32 ticks() const noexcept;
-
 private:
+	friend std::ostream& operator<<(std::ostream& os, Duration dur);
 	friend constexpr Duration impl::makeDuration(i64 seconds, i64 ticks) noexcept;
 
 	static constexpr u32 kInfTicks = ~0U;
@@ -74,12 +72,12 @@ private:
 	    , ticks_(ticks) {
 	}
 
-	i64 seconds_ = 0;
+	impl::I64 seconds_;
 	u32 ticks_ = 0;
 };
 
 inline std::ostream& operator<<(std::ostream& os, Duration dur) {
-	return os << "Duration{seconds: " << dur.secs() << ", ticks: " << dur.ticks() << "}";
+	return os << "Duration{seconds: " << dur.seconds_.value() << ", ticks: " << dur.ticks_ << "}";
 }
 
 } // namespace rb::time
@@ -126,14 +124,6 @@ namespace rb::time {
 // Duration methods
 constexpr Duration Duration::inf() noexcept {
 	return kInfinity;
-}
-
-constexpr i64 Duration::secs() const noexcept {
-	return seconds_;
-}
-
-constexpr u32 Duration::ticks() const noexcept {
-	return ticks_;
 }
 
 constexpr bool Duration::isInf() const noexcept {
