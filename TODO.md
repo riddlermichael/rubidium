@@ -209,7 +209,6 @@
 
 - [ ] adopted threads
 - [ ] thread name
-- [ ] implement `StdThread` using `OsThread`
 - [ ] `std::jthread`
 - [ ] [test for mutex](https://demin.ws/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/)
 - [ ] `once`
@@ -236,7 +235,6 @@
 - [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
 - [ ] `HighResolutionClock`
 - [ ] time(rs) and testing
-- [ ] `std::time` in `Rust`: `Instant`, `SystemTime`
 
 ### `utf`
 

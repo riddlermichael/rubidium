@@ -15,6 +15,7 @@ constexpr auto swap(T& lhs, T& rhs) noexcept(isNothrowMoveConstructible<T> && is
 	T t = lhs;
 	lhs = rhs;
 	rhs = t;
+	return;
 }
 
 namespace impl::swap {
@@ -78,6 +79,7 @@ constexpr EnableIf<isSwappable<T>> swap(T (&lhs)[n], T (&rhs)[n]) noexcept(isNot
 	for (usize pos = 0; pos < n; ++pos) {
 		swap(lhs[pos], rhs[pos]);
 	}
+	return;
 }
 
 } // namespace rb::core

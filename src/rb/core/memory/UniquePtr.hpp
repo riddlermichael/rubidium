@@ -73,18 +73,21 @@ inline namespace memory {
 
 	public:
 
+		template <class DD = D>
 		static auto borrow(Pointer& p) noexcept
-		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<impl::DeleterEnableDefault<D>, impl::SafeDelete<T>>) {
+		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<impl::DeleterEnableDefault<DD>, impl::SafeDelete<T>>) {
 			return UniquePtr(p);
 		}
 
-		static auto borrow(Pointer& p, D const& d) noexcept
-		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<IsCopyConstructible<D>, impl::SafeDelete<T>>) {
+		template <class DD = D>
+		static auto borrow(Pointer& p, DD const& d) noexcept
+		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<IsCopyConstructible<DD>, impl::SafeDelete<T>>) {
 			return UniquePtr(p, d);
 		}
 
-		static auto borrow(Pointer& p, D&& d) noexcept
-		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<IsMoveConstructible<D>, Not<IsLValueRef<D>>, impl::SafeDelete<T>>) {
+		template <class DD = D>
+		static auto borrow(Pointer& p, DD&& d) noexcept
+		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<IsMoveConstructible<DD>, Not<IsLValueRef<DD>>, impl::SafeDelete<T>>) {
 			return UniquePtr(p, RB_MOVE(d));
 		}
 
@@ -192,6 +195,14 @@ inline namespace memory {
 		}
 
 #undef RB_ENSURE_NONNULL
+
+		constexpr ConstPointer get() const noexcept {
+			return operator->();
+		}
+
+		constexpr Pointer get() noexcept {
+			return operator->();
+		}
 
 		constexpr D const& deleter() const noexcept {
 			return storage_.second();
