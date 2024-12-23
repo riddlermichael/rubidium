@@ -37,17 +37,31 @@ public:
 	static Duration const kInfinity;
 	static Duration const kNegativeInfinity;
 
+	/// Returns the special value "positive infinity" Duration.
 	static constexpr Duration inf() noexcept;
 
-	constexpr Duration() noexcept = default;
-	constexpr Duration(Duration const&) noexcept = default;
-	constexpr Duration(Duration&&) noexcept = default;
-	~Duration() = default;
+	/// Returns the maximum finite Duration.
+	static constexpr Duration max() noexcept;
 
-	constexpr Duration& operator=(Duration const&) noexcept = default;
-	constexpr Duration& operator=(Duration&&) noexcept = default;
+	/// Returns the minimum positive finite Duration.
+	/// To find the value that has no values less than it, use lowest().
+	static constexpr Duration min() noexcept;
+
+	/// Returns the zero Duration.
+	static constexpr Duration zero() noexcept;
+
+	/// Returns the lowest finite Duration,
+	/// that is, a finite value `x` such that there is no other finite value `y` where `y < x`.
+	/// Equals `-max()`.
+	static constexpr Duration lowest() noexcept;
+
+	constexpr Duration() noexcept = default;
 
 	constexpr explicit operator bool() const noexcept;
+
+	constexpr bool operator!() const noexcept {
+		return !static_cast<bool>(*this);
+	}
 
 	constexpr Duration operator-() const noexcept;
 
@@ -58,8 +72,12 @@ public:
 	constexpr Duration& operator+=(Duration rhs) noexcept;
 	constexpr Duration& operator-=(Duration rhs) noexcept;
 
+	/// Returns true iff `*this` is positive or negative infinity.
 	constexpr bool isInf() const noexcept;
-	constexpr bool isNeg() const noexcept;
+
+	constexpr bool isPositive() const noexcept;
+	constexpr bool isZero() const noexcept;
+	constexpr bool isNegative() const noexcept;
 
 private:
 	friend std::ostream& operator<<(std::ostream& os, Duration dur);
@@ -76,14 +94,13 @@ private:
 	u32 ticks_ = 0;
 };
 
-inline std::ostream& operator<<(std::ostream& os, Duration dur) {
-	return os << "Duration{seconds: " << dur.seconds_.value() << ", ticks: " << dur.ticks_ << "}";
-}
+std::ostream& operator<<(std::ostream& os, Duration dur);
 
 } // namespace rb::time
 
 namespace rb::time::impl {
 
+// ReSharper disable once CppDFAUnreachableFunctionCall
 constexpr Duration makeDuration(i64 seconds, i64 ticks) noexcept {
 	return {seconds, static_cast<u32>(ticks)};
 }
@@ -126,11 +143,35 @@ constexpr Duration Duration::inf() noexcept {
 	return kInfinity;
 }
 
+constexpr Duration Duration::max() noexcept {
+	return {core::max<i64>, kTicksPerSecond - 1};
+}
+
+constexpr Duration Duration::min() noexcept {
+	return {0, 1};
+}
+
+constexpr Duration Duration::zero() noexcept {
+	return {};
+}
+
+constexpr Duration Duration::lowest() noexcept {
+	return -max();
+}
+
 constexpr bool Duration::isInf() const noexcept {
 	return ticks_ == kInfTicks;
 }
 
-constexpr bool Duration::isNeg() const noexcept {
+constexpr bool Duration::isPositive() const noexcept {
+	return seconds_ ? (seconds_ > 0) : (ticks_ > 0);
+}
+
+constexpr bool Duration::isZero() const noexcept {
+	return !static_cast<bool>(*this);
+}
+
+constexpr bool Duration::isNegative() const noexcept {
 	return seconds_ < 0;
 }
 
@@ -187,6 +228,7 @@ constexpr bool operator>=(Duration lhs, Duration rhs) noexcept {
 }
 
 constexpr bool operator<=(Duration lhs, Duration rhs) noexcept {
+	// ReSharper disable once CppRedundantComplexityInComparison
 	return !(rhs < lhs);
 }
 

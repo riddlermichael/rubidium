@@ -19,6 +19,10 @@ public:
 		return *this;
 	}
 
+	constexpr explicit operator bool() const noexcept {
+		return hi_ || lo_;
+	}
+
 	constexpr I64& operator++() noexcept {
 		return *this = value() + 1;
 	}
