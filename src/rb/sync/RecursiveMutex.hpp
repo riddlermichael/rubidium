@@ -14,8 +14,6 @@ public:
 	RecursiveMutex();
 	~RecursiveMutex() noexcept(RB_USE(WIN32_THREADS));
 
-	RB_DISABLE_COPY(RecursiveMutex);
-
 	void lock();
 	bool tryLock() noexcept;
 	void unlock() noexcept(RB_USE(WIN32_THREADS));

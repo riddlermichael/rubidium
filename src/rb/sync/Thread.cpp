@@ -10,7 +10,7 @@
 using namespace rb::core;
 using namespace rb::sync;
 
-#define RB_GUARD MutexLocker locker(pImpl_->mutex)
+#define RB_GUARD MutexLocker const locker(pImpl_->mutex)
 
 namespace {
 

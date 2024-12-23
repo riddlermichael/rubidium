@@ -19,7 +19,7 @@ public:
 
 	template <class Condition>
 	void wait(MutexLocker& mutexLocker, Condition condition) {
-		while (!condition()) {
+		while (!RB_FWD(condition)()) {
 			wait(mutexLocker);
 		}
 	}

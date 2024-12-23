@@ -83,8 +83,7 @@ private:
 	core::UniquePtr<Impl> pImpl_;
 };
 
-template <class Char, class Traits>
-std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, Thread::Id id) {
+inline std::ostream& operator<<(std::ostream& os, Thread::Id id) {
 	return os << "Thread::Id{" << static_cast<usize>(id) << "}";
 }
 

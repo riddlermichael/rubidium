@@ -57,7 +57,7 @@ Barrier::~Barrier() noexcept(true) {
 
 void Barrier::wait() noexcept {
 	// TRUE for the last thread to signal the barrier.
-	// Threads that signal the barrier before the last thread signals it receive a return value of FALSE.
+	// Threads that signal the barrier before the last thread signals it receives a return value of FALSE.
 	EnterSynchronizationBarrier(RB_SYNC_IMPL, 0);
 }
 
