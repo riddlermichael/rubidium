@@ -1,4 +1,4 @@
-#include "Thread.hpp"
+#include "OsThread.hpp"
 
 #include <memory>
 #include <rb/sync/impl.hpp>
@@ -9,6 +9,11 @@ using namespace rb::sync;
 #if RB_USE(PTHREADS)
 
 namespace {
+
+struct ThreadData {
+	OsThread::StartFn fn;
+	void* arg;
+};
 
 struct AttributeGuard {
 	pthread_attr_t& attr;
@@ -23,43 +28,40 @@ struct AttributeGuard {
 	}
 };
 
+// ReSharper disable once CppParameterMayBeConstPtrOrRef
 void* threadFunc(void* arg) {
-	auto* thread = static_cast<Thread*>(arg);
-	thread->run();
-	return nullptr;
+	auto const* data = static_cast<ThreadData const*>(arg);
+	isize const ret = (data->fn)(data->arg);
+	return reinterpret_cast<void*>(ret); // NOLINT(*-pro-type-reinterpret-cast, *-no-int-to-ptr)
 }
 
 } // namespace
 
-struct Thread::Impl {
-	pthread_t impl;
+struct OsThread::Impl {
+	pthread_t impl = {};
+	UniquePtr<ThreadData> data;
 };
 
-void Thread::join() {
-	if (!pImpl_) {
-		throw OsError(ErrorCode::kInvalidArgument);
-	}
-
-	RB_SYNC_CHECK_ERRNO(pthread_join(pImpl_->impl, nullptr));
-}
-
-void Thread::start() {
+void OsThread::start(StartFn fn, void* arg) {
 	pthread_attr_t attr{};
 	AttributeGuard const _{attr};
 	RB_SYNC_CHECK_ERRNO(pthread_attr_init(&attr));
 	RB_SYNC_CHECK_ERRNO(pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE));
-	RB_SYNC_CHECK_ERRNO(pthread_create(RB_SYNC_IMPL, &attr, threadFunc, this));
+	pImpl_->data = makeUnique<ThreadData>();
+	pImpl_->data->fn = fn;
+	pImpl_->data->arg = arg;
+	RB_SYNC_CHECK_ERRNO(pthread_create(RB_SYNC_IMPL, &attr, threadFunc, pImpl_->data.get()));
 	RB_SYNC_CHECK_ERRNO(pthread_attr_destroy(&attr));
 }
 
 #elif RB_USE(WIN32_THREADS)
 #endif
 
-Thread::Thread()
+OsThread::OsThread()
     : pImpl_(core::makeUnique<Impl>()) {
 }
 
-Thread::~Thread() noexcept(false) {
+OsThread::~OsThread() noexcept(false) {
 	// if (joinable()) {
 	// 	throw OsError(ErrorCode::kOperationInProgress);
 	// }

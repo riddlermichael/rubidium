@@ -6,7 +6,7 @@
 
 namespace rb::sync {
 
-class RB_EXPORT Thread {
+class RB_EXPORT OsThread final {
 public:
 	class RB_EXPORT Id final {
 	public:
@@ -27,7 +27,7 @@ public:
 		constexpr bool operator>=(Id rhs) const noexcept;
 
 	private:
-		friend class Thread;
+		friend class OsThread;
 
 		constexpr explicit Id(usize id) noexcept
 		    : id_(id) {
@@ -36,16 +36,16 @@ public:
 		usize id_ = 0;
 	};
 
+	using StartFn = int (*)(void*);
+
 	// static Thread* currentThread() noexcept;
 	// static Id currentThreadId() noexcept;
 	// static void sleepFor(time::Duration timeout) noexcept;
 	// static void sleepUntil(time::Time deadline) noexcept;
 	// static void yield() noexcept;
 
-	Thread();
-	virtual ~Thread() noexcept(false);
-
-	virtual void run() = 0;
+	OsThread();
+	~OsThread() noexcept(false);
 
 	// explicit operator bool() const noexcept {
 	// 	return joinable();
@@ -59,11 +59,11 @@ public:
 
 	// void detach();
 	// [[noreturn]] void exit(int exitCode = 0);
-	void join();
+	// void join();
 	// void join(int& exitCode);
 	//void swap(Thread& rhs) noexcept;
 
-	void start();
+	void start(StartFn fn, void* arg);
 
 private:
 	struct Impl;
@@ -71,35 +71,35 @@ private:
 	core::UniquePtr<Impl> pImpl_;
 };
 
-inline std::ostream& operator<<(std::ostream& os, Thread::Id id) {
+inline std::ostream& operator<<(std::ostream& os, OsThread::Id id) {
 	return os << "Thread::Id{" << static_cast<usize>(id) << "}";
 }
 
-constexpr int Thread::Id::opCmp(Id rhs) const noexcept {
+constexpr int OsThread::Id::opCmp(Id rhs) const noexcept {
 	return (id_ > rhs.id_) - (id_ < rhs.id_);
 }
 
-constexpr bool Thread::Id::operator==(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator==(Id rhs) const noexcept {
 	return id_ == rhs.id_;
 }
 
-constexpr bool Thread::Id::operator!=(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator!=(Id rhs) const noexcept {
 	return id_ != rhs.id_;
 }
 
-constexpr bool Thread::Id::operator<(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator<(Id rhs) const noexcept {
 	return opCmp(rhs) < 0;
 }
 
-constexpr bool Thread::Id::operator<=(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator<=(Id rhs) const noexcept {
 	return opCmp(rhs) <= 0;
 }
 
-constexpr bool Thread::Id::operator>(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator>(Id rhs) const noexcept {
 	return opCmp(rhs) > 0;
 }
 
-constexpr bool Thread::Id::operator>=(Id rhs) const noexcept {
+constexpr bool OsThread::Id::operator>=(Id rhs) const noexcept {
 	return opCmp(rhs) >= 0;
 }
 
