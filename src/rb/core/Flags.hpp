@@ -4,7 +4,7 @@
 
 #include <rb/core/enums.hpp>
 #include <rb/core/requires.hpp>
-#include <rb/fmt/ToHex.hpp>
+#include <rb/fmt/hex.hpp>
 
 namespace rb::core {
 
@@ -102,7 +102,7 @@ public:
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, Flags flags) {
-		return os << fmt::toHex << flags.value_;
+		return os << fmt::hex << flags.value_;
 	}
 
 private:

@@ -19,6 +19,7 @@ czstring toString(ErrorCode errorCode) noexcept {
 		return "Resource unavailable, try again";
 	}
 
+	// ReSharper disable once CppDFAUnreachableCode
 	switch (errorCode) {
 		case ErrorCode::kNotImplemented                 : return "Not implemented";
 		case ErrorCode::kUnknown                        : return "Unknown error";
