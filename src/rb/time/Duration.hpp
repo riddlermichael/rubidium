@@ -21,12 +21,12 @@ namespace impl {
 
 class Duration final {
 public:
-	static constexpr i64 kNanosecondsPerSecond = 1'000'000'000;
+	static constexpr u32 kTicksPerSecond = 4'000'000'000U;
+	static constexpr u32 kTicksPerNanosecond = 4U;
+
+	static constexpr u32 kNanosecondsPerSecond = 1'000'000'000;
 	static constexpr auto kSecondsPerMinute = 60U;
 	static constexpr auto kSecondsPerHour = 3600U;
-
-	static constexpr u32 kTicksPerSecond = 4'000'000'000U;
-	static constexpr unsigned kTicksPerNanosecond = 4U;
 
 	static Duration const kNanosecond;
 	static Duration const kMicrosecond;
@@ -36,9 +36,13 @@ public:
 	static Duration const kHour;
 	static Duration const kInfinity;
 	static Duration const kNegativeInfinity;
+	static Duration const kNaN;
 
 	/// Returns the special value "positive infinity" Duration.
 	static constexpr Duration inf() noexcept;
+
+	/// Returns the special value "NaN" Duration.
+	static constexpr Duration nan() noexcept;
 
 	/// Returns the maximum finite Duration.
 	static constexpr Duration max() noexcept;
@@ -59,10 +63,6 @@ public:
 
 	constexpr explicit operator bool() const noexcept;
 
-	constexpr bool operator!() const noexcept {
-		return !static_cast<bool>(*this);
-	}
-
 	constexpr Duration operator-() const noexcept;
 
 	constexpr bool operator==(Duration rhs) const noexcept;
@@ -75,6 +75,9 @@ public:
 	/// Returns true iff `*this` is positive or negative infinity.
 	constexpr bool isInf() const noexcept;
 
+	/// Returns true iff `*this` is NaN.
+	constexpr bool isNaN() const noexcept;
+
 	constexpr bool isPositive() const noexcept;
 	constexpr bool isZero() const noexcept;
 	constexpr bool isNegative() const noexcept;
@@ -84,6 +87,7 @@ private:
 	friend constexpr Duration impl::makeDuration(i64 seconds, i64 ticks) noexcept;
 
 	static constexpr u32 kInfTicks = ~0U;
+	static constexpr u32 kNaNTicks = kNanosecondsPerSecond;
 
 	constexpr Duration(i64 seconds, u32 ticks) noexcept
 	    : seconds_(seconds)
@@ -143,6 +147,10 @@ constexpr Duration Duration::inf() noexcept {
 	return kInfinity;
 }
 
+constexpr Duration Duration::nan() noexcept {
+	return kNaN;
+}
+
 constexpr Duration Duration::max() noexcept {
 	return {core::max<i64>, kTicksPerSecond - 1};
 }
@@ -163,15 +171,28 @@ constexpr bool Duration::isInf() const noexcept {
 	return ticks_ == kInfTicks;
 }
 
+constexpr bool Duration::isNaN() const noexcept {
+	return ticks_ == kNaNTicks;
+}
+
 constexpr bool Duration::isPositive() const noexcept {
+	if (RB_UNLIKELY(isNaN())) {
+		return false;
+	}
 	return seconds_ ? (seconds_ > 0) : (ticks_ > 0);
 }
 
 constexpr bool Duration::isZero() const noexcept {
+	if (RB_UNLIKELY(isNaN())) {
+		return false;
+	}
 	return !static_cast<bool>(*this);
 }
 
 constexpr bool Duration::isNegative() const noexcept {
+	if (RB_UNLIKELY(isNaN())) {
+		return false;
+	}
 	return seconds_ < 0;
 }
 
@@ -180,6 +201,10 @@ constexpr Duration::operator bool() const noexcept {
 }
 
 constexpr Duration Duration::operator-() const noexcept {
+	if (RB_UNLIKELY(isNaN())) {
+		return kNaN;
+	}
+
 	// if ticks_ is zero, we have it easy; it's safe to negate seconds_,
 	// we're dealing with an integral number of seconds,
 	// and the only special case is the maximum negative finite duration, which can't be negated
@@ -200,6 +225,10 @@ constexpr Duration Duration::operator-() const noexcept {
 }
 
 constexpr bool Duration::operator==(Duration rhs) const noexcept {
+	if (RB_UNLIKELY(isNaN() || rhs.isNaN())) {
+		return false;
+	}
+
 	return seconds_ == rhs.seconds_ && ticks_ == rhs.ticks_;
 }
 
@@ -208,6 +237,10 @@ constexpr bool operator!=(Duration lhs, Duration rhs) noexcept {
 }
 
 constexpr bool Duration::operator<(Duration rhs) const noexcept {
+	if (RB_UNLIKELY(isNaN() || rhs.isNaN())) {
+		return false;
+	}
+
 	if (seconds_ != rhs.seconds_) {
 		return seconds_ < rhs.seconds_;
 	}
@@ -220,19 +253,36 @@ constexpr bool Duration::operator<(Duration rhs) const noexcept {
 }
 
 constexpr bool operator>(Duration lhs, Duration rhs) noexcept {
+	if (RB_UNLIKELY(lhs.isNaN() || rhs.isNaN())) {
+		return false;
+	}
 	return rhs < lhs;
 }
 
 constexpr bool operator>=(Duration lhs, Duration rhs) noexcept {
+	if (RB_UNLIKELY(lhs.isNaN() || rhs.isNaN())) {
+		return false;
+	}
 	return !(lhs < rhs);
 }
 
 constexpr bool operator<=(Duration lhs, Duration rhs) noexcept {
+	if (RB_UNLIKELY(lhs.isNaN() || rhs.isNaN())) {
+		return false;
+	}
 	// ReSharper disable once CppRedundantComplexityInComparison
 	return !(rhs < lhs);
 }
 
 constexpr Duration& Duration::operator+=(Duration rhs) noexcept {
+	if (RB_UNLIKELY(
+	        isNaN()
+	        || rhs.isNaN()
+	        || *this == kInfinity && rhs == kNegativeInfinity
+	        || *this == kNegativeInfinity && rhs == kInfinity)) {
+		return *this = kNaN;
+	}
+
 	if (isInf()) {
 		return *this;
 	}
@@ -256,6 +306,14 @@ constexpr Duration& Duration::operator+=(Duration rhs) noexcept {
 }
 
 constexpr Duration& Duration::operator-=(Duration rhs) noexcept {
+	if (RB_UNLIKELY(
+	        isNaN()
+	        || rhs.isNaN()
+	        || *this == kInfinity && rhs == kInfinity
+	        || *this == kNegativeInfinity && rhs == kNegativeInfinity)) {
+		return *this = kNaN;
+	}
+
 	if (isInf()) {
 		return *this;
 	}
@@ -331,6 +389,7 @@ constexpr Duration Duration::kMinute = minutes(1);
 constexpr Duration Duration::kHour = hours(1);
 constexpr Duration Duration::kInfinity = {core::max<i64>, kInfTicks};
 constexpr Duration Duration::kNegativeInfinity = {core::min<i64>, kInfTicks};
+constexpr Duration Duration::kNaN = {0, kNaNTicks};
 
 inline namespace literals {
 
