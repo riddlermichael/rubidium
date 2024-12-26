@@ -36,9 +36,9 @@
   - [ ] ref-counted pointer instead of `std::shared_ptr`
   - [ ] `cause`
 - [ ] `Option` like in C++23
-  - [ ] `Option<T&&>`?
+  - [ ] `Option<T&>` and `Option<T&&>`?
 - [ ] `Variant`
-- [ ] type of container (random-access, associative, tuple-like)
+- [ ] `Tuple`
 - [ ] `TypeList` and `ArgList` with `auto` template parameters
 - [ ] `constexpr` in C++20
   - [ ] `UniquePtr`
@@ -235,6 +235,7 @@
 - [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
 - [ ] `HighResolutionClock`
 - [ ] time(rs) and testing
+- [ ] `Nanosecond`, `Microsecond`, `Millisecond`, `Second`, `Minute`, `Hour`, `Day`
 
 ### `utf`
 

@@ -155,7 +155,7 @@ constexpr core::Option<int> isDigit(Char ch) noexcept {
 
 /// Analyzes the character sequence [@p first, @p last) for a pattern described below.
 /// If no characters match the pattern or if the value obtained by parsing the matched characters
-/// is not representable in the type of @p value, @p value is unmodified,
+/// is not representable in the type of @p value, @p value is unmodified;
 /// otherwise the characters matching the pattern are interpreted as a text representation of an arithmetic value,
 /// which is stored in @p value.
 /// Expects the pattern identical to the one used by std::strtol in the default ("C") locale
@@ -171,22 +171,18 @@ template <class T, unsigned base = 10, class Char,
     RB_NO_SANITIZE("address")
 #endif
 {
-	struct SetPtr {
-		Char const** target;
-		Char const*& source;
-
-		~SetPtr() {
-			if (target) {
-				*target = source;
-			}
-		}
-	};
 
 	using core::err;
 
 	constexpr bool kSigned = core::isSigned<T>;
 
-	SetPtr _{ptr, first};
+#define RB_SET_PTR    \
+	if (ptr) {        \
+		*ptr = first; \
+	}
+
+	RB_SET_PTR;
+
 	if (!first || last < first) {
 		return err(FromCharsError::kInvalidRange);
 	}
@@ -211,6 +207,7 @@ template <class T, unsigned base = 10, class Char,
 			x = -x;
 		}
 	} else {
+		RB_SET_PTR;
 		return err(FromCharsError::kFormatError);
 	}
 
@@ -225,11 +222,13 @@ template <class T, unsigned base = 10, class Char,
 		++first;
 		T const d = *digit;
 		if (x > (core::max<T> - d) / kBase) {
+			RB_SET_PTR;
 			return err(FromCharsError::kPosOverflow);
 		}
 
 		if constexpr (kSigned) {
 			if (isNeg && x < (core::min<T> + d) / kBase) {
+				RB_SET_PTR;
 				return err(FromCharsError::kNegOverflow);
 			}
 		}
@@ -241,7 +240,10 @@ template <class T, unsigned base = 10, class Char,
 			x += d;
 		}
 	}
+	RB_SET_PTR;
 	return x;
+
+#undef RB_SET_PTR
 }
 
 } // namespace rb::fmt

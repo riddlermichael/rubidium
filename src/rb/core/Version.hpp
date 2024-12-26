@@ -2,9 +2,9 @@
 
 #include <ostream>
 
-// ReSharper disable once CppUnusedIncludeDirective
-#include <rb/core/builtins.hpp>
-#include <rb/core/types.hpp>
+#include <rb/core/Option.hpp>
+#include <rb/core/Span.hpp>
+#include <rb/fmt/charconv.hpp>
 #include <rb/rb_version.hpp>
 
 namespace rb::core {
@@ -18,6 +18,37 @@ public:
 		kMinor,
 		kPatch,
 	};
+
+	static constexpr Option<Version> from(Span<char const> s) noexcept {
+		char const* first = s.data();
+		char const* last = s.data() + s.size();
+
+		u32 components[3] = {};
+		for (int c = 0; c < 3; ++c) {
+			auto result = fmt::fromChars<u32>(first, last, &first);
+			if (!result) {
+				return kNone;
+			}
+
+			components[c] = *result; // NOLINT(*-pro-bounds-constant-array-index)
+			if (first == last) {
+				return Version{components[0], components[1], components[2]};
+			}
+
+			if (*first && *first != '.') {
+				return kNone;
+			}
+
+			if (c < 2) {
+				++first;
+			}
+		}
+		if (*first && first != last) {
+			return kNone;
+		}
+
+		return Version{components[0], components[1], components[2]};
+	}
 
 	static constexpr Version unpack(u32 value) noexcept {
 		u32 const major = (value & 0xFF00'0000) >> 24;
