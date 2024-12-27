@@ -273,6 +273,10 @@ Span(std::array<T, n> const&) -> Span<T const, n>;
 template <class C>
 Span(C&) -> Span<RemovePointer<decltype(core::data(RB_DECLVAL(C&)))>>;
 
+using ByteSpan = Span<byte>;
+
+using ByteConstSpan = Span<byte const>;
+
 template <class T, usize n>
 RB_EXPORT constexpr auto asBytes(Span<T, n> s) noexcept {
 	using S = Span<byte const, n == kDynExtent ? kDynExtent : sizeof(T) * n>;

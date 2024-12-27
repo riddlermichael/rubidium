@@ -217,7 +217,7 @@ public:
 			if constexpr (kUnsigned) {
 				return {0, hi_ >> (amount - 64)};
 			} else {
-				return {(hi_ >> 32) >> 32, u64(hi_ >> (amount - 64))};
+				return {(hi_ >> 32) >> 32, static_cast<u64>(hi_ >> (amount - 64))};
 			}
 		}
 		return {hi_ >> amount, (lo_ >> amount) | (static_cast<u64>(hi_) << (64 - amount))};
@@ -336,7 +336,7 @@ public:
 
 	template <bool _ = true, RB_REQUIRES(_&& kUnsigned)>
 	std::string toFormattedString(std::ios_base::fmtflags flags) const {
-		// Select a divisor which is the largest power of the base < 2^64.
+		// select a divisor which is the largest power of the base < 2^64
 		Int128 div{10'000'000'000'000'000'000ULL}; // 10^19
 		int divBaseLog{19};
 		switch (flags & std::ios::basefield) {
@@ -354,10 +354,10 @@ public:
 				break;
 		}
 
-		// Now piece together the uint128 representation from three chunks of the original value,
+		// now piece together the uint128 representation from three chunks of the original value,
 		// each less than "div" and therefore representable as u64
 		std::ostringstream os;
-		auto const copyMask = std::ios::basefield | std::ios::showbase | std::ios::uppercase;
+		constexpr auto copyMask = std::ios::basefield | std::ios::showbase | std::ios::uppercase;
 		os.setf(flags & copyMask, copyMask);
 		Int128 high = *this;
 		Int128 low;
@@ -428,10 +428,10 @@ inline namespace literals {
 
 } // namespace literals
 
-/// Returns the 0-based position of the last set bit (i.e., most significant bit) in the given u128
+/// Returns the 0-based position of the last set bit (i.e., the most significant bit) in the given u128
 constexpr unsigned fls128(u128 value) noexcept {
 	RB_DEBUG_ASSERT(value);
-	if (u64 hi = static_cast<u64>(value >> 64)) {
+	if (u64 const hi = static_cast<u64>(value >> 64)) {
 		return 127 - countLeadingZeroes(hi);
 	}
 	return 63 - countLeadingZeroes(static_cast<u64>(value));
@@ -645,10 +645,8 @@ constexpr QuoRem<u128> quorem(u128 dividend, i128 divisor) noexcept {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-namespace std {
-
 template <bool kUnsigned>
-struct numeric_limits<rb::core::Int128<kUnsigned>> { // NOLINT(cert-dcl58-cpp)
+struct std::numeric_limits<rb::core::Int128<kUnsigned>> { // NOLINT(cert-dcl58-cpp)
 	using Int128 = rb::core::Int128<kUnsigned>;
 
 	static constexpr bool is_specialized = true;
@@ -715,7 +713,5 @@ struct numeric_limits<rb::core::Int128<kUnsigned>> { // NOLINT(cert-dcl58-cpp)
 	static constexpr bool tinyness_before = false;
 	static constexpr float_round_style round_style = round_toward_zero;
 };
-
-} // namespace std
 
 // NOLINTEND(readability-identifier-naming)
