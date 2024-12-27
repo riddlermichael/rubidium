@@ -16,7 +16,7 @@ namespace rb::time {
 class Duration;
 
 namespace impl {
-	constexpr Duration makeDuration(i64 seconds, i64 ticks = 0) noexcept;
+	constexpr Duration duration(i64 seconds, i64 ticks = 0) noexcept;
 } // namespace impl
 
 class Duration final {
@@ -34,6 +34,7 @@ public:
 	static Duration const kSecond;
 	static Duration const kMinute;
 	static Duration const kHour;
+
 	static Duration const kInfinity;
 	static Duration const kNegativeInfinity;
 	static Duration const kNaN;
@@ -84,7 +85,7 @@ public:
 
 private:
 	friend std::ostream& operator<<(std::ostream& os, Duration dur);
-	friend constexpr Duration impl::makeDuration(i64 seconds, i64 ticks) noexcept;
+	friend constexpr Duration impl::duration(i64 seconds, i64 ticks) noexcept;
 
 	static constexpr u32 kInfTicks = ~0U;
 	static constexpr u32 kNaNTicks = kNanosecondsPerSecond;
@@ -105,7 +106,7 @@ std::ostream& operator<<(std::ostream& os, Duration dur);
 namespace rb::time::impl {
 
 // ReSharper disable once CppDFAUnreachableFunctionCall
-constexpr Duration makeDuration(i64 seconds, i64 ticks) noexcept {
+constexpr Duration duration(i64 seconds, i64 ticks) noexcept {
 	return {seconds, static_cast<u32>(ticks)};
 }
 
@@ -119,13 +120,13 @@ constexpr Duration fromInt64(i64 value, std::ratio<1, n> /*unused*/) noexcept {
 		--seconds;
 		ticks += Duration::kTicksPerSecond;
 	}
-	return makeDuration(seconds, ticks);
+	return duration(seconds, ticks);
 }
 
 constexpr Duration fromInt64(i64 value, std::ratio<Duration::kSecondsPerMinute> /*unused*/) {
 	if (value <= core::max<i64> / Duration::kSecondsPerMinute && //
 	    value >= core::min<i64> / Duration::kSecondsPerMinute) {
-		return makeDuration(value * Duration::kSecondsPerMinute);
+		return duration(value * Duration::kSecondsPerMinute);
 	}
 	return value > 0 ? Duration::kInfinity : Duration::kNegativeInfinity;
 }
@@ -133,7 +134,7 @@ constexpr Duration fromInt64(i64 value, std::ratio<Duration::kSecondsPerMinute> 
 constexpr Duration fromInt64(i64 value, std::ratio<Duration::kSecondsPerHour> /*unused*/) {
 	if (value <= core::max<i64> / Duration::kSecondsPerHour && //
 	    value >= core::min<i64> / Duration::kSecondsPerHour) {
-		return makeDuration(value * Duration::kSecondsPerHour);
+		return duration(value * Duration::kSecondsPerHour);
 	}
 	return value > 0 ? Duration::kInfinity : Duration::kNegativeInfinity;
 }
@@ -387,6 +388,7 @@ constexpr Duration Duration::kMillisecond = milliseconds(1);
 constexpr Duration Duration::kSecond = seconds(1);
 constexpr Duration Duration::kMinute = minutes(1);
 constexpr Duration Duration::kHour = hours(1);
+
 constexpr Duration Duration::kInfinity = {core::max<i64>, kInfTicks};
 constexpr Duration Duration::kNegativeInfinity = {core::min<i64>, kInfTicks};
 constexpr Duration Duration::kNaN = {0, kNaNTicks};
