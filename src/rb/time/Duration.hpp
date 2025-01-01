@@ -2,10 +2,11 @@
 
 #include <chrono>
 
+#include <rb/core/Expected.hpp>
 #include <rb/core/int128.hpp>
+#include <rb/core/quorem.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/enums.hpp>
-#include <rb/core/traits/IsArithmetic.hpp>
 #include <rb/time/I64.hpp>
 
 #define RB_REQUIRES_INTEGRAL(T) RB_REQUIRES(rb::core::isIntegral<T> || rb::core::isEnum<T>)
@@ -21,6 +22,14 @@ namespace impl {
 
 class Duration final {
 public:
+	enum class QuoRemError {
+		kNaN,
+		kInf
+	};
+
+	using QuoRem = core::QuoRem<core::i128, Duration>;
+	using QuoRemResult = core::Expected<QuoRem, QuoRemError>;
+
 	static constexpr u32 kTicksPerSecond = 4'000'000'000U;
 	static constexpr u32 kTicksPerNanosecond = 4U;
 
@@ -72,6 +81,7 @@ public:
 
 	constexpr Duration operator*(i64 value) const noexcept;
 	constexpr Duration operator/(i64 value) const noexcept;
+	constexpr core::i128 operator/(Duration rhs) const noexcept;
 	constexpr Duration operator%(i64 value) const noexcept;
 
 	constexpr Duration& operator+=(Duration rhs) noexcept;
@@ -89,6 +99,8 @@ public:
 	constexpr bool isPositive() const noexcept;
 	constexpr bool isZero() const noexcept;
 	constexpr bool isNegative() const noexcept;
+
+	constexpr QuoRemResult quorem(Duration rhs) const noexcept;
 
 private:
 	friend std::ostream& operator<<(std::ostream& os, Duration dur);
@@ -206,6 +218,39 @@ constexpr bool Duration::isNegative() const noexcept {
 		return false;
 	}
 	return seconds_ < 0;
+}
+
+constexpr Duration::QuoRemResult Duration::quorem(Duration rhs) const noexcept {
+	constexpr auto toTicks = [](Duration dur) noexcept { // dur >= 0
+		core::i128 const ticks = static_cast<i64>(dur.seconds_);
+		return ticks * kTicksPerSecond + dur.ticks_;
+	};
+
+	constexpr auto toDuration = [](core::i128 ticks) noexcept { // ticks >= 0
+		auto const [seconds, ticks_]
+		    = core::quorem(ticks, core::i128{kTicksPerSecond});
+		return Duration{static_cast<i64>(seconds), static_cast<u32>(ticks_)};
+	};
+
+	if (RB_UNLIKELY(isNaN()) || isZero() && rhs.isZero()) {
+		return core::err(QuoRemError::kNaN);
+	}
+
+	if (isInf() || rhs.isZero()) {
+		return core::err(QuoRemError::kInf);
+	}
+
+	auto const dividend = toTicks(abs(*this));
+	auto const divisor = toTicks(abs(rhs));
+	auto [quo, remTicks] = core::quorem(dividend, divisor);
+	if (isNegative() != rhs.isNegative()) {
+		quo = -quo;
+	}
+	auto rem = toDuration(remTicks);
+	if (isNegative()) {
+		rem = -rem;
+	}
+	return QuoRem{quo, rem};
 }
 
 constexpr Duration::operator bool() const noexcept {
@@ -422,6 +467,20 @@ constexpr Duration Duration::operator/(i64 value) const noexcept {
 	return isNeg ? -ans : ans;
 }
 
+constexpr core::i128 Duration::operator/(Duration rhs) const noexcept {
+	auto const result = quorem(rhs);
+	bool const isNeg = isNegative() != rhs.isNegative();
+	if (result.hasValue()) {
+		return result->quo;
+	}
+
+	if (result.error() == QuoRemError::kNaN) {
+		return core::i128::min();
+	}
+
+	return isNeg ? core::i128::min() : core::i128::max();
+}
+
 constexpr Duration operator+(Duration lhs, Duration rhs) noexcept {
 	return lhs += rhs;
 }
@@ -473,6 +532,10 @@ template <class T,
     RB_REQUIRES_INTEGRAL(T)>
 constexpr Duration hours(T value) noexcept {
 	return impl::fromInt64(value, std::ratio<Duration::kSecondsPerHour>{});
+}
+
+constexpr Duration::QuoRemResult quorem(Duration lhs, Duration rhs) noexcept {
+	return lhs.quorem(rhs);
 }
 
 constexpr Duration Duration::kNanosecond = nanoseconds(1);
