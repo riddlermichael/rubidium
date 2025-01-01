@@ -63,17 +63,22 @@ public:
 
 	constexpr explicit operator bool() const noexcept;
 
+	constexpr Duration operator+() const noexcept;
 	constexpr Duration operator-() const noexcept;
 
 	constexpr bool operator==(Duration rhs) const noexcept;
 
 	constexpr bool operator<(Duration rhs) const noexcept;
 
-	constexpr Duration& operator+=(Duration rhs) noexcept;
-	constexpr Duration& operator-=(Duration rhs) noexcept;
-
 	constexpr Duration operator*(i64 value) const noexcept;
 	constexpr Duration operator/(i64 value) const noexcept;
+	constexpr Duration operator%(i64 value) const noexcept;
+
+	constexpr Duration& operator+=(Duration rhs) noexcept;
+	constexpr Duration& operator-=(Duration rhs) noexcept;
+	constexpr Duration& operator*=(i64 value) noexcept;
+	constexpr Duration& operator/=(i64 value) noexcept;
+	constexpr Duration& operator%=(i64 value) noexcept;
 
 	/// Returns true iff `*this` is positive or negative infinity.
 	constexpr bool isInf() const noexcept;
@@ -205,6 +210,10 @@ constexpr bool Duration::isNegative() const noexcept {
 
 constexpr Duration::operator bool() const noexcept {
 	return seconds_ || ticks_;
+}
+
+constexpr Duration Duration::operator+() const noexcept {
+	return *this;
 }
 
 constexpr Duration Duration::operator-() const noexcept {
@@ -343,17 +352,26 @@ constexpr Duration& Duration::operator-=(Duration rhs) noexcept {
 	return *this;
 }
 
+constexpr Duration& Duration::operator*=(i64 value) noexcept {
+	return *this = *this * value;
+}
+
+constexpr Duration& Duration::operator/=(i64 value) noexcept {
+	return *this = *this / value;
+}
+
+constexpr Duration& Duration::operator%=(i64 value) noexcept {
+	return *this = *this % value;
+}
+
 constexpr Duration Duration::operator*(i64 value) const noexcept {
-	if (RB_UNLIKELY(isNaN())) {
+	if (RB_UNLIKELY(isNaN()) || isInf() && !value) {
 		return kNaN;
 	}
 
 	bool const isNeg = isNegative() != (value < 0);
 	Duration const inf = isNeg ? kNegativeInfinity : kInfinity;
 	if (isInf()) {
-		if (!value) {
-			return kNaN;
-		}
 		return inf;
 	}
 
@@ -383,11 +401,25 @@ constexpr Duration Duration::operator*(i64 value) const noexcept {
 }
 
 constexpr Duration Duration::operator/(i64 value) const noexcept {
-	if (isInf()) {
-		return *this;
+	if (RB_UNLIKELY(isNaN()) || isZero() && !value) {
+		return kNaN;
 	}
 
-	return *this;
+	bool const isNeg = isNegative() != (value < 0);
+	Duration const inf = isNeg ? kNegativeInfinity : kInfinity;
+	if (isInf() || !value) {
+		return inf;
+	}
+
+	Duration const dur = abs(*this);
+	u64 const v = value < 0 ? -value : value;
+	u64 const seconds = dur.seconds_ / v;
+	core::u128 ticks = dur.seconds_ % v;
+	ticks *= kTicksPerSecond;
+	ticks += dur.ticks_;
+	ticks /= v; // < kTicksPerSecond
+	Duration const ans{static_cast<i64>(seconds), static_cast<u32>(ticks)};
+	return isNeg ? -ans : ans;
 }
 
 constexpr Duration operator+(Duration lhs, Duration rhs) noexcept {
@@ -400,6 +432,10 @@ constexpr Duration operator-(Duration lhs, Duration rhs) noexcept {
 
 constexpr Duration operator*(i64 lhs, Duration rhs) noexcept {
 	return rhs * lhs;
+}
+
+constexpr Duration Duration::operator%(i64 value) const noexcept {
+	return *this - (*this / value) * value;
 }
 
 // Factory functions

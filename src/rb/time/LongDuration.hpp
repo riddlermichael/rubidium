@@ -104,6 +104,7 @@ public:
 
 	constexpr bool operator!() const noexcept;
 
+	constexpr LongDuration operator+() const noexcept;
 	constexpr LongDuration operator-() const noexcept;
 
 	constexpr bool operator==(LongDuration rhs) const noexcept;
@@ -228,6 +229,10 @@ constexpr LongDuration::operator bool() const noexcept {
 
 constexpr bool LongDuration::operator!() const noexcept {
 	return !ticks_;
+}
+
+constexpr LongDuration LongDuration::operator+() const noexcept {
+	return *this;
 }
 
 constexpr LongDuration LongDuration::operator-() const noexcept {
