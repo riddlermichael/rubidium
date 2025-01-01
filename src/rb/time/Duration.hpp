@@ -57,7 +57,6 @@ public:
 
 	/// Returns the lowest finite Duration,
 	/// that is, a finite value `x` such that there is no other finite value `y` where `y < x`.
-	/// Equals `-max()`.
 	static constexpr Duration lowest() noexcept;
 
 	constexpr Duration() noexcept = default;
@@ -72,6 +71,9 @@ public:
 
 	constexpr Duration& operator+=(Duration rhs) noexcept;
 	constexpr Duration& operator-=(Duration rhs) noexcept;
+
+	constexpr Duration operator*(i64 value) const noexcept;
+	constexpr Duration operator/(i64 value) const noexcept;
 
 	/// Returns true iff `*this` is positive or negative infinity.
 	constexpr bool isInf() const noexcept;
@@ -143,6 +145,10 @@ constexpr Duration fromInt64(i64 value, std::ratio<Duration::kSecondsPerHour> /*
 
 namespace rb::time {
 
+constexpr Duration abs(Duration dur) noexcept {
+	return dur.isNegative() ? -dur : dur;
+}
+
 // Duration methods
 constexpr Duration Duration::inf() noexcept {
 	return kInfinity;
@@ -165,7 +171,7 @@ constexpr Duration Duration::zero() noexcept {
 }
 
 constexpr Duration Duration::lowest() noexcept {
-	return -max();
+	return {core::min<i64>, 0};
 }
 
 constexpr bool Duration::isInf() const noexcept {
@@ -337,12 +343,63 @@ constexpr Duration& Duration::operator-=(Duration rhs) noexcept {
 	return *this;
 }
 
+constexpr Duration Duration::operator*(i64 value) const noexcept {
+	if (RB_UNLIKELY(isNaN())) {
+		return kNaN;
+	}
+
+	bool const isNeg = isNegative() != (value < 0);
+	Duration const inf = isNeg ? kNegativeInfinity : kInfinity;
+	if (isInf()) {
+		if (!value) {
+			return kNaN;
+		}
+		return inf;
+	}
+
+	if (!value) {
+		return {};
+	}
+
+	Duration const dur = abs(*this);
+	u64 const v = value < 0 ? -value : value;
+	core::u128 seconds = static_cast<i64>(dur.seconds_);
+	seconds *= v;
+	core::u128 ticks = dur.ticks_;
+	ticks *= v;
+	core::u128 const addSecs = ticks / kTicksPerSecond;
+	ticks %= kTicksPerSecond;
+	if (seconds > core::u128::max() - addSecs) {
+		return inf;
+	}
+
+	seconds += addSecs;
+	if (seconds > core::max<i64>) {
+		return inf;
+	}
+
+	Duration const ans{static_cast<i64>(seconds), static_cast<u32>(ticks)};
+	return isNeg ? -ans : ans;
+}
+
+constexpr Duration Duration::operator/(i64 value) const noexcept {
+	if (isInf()) {
+		return *this;
+	}
+
+	return *this;
+}
+
 constexpr Duration operator+(Duration lhs, Duration rhs) noexcept {
 	return lhs += rhs;
 }
 
 constexpr Duration operator-(Duration lhs, Duration rhs) noexcept {
 	return lhs -= rhs;
+}
+
+constexpr Duration operator*(i64 lhs, Duration rhs) noexcept {
+	return rhs * lhs;
 }
 
 // Factory functions
