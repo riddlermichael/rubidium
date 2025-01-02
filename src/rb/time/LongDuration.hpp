@@ -399,6 +399,7 @@ constexpr auto LongDuration::operator*(T value) const noexcept
 
 	auto const ticks = abs(ticks_);
 	auto const f = std::abs(value);
+	// FIXME
 	if (f > static_cast<T>(core::u128{max().ticks_} / ticks)) {
 		return isNeg ? kNegativeInfinity : kInfinity;
 	}

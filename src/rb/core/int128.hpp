@@ -548,18 +548,18 @@ inline std::ostream& operator<<(std::ostream& os, i128 const& value) {
 
 template <class T, bool kUnsigned,
     RB_REQUIRES(isIntegral<T>&& isUnsigned<T>)>
-constexpr Int128<kUnsigned> pow(Int128<kUnsigned> const& value, T p) noexcept {
+constexpr Int128<kUnsigned> pow(Int128<kUnsigned> value, T p) noexcept {
 	using I = Int128<kUnsigned>;
 
 	if (p == 0) {
-		return I::kOne;
+		return 1;
 	}
 
 	if (p == 1) {
 		return value;
 	}
 
-	I result = I::kOne;
+	I result = 1;
 	I base = value;
 	while (p) {
 		if (p % 2) {
@@ -573,20 +573,20 @@ constexpr Int128<kUnsigned> pow(Int128<kUnsigned> const& value, T p) noexcept {
 
 template <class T, bool kUnsigned,
     RB_REQUIRES(isIntegral<T>&& isSigned<T>)>
-constexpr Int128<kUnsigned> pow(Int128<kUnsigned> const& x, T value) noexcept {
+constexpr Int128<kUnsigned> pow(Int128<kUnsigned> x, T value) noexcept {
 	using I = Int128<kUnsigned>;
 
 	if (value >= 0) {
 		return pow(x, static_cast<Unsigned<T>>(value));
 	}
 
-	if (x == I::kOne) {
-		return I::kOne;
+	if (x == 1) {
+		return 1;
 	}
 
 	if constexpr (!kUnsigned) {
-		if (x == I::kMinusOne) {
-			return value % 2 ? I::kMinusOne : I::kOne;
+		if (x == -1) {
+			return value % 2 ? -1 : 1;
 		}
 	}
 

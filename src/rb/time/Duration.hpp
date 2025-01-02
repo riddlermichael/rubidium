@@ -84,6 +84,10 @@ public:
 	constexpr core::i128 operator/(Duration rhs) const noexcept;
 	constexpr Duration operator%(i64 value) const noexcept;
 
+	template <class T>
+	constexpr auto operator*(T value) const noexcept
+	    -> core::EnableIf<core::isFloatingPoint<T>, Duration>;
+
 	constexpr Duration& operator+=(Duration rhs) noexcept;
 	constexpr Duration& operator-=(Duration rhs) noexcept;
 	constexpr Duration& operator*=(i64 value) noexcept;
@@ -109,10 +113,14 @@ private:
 	static constexpr u32 kInfTicks = ~0U;
 	static constexpr u32 kNaNTicks = kNanosecondsPerSecond;
 
+	static constexpr Duration from(core::i128 ticks) noexcept;
+
 	constexpr Duration(i64 seconds, u32 ticks) noexcept
 	    : seconds_(seconds)
 	    , ticks_(ticks) {
 	}
+
+	constexpr core::i128 toTicks() const noexcept;
 
 	impl::I64 seconds_;
 	u32 ticks_ = 0;
@@ -221,17 +229,6 @@ constexpr bool Duration::isNegative() const noexcept {
 }
 
 constexpr Duration::QuoRemResult Duration::quorem(Duration rhs) const noexcept {
-	constexpr auto toTicks = [](Duration dur) noexcept { // dur >= 0
-		core::i128 const ticks = static_cast<i64>(dur.seconds_);
-		return ticks * kTicksPerSecond + dur.ticks_;
-	};
-
-	constexpr auto toDuration = [](core::i128 ticks) noexcept { // ticks >= 0
-		auto const [seconds, ticks_]
-		    = core::quorem(ticks, core::i128{kTicksPerSecond});
-		return Duration{static_cast<i64>(seconds), static_cast<u32>(ticks_)};
-	};
-
 	if (RB_UNLIKELY(isNaN()) || isZero() && rhs.isZero()) {
 		return core::err(QuoRemError::kNaN);
 	}
@@ -240,17 +237,28 @@ constexpr Duration::QuoRemResult Duration::quorem(Duration rhs) const noexcept {
 		return core::err(QuoRemError::kInf);
 	}
 
-	auto const dividend = toTicks(abs(*this));
-	auto const divisor = toTicks(abs(rhs));
+	auto const dividend = abs(*this).toTicks(); // FIXME *this == lowest()
+	auto const divisor = abs(rhs).toTicks();
 	auto [quo, remTicks] = core::quorem(dividend, divisor);
 	if (isNegative() != rhs.isNegative()) {
 		quo = -quo;
 	}
-	auto rem = toDuration(remTicks);
+	auto rem = from(remTicks);
 	if (isNegative()) {
 		rem = -rem;
 	}
 	return QuoRem{quo, rem};
+}
+
+constexpr Duration Duration::from(core::i128 ticks) noexcept { // ticks >= 0
+	auto const [seconds, ticks_]
+	    = core::quorem(ticks, core::i128{kTicksPerSecond});
+	return {static_cast<i64>(seconds), static_cast<u32>(ticks_)};
+}
+
+constexpr core::i128 Duration::toTicks() const noexcept { // dur >= 0
+	core::i128 const ticks = static_cast<i64>(seconds_);
+	return ticks * kTicksPerSecond + ticks_;
 }
 
 constexpr Duration::operator bool() const noexcept {
@@ -445,6 +453,38 @@ constexpr Duration Duration::operator*(i64 value) const noexcept {
 	return isNeg ? -ans : ans;
 }
 
+template <class T>
+constexpr auto Duration::operator*(T value) const noexcept
+    -> core::EnableIf<core::isFloatingPoint<T>, Duration> {
+	if (isNaN()
+	    || std::isnan(value)
+	    || isZero() && std::isinf(value)
+	    || isInf() && !value) //
+	{
+		return kNaN;
+	}
+
+	if (isZero() || !value) {
+		return {};
+	}
+
+	bool const isNeg = isNegative() != (value < 0);
+	if (isInf() || std::isinf(value)) {
+		return isNeg ? kNegativeInfinity : kInfinity;
+	}
+
+	constexpr auto maxTicks = max().toTicks(); // 2^63 * 4'000'000'000 - 1 ~ 3.689 * 10^28 < max<f32>
+	auto const t = abs(*this).toTicks(); // FIXME *this == lowest()
+	auto const f = std::abs(value);
+	core::i128 const ticks = static_cast<T>(t) * f;
+	if (ticks > maxTicks) {
+		return isNeg ? kNegativeInfinity : kInfinity;
+	}
+
+	Duration const ans = from(ticks);
+	return isNeg ? -ans : ans;
+}
+
 constexpr Duration Duration::operator/(i64 value) const noexcept {
 	if (RB_UNLIKELY(isNaN()) || isZero() && !value) {
 		return kNaN;
@@ -493,6 +533,12 @@ constexpr Duration operator*(i64 lhs, Duration rhs) noexcept {
 	return rhs * lhs;
 }
 
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration operator*(T lhs, Duration rhs) noexcept {
+	return rhs * lhs;
+}
+
 constexpr Duration Duration::operator%(i64 value) const noexcept {
 	return *this - (*this / value) * value;
 }
@@ -532,6 +578,42 @@ template <class T,
     RB_REQUIRES_INTEGRAL(T)>
 constexpr Duration hours(T value) noexcept {
 	return impl::fromInt64(value, std::ratio<Duration::kSecondsPerHour>{});
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration nanoseconds(T value) noexcept {
+	return value * Duration::kNanosecond;
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration microseconds(T value) noexcept {
+	return value * Duration::kMicrosecond;
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration milliseconds(T value) noexcept {
+	return value * Duration::kMillisecond;
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration seconds(T value) noexcept {
+	return value * Duration::kSecond;
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration minutes(T value) noexcept {
+	return value * Duration::kMinute;
+}
+
+template <class T,
+    RB_REQUIRES_FLOAT(T)>
+constexpr Duration hours(T value) noexcept {
+	return value * Duration::kHour;
 }
 
 constexpr Duration::QuoRemResult quorem(Duration lhs, Duration rhs) noexcept {
