@@ -104,6 +104,10 @@ public:
 	constexpr bool isZero() const noexcept;
 	constexpr bool isNegative() const noexcept;
 
+	template <class T = double>
+	constexpr auto div(Duration rhs) const noexcept
+	    -> core::EnableIf<core::isFloatingPoint<T>, T>;
+
 	constexpr QuoRemResult quorem(Duration rhs) const noexcept;
 
 private:
@@ -226,6 +230,30 @@ constexpr bool Duration::isNegative() const noexcept {
 		return false;
 	}
 	return seconds_ < 0;
+}
+
+template <class T>
+constexpr auto Duration::div(Duration rhs) const noexcept
+    -> core::EnableIf<core::isFloatingPoint<T>, T> {
+	if (isNaN()
+	    || rhs.isNaN()
+	    || isZero() && rhs.isZero()
+	    || isInf() && rhs.isInf()) //
+	{
+		return std::numeric_limits<T>::quiet_NaN();
+	}
+
+	if (isInf() || rhs.isZero()) {
+		bool const isNeg = isNegative() != rhs.isNegative();
+		constexpr T inf = core::inf<T>;
+		return isNeg ? -inf : inf;
+	}
+
+	if (rhs.isInf()) {
+		return 0;
+	}
+
+	return static_cast<T>(toTicks()) / static_cast<T>(rhs.toTicks());
 }
 
 constexpr Duration::QuoRemResult Duration::quorem(Duration rhs) const noexcept {
