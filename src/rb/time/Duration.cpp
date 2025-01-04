@@ -39,7 +39,11 @@ std::ostream& rb::time::operator<<(std::ostream& os, Duration dur) {
 			}
 			dur = rem;
 		}
-		return os << dur.div(Duration::kSecond) << "s";
+		auto const seconds = dur.div(Duration::kSecond);
+		if (seconds != 0.0) {
+			os << seconds << "s";
+		}
+		return os;
 	}
 
 	if (dur < Duration::kMicrosecond) {

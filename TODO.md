@@ -231,7 +231,7 @@
 
 - [x] use `absl::Duration`; move `i128` representation to `LongDuration`
 - [ ] look at Rust's `std::time`: `Duration`, `Instant`, `SystemTime`
-- [ ] conversions in `Duration`
+- [x] conversions in `Duration`
 - [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
 - [ ] `HighResolutionClock`
 - [ ] time(rs) and testing
