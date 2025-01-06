@@ -230,10 +230,10 @@
 ### `time`
 
 - [x] use `absl::Duration`; move `i128` representation to `LongDuration`
-- [ ] look at Rust's `std::time`: `Duration`, `Instant`, `SystemTime`
+- [x] look at Rust's `std::time`: `Duration`, `Instant`, `SystemTime`
 - [x] conversions in `Duration`
-- [ ] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
-- [ ] `HighResolutionClock`
+- [x] `SysTime`, `MonoTime` or `SysClock`, `MonoClock`
+- [x] ~~`HighResolutionClock`~~
 - [ ] time(rs) and testing
 - [ ] `Nanosecond`, `Microsecond`, `Millisecond`, `Second`, `Minute`, `Hour`, `Day` types
 
