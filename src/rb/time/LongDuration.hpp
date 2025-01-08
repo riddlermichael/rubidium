@@ -199,12 +199,12 @@ RB_CONST constexpr LongDuration trunc(LongDuration dur, LongDuration unit = Long
 
 #if RB_ENABLED(DURATION_NAN)
 constexpr LongDuration LongDuration::nan() noexcept {
-	return kNaN;
+	return LongDuration{kNaNTicks};
 }
 #endif
 
 constexpr LongDuration LongDuration::inf() noexcept {
-	return kInfinity;
+	return LongDuration{kInfTicks};
 }
 
 constexpr LongDuration LongDuration::max() noexcept {
@@ -474,7 +474,7 @@ constexpr bool LongDuration::isNaN() const noexcept {
 }
 
 constexpr bool LongDuration::isInf() const noexcept {
-	return *this == kInfinity || *this == kNegativeInfinity;
+	return *this == inf() || *this == kNegativeInfinity;
 }
 
 constexpr bool LongDuration::isPositive() const noexcept {
@@ -552,9 +552,11 @@ inline LongDuration const LongDuration::kSecond = seconds(1);
 inline LongDuration const LongDuration::kMinute = minutes(1);
 inline LongDuration const LongDuration::kHour = hours(1);
 
-inline LongDuration const LongDuration::kInfinity{kInfTicks};
-inline LongDuration const LongDuration::kNegativeInfinity{-kInfTicks};
-inline LongDuration const LongDuration::kNaN{kNaNTicks};
+inline LongDuration const LongDuration::kInfinity = LongDuration::inf();
+inline LongDuration const LongDuration::kNegativeInfinity = -LongDuration::inf();
+#if RB_ENABLED(DURATION_NAN)
+inline LongDuration const LongDuration::kNaN = LongDuration::nan();
+#endif
 
 // units
 
