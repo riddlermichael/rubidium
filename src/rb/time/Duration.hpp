@@ -1,7 +1,21 @@
 #pragma once
 
 #include <chrono>
-#include <ctime>
+
+#include <rb/core/compiler.hpp>
+#include <rb/core/os.hpp>
+#if defined(RB_COMPILER_MINGW) || defined(RB_OS_CYGWIN)
+// NOLINTBEGIN
+	#include <time.h>
+
+namespace std {
+using ::timespec;
+} // namespace std
+
+// NOLINTEND
+#else
+	#include <ctime>
+#endif
 
 #include <rb/core/Expected.hpp>
 #include <rb/core/int128.hpp>
@@ -216,11 +230,11 @@ constexpr Duration abs(Duration dur) noexcept {
 
 // Duration methods
 constexpr Duration Duration::inf() noexcept {
-	return kInfinity;
+	return {core::max<i64>, kInfTicks};
 }
 
 constexpr Duration Duration::nan() noexcept {
-	return kNaN;
+	return {0, kNaNTicks};
 }
 
 constexpr Duration Duration::max() noexcept {
@@ -340,22 +354,16 @@ constexpr Duration Duration::operator-() const noexcept {
 		return kNaN;
 	}
 
-	// if ticks_ is zero, we have it easy; it's safe to negate seconds_,
-	// we're dealing with an integral number of seconds,
-	// and the only special case is the maximum negative finite duration, which can't be negated
 	if (ticks_ == 0) {
 		return seconds_ == core::min<i64>
 		         ? kInfinity
 		         : Duration{-seconds_, 0};
 	}
 
-	// infinities stay infinite and just change a direction
 	if (isInf()) {
 		return (seconds_ < 0) ? kInfinity : kNegativeInfinity;
 	}
 
-	// finally, we're in the case where ticks_ is non-zero,
-	// and we can borrow a second's worth of ticks and avoid overflow
 	return Duration{~seconds_, kTicksPerSecond - ticks_};
 }
 
@@ -695,20 +703,20 @@ constexpr Duration hours(T value) noexcept {
 	return value * Duration::kHour;
 }
 
-constexpr Duration Duration::kNanosecond = nanoseconds(1);
-constexpr Duration Duration::kMicrosecond = microseconds(1);
-constexpr Duration Duration::kMillisecond = milliseconds(1);
-constexpr Duration Duration::kSecond = seconds(1);
-constexpr Duration Duration::kMinute = minutes(1);
-constexpr Duration Duration::kHour = hours(1);
+inline Duration const Duration::kNanosecond = nanoseconds(1);
+inline Duration const Duration::kMicrosecond = microseconds(1);
+inline Duration const Duration::kMillisecond = milliseconds(1);
+inline Duration const Duration::kSecond = seconds(1);
+inline Duration const Duration::kMinute = minutes(1);
+inline Duration const Duration::kHour = hours(1);
 
-constexpr Duration Duration::kInfinity = {core::max<i64>, kInfTicks};
-constexpr Duration Duration::kNegativeInfinity = {core::min<i64>, kInfTicks};
-constexpr Duration Duration::kNaN = {0, kNaNTicks};
+inline Duration const Duration::kInfinity = Duration::inf();
+inline Duration const Duration::kNegativeInfinity = {core::min<i64>, kInfTicks};
+inline Duration const Duration::kNaN = Duration::nan();
 
 constexpr Duration Duration::from(std::timespec ts) noexcept {
 	if (static_cast<u64>(ts.tv_nsec) < kNanosecondsPerSecond) {
-		i64 const ticks = ts.tv_nsec * kTicksPerNanosecond;
+		auto const ticks = static_cast<i64>(ts.tv_nsec) * kTicksPerNanosecond;
 		return impl::duration(ts.tv_sec, ticks);
 	}
 	return seconds(ts.tv_sec) + nanoseconds(ts.tv_nsec);
@@ -845,31 +853,31 @@ constexpr i64 Duration::toHours() const noexcept {
 namespace impl {
 
 	template <class Ratio>
-	constexpr auto toInt(Duration dur, Ratio) noexcept {
+	constexpr auto toInt(Duration dur, Ratio /*unused*/) noexcept {
 		return (dur * Ratio::den / Ratio::num).toSeconds();
 	}
 
-	constexpr auto toInt(Duration dur, std::nano) noexcept {
+	constexpr auto toInt(Duration dur, std::nano /*unused*/) noexcept {
 		return dur.toNanoseconds();
 	}
 
-	constexpr auto toInt(Duration dur, std::micro) noexcept {
+	constexpr auto toInt(Duration dur, std::micro /*unused*/) noexcept {
 		return dur.toMicroseconds();
 	}
 
-	constexpr auto toInt(Duration dur, std::milli) noexcept {
+	constexpr auto toInt(Duration dur, std::milli /*unused*/) noexcept {
 		return dur.toMilliseconds();
 	}
 
-	constexpr auto toInt(Duration dur, std::ratio<1>) noexcept {
+	constexpr auto toInt(Duration dur, std::ratio<1> /*unused*/) noexcept {
 		return dur.toSeconds();
 	}
 
-	constexpr auto toInt(Duration dur, std::ratio<Duration::kSecondsPerMinute>) noexcept {
+	constexpr auto toInt(Duration dur, std::ratio<Duration::kSecondsPerMinute> /*unused*/) noexcept {
 		return dur.toMinutes();
 	}
 
-	constexpr auto toInt(Duration dur, std::ratio<Duration::kSecondsPerHour>) noexcept {
+	constexpr auto toInt(Duration dur, std::ratio<Duration::kSecondsPerHour> /*unused*/) noexcept {
 		return dur.toHours();
 	}
 
@@ -883,20 +891,20 @@ constexpr auto Duration::toChrono() const noexcept
 	using Period = typename D::Period;
 
 	if (RB_UNLIKELY(isNaN())) {
-		return (T::min) ();
+		return T::min();
 	}
 
 	if (isInf()) {
-		return isNegative() ? (T::min) () : (T::max) ();
+		return isNegative() ? T::min() : T::max();
 	}
 
 	auto const value = impl::toInt(*this, Period{});
 	if (value > core::max<Rep>) {
-		return (T::max) ();
+		return T::max();
 	}
 
 	if (value < core::min<Rep>) {
-		return (T::min) ();
+		return T::min();
 	}
 
 	return T{static_cast<Rep>(value)};
@@ -915,9 +923,9 @@ constexpr std::timespec Duration::toTimespec() const noexcept {
 			}
 		}
 		// ReSharper disable once CppRedundantCastExpression
-		ts.tv_sec = static_cast<decltype(ts.tv_sec)>(seconds);
+		ts.tv_sec = static_cast<std::time_t>(seconds);
 		if (ts.tv_sec == seconds) { // no time_t narrowing
-			ts.tv_nsec = ticks / kTicksPerNanosecond;
+			ts.tv_nsec = ticks / kTicksPerNanosecond; // NOLINT(*-narrowing-conversions)
 			return ts;
 		}
 	}
