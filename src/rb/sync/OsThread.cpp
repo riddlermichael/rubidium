@@ -55,10 +55,14 @@ void OsThread::start(StartFn fn, void* arg) {
 }
 
 #elif RB_USE(WIN32_THREADS)
+
+struct OsThread::Impl {
+};
+
 #endif
 
 OsThread::OsThread()
-    : pImpl_(core::makeUnique<Impl>()) {
+	: pImpl_(core::makeUnique<Impl>()) {
 }
 
 OsThread::~OsThread() noexcept(false) {

@@ -22,7 +22,7 @@
 	#define RB_BUILTIN_FUNCSIG __builtin_FUNCTION()
 	#define RB_HAS_BUILTIN_SOURCE_LOCATION 1
 #elif defined(RB_COMPILER_MSVC)
-	#if _MSC_VER >= 1926 && _MSVC_LANG > 201703L // works in C++20 mode only
+	#if _MSC_VER >= 1926
 		#define RB_BUILTIN_FILE __builtin_FILE()
 		#define RB_BUILTIN_LINE __builtin_LINE()
 		#define RB_BUILTIN_FUNCTION __builtin_FUNCTION()

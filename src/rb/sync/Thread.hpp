@@ -2,7 +2,7 @@
 
 #include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
-#include <rb/time/Time.hpp>
+#include <rb/time/Duration.hpp>
 
 namespace rb::sync {
 
@@ -19,11 +19,15 @@ public:
 		constexpr int opCmp(Id rhs) const noexcept;
 
 		constexpr bool operator==(Id rhs) const noexcept;
+
 		constexpr bool operator!=(Id rhs) const noexcept;
 
 		constexpr bool operator<(Id rhs) const noexcept;
+
 		constexpr bool operator<=(Id rhs) const noexcept;
+
 		constexpr bool operator>(Id rhs) const noexcept;
+
 		constexpr bool operator>=(Id rhs) const noexcept;
 
 	private:
@@ -37,33 +41,31 @@ public:
 	};
 
 	// static Thread* currentThread() noexcept;
-	// static Id currentThreadId() noexcept;
-	// static void sleepFor(time::Duration timeout) noexcept;
-	// static void sleepUntil(time::Time deadline) noexcept;
-	// static void yield() noexcept;
+	static Id currentThreadId() noexcept;
+	static void sleepFor(time::Duration timeout) noexcept; // TODO sleepUntil(MonoTime)
+	static void yield() noexcept;
 
 	Thread();
+
 	virtual ~Thread() noexcept(false);
 
 	virtual void run() = 0;
 
-	// explicit operator bool() const noexcept {
-	// 	return joinable();
-	// }
+	explicit operator bool() const noexcept {
+		return joinable();
+	}
 
 	// usize stackSize() const noexcept;
 	// void setStackSize(usize stackSize);
 
-	// Id id() const noexcept;
-	// [[nodiscard]] bool joinable() const noexcept;
+	void swap(Thread& rhs) noexcept;
 
-	// void detach();
-	// [[noreturn]] void exit(int exitCode = 0);
+	Id id() const noexcept;
+	[[nodiscard]] bool joinable() const noexcept;
+
+	void detach();
 	void join();
-	// void join(int& exitCode);
-	//void swap(Thread& rhs) noexcept;
-
-	void start();
+	void start(RB_SOURCE_LOCATION_DECL);
 
 private:
 	struct Impl;
