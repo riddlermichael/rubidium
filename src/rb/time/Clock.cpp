@@ -1,12 +1,12 @@
 #include "Clock.hpp"
 
-#include <rb/core/os.hpp>
-
 using namespace rb::time;
 
 #ifdef RB_OS_WIN
 
 	#include <Windows.h>
+
+	#include <rb/core/os.hpp>
 
 namespace {
 
@@ -40,7 +40,7 @@ Duration Clock<ClockId::kMonotonic>::now() noexcept {
 	return impl::duration(secs, ticks);
 }
 
-Duration Clock<ClockId::kMonotonicCoarse>::now() noexcept {
+Duration Clock<ClockId::kMonotonicFast>::now() noexcept {
 	return milliseconds(GetTickCount64());
 }
 
@@ -50,15 +50,59 @@ Duration Clock<ClockId::kRealtime>::now() noexcept {
 	return toDuration(fileTime);
 }
 
-Duration Clock<ClockId::kRealtimeCoarse>::now() noexcept {
+Duration Clock<ClockId::kRealtimeFast>::now() noexcept {
 	FILETIME fileTime;
 	GetSystemTimeAsFileTime(&fileTime);
 	return toDuration(fileTime);
 }
 
-Duration Clock<ClockId::kBootTime>::now() noexcept {
+Duration Clock<ClockId::kUptime>::now() noexcept {
 	return milliseconds(GetTickCount64());
 }
 
 #else
+
+namespace {
+
+// TODO add fallback variants
+Duration getTime(clockid_t clockId) noexcept {
+	std::timespec ts = {};
+	clock_gettime(clockId, &ts);
+	return Duration::from(ts);
+}
+
+} // namespace
+
+Duration Clock<ClockId::kMonotonic>::now() noexcept {
+	return getTime(CLOCK_MONOTONIC);
+}
+
+Duration Clock<ClockId::kMonotonicFast>::now() noexcept {
+	return getTime(CLOCK_MONOTONIC_COARSE);
+}
+
+Duration Clock<ClockId::kRealtime>::now() noexcept {
+	return getTime(CLOCK_REALTIME);
+}
+
+Duration Clock<ClockId::kRealtimeFast>::now() noexcept {
+	return getTime(CLOCK_REALTIME_COARSE);
+}
+
+Duration Clock<ClockId::kUptime>::now() noexcept {
+	return getTime(CLOCK_BOOTTIME);
+}
+
+Duration Clock<ClockId::kTai>::now() noexcept {
+	return getTime(CLOCK_TAI); // since Linux 3.10; Linux-specific
+}
+
+Duration Clock<ClockId::kProcessCpuTime>::now() noexcept {
+	return getTime(CLOCK_PROCESS_CPUTIME_ID);
+}
+
+Duration Clock<ClockId::kThreadCpuTime>::now() noexcept {
+	return getTime(CLOCK_THREAD_CPUTIME_ID);
+}
+
 #endif
