@@ -7,7 +7,13 @@ using namespace rb::sync;
 
 #if RB_USE(PTHREADS)
 
+	#ifndef RBC_COMPILER_MINGW
+		#include <sched.h>
+	#endif
+
 namespace {
+
+static_assert(sizeof(pthread_t) <= sizeof(usize));
 
 struct AttributeGuard {
 	pthread_attr_t& attr;
@@ -22,27 +28,87 @@ struct AttributeGuard {
 	}
 };
 
-void* threadFunc(void* arg) {
+void* threadFunc(void* arg) noexcept {
 	auto* thread = static_cast<Thread*>(arg);
 	thread->run();
 	return nullptr;
 }
 
+template <class T>
+constexpr auto toUsize(T value) noexcept
+    -> RB_REQUIRES_RETURN(usize, isIntegral<T>) {
+	return static_cast<usize>(value);
+}
+
+template <class T>
+constexpr auto toUsize(T value) noexcept
+    -> RB_REQUIRES_RETURN(usize, isPointer<T>) {
+	return reinterpret_cast<usize>(value); // NOLINT(*-pro-type-reinterpret-cast)
+}
+
+template <class T>
+auto toUsize(T value) noexcept
+    -> RB_REQUIRES_RETURN(usize, !isIntegral<T> && !isPointer<T>) {
+	static_assert(sizeof(T) <= sizeof(usize));
+	u8 data[sizeof(usize)] = {};
+	std::memcpy(data, &value, sizeof(value));
+	return bitCast<usize>(data);
+}
+
 } // namespace
 
 struct Thread::Impl {
-	pthread_t impl;
+	pthread_t impl = {};
 };
 
+Thread::Id Thread::currentThreadId() noexcept {
+	return Id{toUsize(pthread_self())};
+}
+
+void Thread::sleepFor(time::Duration timeout) noexcept {
+	auto const ts = timeout.toTimespec();
+	nanosleep(&ts, nullptr); // TODO process EINTR
+}
+
+void Thread::yield() noexcept {
+	sched_yield();
+}
+
+Thread::Thread()
+    : pImpl_(makeUnique<Impl>()) {
+}
+
+Thread::Id Thread::id() const noexcept {
+	return Id{toUsize(pImpl_->impl)};
+}
+
+bool Thread::joinable() const noexcept {
+	return id() != Id{};
+}
+
+void Thread::detach() {
+	if (!joinable()) {
+		throw OsError(ErrorCode::kInvalidArgument);
+	}
+
+	RB_SYNC_CHECK_ERRNO(pthread_detach(pImpl_->impl));
+	pImpl_ = makeUnique<Impl>();
+}
+
 void Thread::join() {
-	if (!pImpl_) {
+	if (!joinable()) {
 		throw OsError(ErrorCode::kInvalidArgument);
 	}
 
 	RB_SYNC_CHECK_ERRNO(pthread_join(pImpl_->impl, nullptr));
+	pImpl_ = makeUnique<Impl>();
 }
 
 void Thread::start() {
+	if (joinable()) {
+		throw OsError(ErrorCode::kOperationInProgress);
+	}
+
 	pthread_attr_t attr{};
 	AttributeGuard const _{attr};
 	RB_SYNC_CHECK_ERRNO(pthread_attr_init(&attr));
@@ -104,16 +170,6 @@ Thread::Thread()
 	RB_SYNC_CHECK_ERRNO(errno);
 }
 
-Thread::~Thread() noexcept(false) {
-	if (joinable()) {
-		throw OsError(ErrorCode::kOperationInProgress);
-	}
-}
-
-void Thread::swap(Thread& rhs) noexcept {
-	pImpl_.swap(rhs.pImpl_);
-}
-
 Thread::Id Thread::id() const noexcept {
 	return Id{pImpl_->id};
 }
@@ -148,14 +204,31 @@ void Thread::join() {
 	pImpl_ = makeUnique<Impl>();
 }
 
-void Thread::start(SourceLocation const& location) {
+void Thread::start() {
 	DWORD const suspendCount = ResumeThread(pImpl_->hThread);
 	if (suspendCount == 0) {
-		throw OsError(ErrorCode::kOperationInProgress, location);
+		throw OsError(ErrorCode::kOperationInProgress);
 	}
 	if (suspendCount == -1) {
-		throw OsError::lastOsError(location);
+		throw OsError::lastOsError();
 	}
 }
 
 #endif
+
+Thread::~Thread() noexcept(false) {
+	if (joinable()) {
+		throw OsError(ErrorCode::kOperationInProgress);
+	}
+}
+
+void Thread::swap(Thread& rhs) noexcept {
+	pImpl_.swap(rhs.pImpl_);
+}
+
+void Thread::sleepUntil(time::Instant instant) noexcept {
+	auto const duration = instant.since(time::Instant::now());
+	if (duration.isPositive()) {
+		sleepFor(duration);
+	}
+}

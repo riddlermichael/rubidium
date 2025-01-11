@@ -214,12 +214,14 @@
 - [ ] [test for mutex](https://demin.ws/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/)
 - [ ] `once`
   - [ ] static init
-- [ ] make `Thread::start` `noexcept`
+- [ ] make `Thread::start` `noexcept` (catch exceptions)
 - [ ] Windows
   - [ ] condition variable wait for/until
   - [ ] non-recursive mutex
   - [ ] spinlock
   - [ ] timed mutex
+- [ ] thread stack size
+- [ ] thread timed join (i.e., wait)
 
 ### `thread`
 

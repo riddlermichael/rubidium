@@ -2,7 +2,7 @@
 
 #include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
-#include <rb/time/Duration.hpp>
+#include <rb/time/MonoTime.hpp>
 
 namespace rb::sync {
 
@@ -42,11 +42,11 @@ public:
 
 	// static Thread* currentThread() noexcept;
 	static Id currentThreadId() noexcept;
-	static void sleepFor(time::Duration timeout) noexcept; // TODO sleepUntil(MonoTime)
+	static void sleepFor(time::Duration timeout) noexcept;
+	static void sleepUntil(time::Instant instant) noexcept;
 	static void yield() noexcept;
 
 	Thread();
-
 	virtual ~Thread() noexcept(false);
 
 	virtual void run() = 0;
@@ -55,9 +55,6 @@ public:
 		return joinable();
 	}
 
-	// usize stackSize() const noexcept;
-	// void setStackSize(usize stackSize);
-
 	void swap(Thread& rhs) noexcept;
 
 	Id id() const noexcept;
@@ -65,7 +62,7 @@ public:
 
 	void detach();
 	void join();
-	void start(RB_SOURCE_LOCATION_DECL);
+	void start();
 
 private:
 	struct Impl;
