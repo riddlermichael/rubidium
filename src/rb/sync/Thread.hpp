@@ -40,7 +40,7 @@ public:
 		usize id_ = 0;
 	};
 
-	// static Thread* currentThread() noexcept;
+	static Thread* currentThread() noexcept;
 	static Id currentThreadId() noexcept;
 	static void sleepFor(time::Duration timeout) noexcept;
 	static void sleepUntil(time::Instant instant) noexcept;

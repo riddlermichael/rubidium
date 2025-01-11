@@ -5,6 +5,10 @@
 using namespace rb::core;
 using namespace rb::sync;
 
+namespace {
+thread_local Thread* thisThread = nullptr;
+} // namespace
+
 #if RB_USE(PTHREADS)
 
 	#ifndef RBC_COMPILER_MINGW
@@ -30,6 +34,7 @@ struct AttributeGuard {
 
 void* threadFunc(void* arg) noexcept {
 	auto* thread = static_cast<Thread*>(arg);
+	thisThread = thread;
 	thread->run();
 	return nullptr;
 }
@@ -130,6 +135,7 @@ namespace {
 
 unsigned WINAPI threadFunc(void* arg) noexcept {
 	auto* thread = static_cast<Thread*>(arg);
+	thisThread = thread;
 	thread->run();
 	return 0;
 }
@@ -150,7 +156,8 @@ void Thread::sleepFor(time::Duration timeout) noexcept {
 		return;
 	}
 
-	Sleep(static_cast<DWORD>(ms));
+	// TODO use waitable timer for duration < 1ms
+	SleepEx(static_cast<DWORD>(ms), FALSE);
 }
 
 void Thread::yield() noexcept {
@@ -215,6 +222,10 @@ void Thread::start() {
 }
 
 #endif
+
+Thread* Thread::currentThread() noexcept {
+	return thisThread;
+}
 
 Thread::~Thread() noexcept(false) {
 	if (joinable()) {
