@@ -2,27 +2,13 @@
 
 #include <chrono>
 
-#include <rb/core/compiler.hpp>
-#include <rb/core/os.hpp>
-#if defined(RB_COMPILER_MINGW) || defined(RB_OS_CYGWIN)
-// NOLINTBEGIN
-	#include <time.h>
-
-namespace std {
-using ::timespec;
-} // namespace std
-
-// NOLINTEND
-#else
-	#include <ctime>
-#endif
-
 #include <rb/core/Expected.hpp>
 #include <rb/core/int128.hpp>
 #include <rb/core/quorem.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/enums.hpp>
 #include <rb/time/I64.hpp>
+#include <rb/time/TimeSpec.hpp>
 
 #define RB_REQUIRES_INTEGRAL(T) RB_REQUIRES(rb::core::isIntegral<T> || rb::core::isEnum<T>)
 #define RB_REQUIRES_FLOAT(T) RB_REQUIRES(rb::core::isFloatingPoint<T>)
@@ -154,6 +140,7 @@ public:
 	    -> core::EnableIf<impl::IsDuration<T>::value, T>;
 
 	constexpr std::timespec toTimespec() const noexcept;
+	constexpr core::Option<TimeSpec> toTimeSpec() const noexcept;
 
 private:
 	friend std::ostream& operator<<(std::ostream& os, Duration dur);
@@ -937,6 +924,24 @@ constexpr std::timespec Duration::toTimespec() const noexcept {
 		ts.tv_nsec = 0;
 	}
 	return ts;
+}
+
+constexpr core::Option<TimeSpec> Duration::toTimeSpec() const noexcept {
+	if (isInf() || isNaN()) {
+		return {};
+	}
+
+	auto seconds = static_cast<i64>(seconds_);
+	u32 ticks = ticks_;
+	if (seconds < 0) {
+		ticks += kTicksPerNanosecond - 1;
+		if (ticks >= kTicksPerSecond) {
+			seconds += 1;
+			ticks -= kTicksPerSecond;
+		}
+	}
+
+	return TimeSpec{seconds, ticks / kTicksPerNanosecond};
 }
 
 } // namespace rb::time

@@ -71,8 +71,31 @@ Thread::Id Thread::currentThreadId() noexcept {
 }
 
 void Thread::sleepFor(time::Duration timeout) noexcept {
-	auto const ts = timeout.toTimespec();
-	nanosleep(&ts, nullptr); // TODO process EINTR
+	// ReSharper disable CppRedundantCastExpression
+	if (RB_UNLIKELY(timeout.isNaN())
+	    || timeout.isNegative()) {
+		return;
+	}
+
+	if (timeout.isInf()) {
+		timeout = time::Duration::max();
+	}
+
+	auto [secs, nsecs] = *timeout.toTimeSpec(); // NOLINT(*-cplusplus.Move)
+	while (secs > 0 || nsecs > 0) {
+		constexpr auto kMaxTimeT = static_cast<i64>(max<std::time_t>);
+		std::timespec ts = {
+		    static_cast<std::time_t>(kMaxTimeT < secs ? kMaxTimeT : secs),
+		    nsecs,
+		};
+		secs -= static_cast<i64>(ts.tv_sec);
+		if (nanosleep(&ts, &ts) == -1) {
+			secs += static_cast<i64>(ts.tv_sec);
+			nsecs = ts.tv_nsec;
+		} else {
+			nsecs = 0;
+		}
+	}
 }
 
 void Thread::yield() noexcept {

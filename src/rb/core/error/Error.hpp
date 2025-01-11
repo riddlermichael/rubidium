@@ -9,7 +9,7 @@ inline namespace error {
 
 	class RB_EXPORT Error {
 	public:
-		/// Construct Error with empty message and specified @p location.
+		/// Construct Error with an empty message and specified @p location.
 		explicit Error(RB_SOURCE_LOCATION_DECL) noexcept;
 
 		/// Construct Error with @p msg and @p location.
