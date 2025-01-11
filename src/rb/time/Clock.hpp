@@ -107,6 +107,8 @@ public:
 	static Duration now() noexcept;
 };
 
+#ifndef RB_OS_WIN
+
 template <>
 class Clock<ClockId::kTai> {
 public:
@@ -130,5 +132,7 @@ public:
 
 	static Duration now() noexcept;
 };
+
+#endif
 
 } // namespace rb::time

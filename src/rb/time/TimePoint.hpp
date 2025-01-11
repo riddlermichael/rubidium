@@ -8,6 +8,10 @@ template <class Clock,
     RB_REQUIRES_T(IsClock<Clock>)>
 class TimePoint final {
 public:
+	static constexpr TimePoint from(Duration dur) noexcept {
+		return TimePoint{dur};
+	}
+
 	static TimePoint now() noexcept {
 		return TimePoint{Clock::now()};
 	}
@@ -32,8 +36,21 @@ public:
 		return *this;
 	}
 
+	template <bool _ = true, RB_REQUIRES(_&& Clock::kIsMonotonic)>
+	constexpr Duration operator-(TimePoint rhs) const noexcept {
+		return rep_ - rhs.rep_;
+	}
+
+	constexpr bool isInf() const noexcept {
+		return rep_.isInf();
+	}
+
 	constexpr Duration since(TimePoint rhs) const noexcept {
 		return rep_ - rhs.rep_;
+	}
+
+	constexpr Duration sinceEpoch() const noexcept {
+		return rep_;
 	}
 
 	Duration elapsed() const noexcept {
