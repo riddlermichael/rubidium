@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rb/time/Duration.hpp>
+#include <rb/time/TimePoint.hpp>
 
 namespace rb::time {
 
@@ -10,68 +10,66 @@ namespace rb::time {
 /// that is returned by a later call to now().
 ///
 /// A clock is *steady* if the time between clock ticks is constant.
-///
-/// MonoTime is **not** guaranteed to be steady. However, on all supported platforms, monotonic clocks are steady now.
+/// MonoTime is **not** guaranteed to be steady.
 class MonoTime final {
+	using Impl = TimePoint<Clock<ClockId::kMonotonic>>;
+
 public:
-	static MonoTime now() noexcept;
+	static MonoTime now() noexcept {
+		return MonoTime{Impl::now()};
+	}
 
 	constexpr MonoTime() noexcept = default;
 
-	constexpr bool operator==(MonoTime rhs) const noexcept;
-	constexpr bool operator<(MonoTime rhs) const noexcept;
-
-	constexpr MonoTime& operator+=(Duration dur) noexcept;
-	constexpr MonoTime& operator-=(Duration dur) noexcept;
-
-	/// @return the amount of time elapsed from @p rhs to *this, or zero duration if @p rhs is later than *this.
-	constexpr Duration operator-(MonoTime rhs) const noexcept;
-
-	constexpr bool isInf() const noexcept;
-	constexpr Duration since(MonoTime rhs) const noexcept;
-
-	Duration elapsed() const noexcept;
-
-private:
-	friend std::ostream& operator<<(std::ostream& os, MonoTime clock);
-
-	constexpr explicit MonoTime(Duration rep) noexcept
-	    : rep_{rep} {
+	constexpr bool operator==(MonoTime rhs) const noexcept {
+		return impl_ == rhs.impl_;
 	}
 
-	Duration rep_;
+	constexpr bool operator<(MonoTime rhs) const noexcept {
+		return impl_ < rhs.impl_;
+	}
+
+	constexpr MonoTime& operator+=(Duration dur) noexcept {
+		impl_ += dur;
+		return *this;
+	}
+
+	constexpr MonoTime& operator-=(Duration dur) noexcept {
+		impl_ -= dur;
+		return *this;
+	}
+
+	constexpr Duration operator-(MonoTime rhs) const noexcept {
+		return since(rhs);
+	}
+
+	constexpr bool isInf() const noexcept {
+		return impl_.isInf();
+	}
+
+	/// @return the amount of time elapsed from @p rhs to *this, or zero duration if @p rhs is later than *this.
+	constexpr Duration since(MonoTime rhs) const noexcept {
+		auto const duration = impl_ - rhs.impl_;
+		return duration.isNegative() ? Duration::zero() : duration;
+	}
+
+	Duration elapsed() const noexcept {
+		return impl_.elapsed();
+	}
+
+private:
+	friend std::ostream& operator<<(std::ostream& os, MonoTime monoTime) {
+		return os << "Instant{" << monoTime.impl_.sinceEpoch() << "}";
+	}
+
+	constexpr explicit MonoTime(Impl impl) noexcept
+	    : impl_{impl} {
+	}
+
+	Impl impl_;
 };
 
-constexpr bool MonoTime::operator==(MonoTime rhs) const noexcept {
-	return rep_ == rhs.rep_;
-}
-
-constexpr bool MonoTime::operator<(MonoTime rhs) const noexcept {
-	return rep_ < rhs.rep_;
-}
-
-constexpr MonoTime& MonoTime::operator+=(Duration dur) noexcept {
-	rep_ += dur;
-	return *this;
-}
-
-constexpr MonoTime& MonoTime::operator-=(Duration dur) noexcept {
-	rep_ -= dur;
-	return *this;
-}
-
-constexpr Duration MonoTime::operator-(MonoTime rhs) const noexcept {
-	return since(rhs);
-}
-
-constexpr bool MonoTime::isInf() const noexcept {
-	return rep_.isInf();
-}
-
-constexpr Duration MonoTime::since(MonoTime rhs) const noexcept {
-	auto const duration = rep_ - rhs.rep_;
-	return duration.isNegative() ? Duration::zero() : duration;
-}
+using Instant = MonoTime;
 
 #pragma region synthesized operators
 
@@ -104,7 +102,5 @@ constexpr MonoTime operator-(MonoTime lhs, Duration rhs) noexcept {
 }
 
 #pragma endregion synthesized operators
-
-std::ostream& operator<<(std::ostream& os, MonoTime clock);
 
 } // namespace rb::time

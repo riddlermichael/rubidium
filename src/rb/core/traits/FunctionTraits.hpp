@@ -52,7 +52,6 @@ inline namespace traits {
 		using Parameters = TypeSeq<Args...>;
 
 		static constexpr FunctionAttributes kAttributes{
-		    FunctionAttribute::kNone,
 		    FunctionAttribute::kNoexcept,
 		};
 	};
@@ -66,7 +65,6 @@ inline namespace traits {
 		using Parameters = TypeSeq<Args...>;
 
 		static constexpr FunctionAttributes kAttributes{
-		    FunctionAttribute::kNone,
 		    FunctionAttribute::kVariadic,
 		};
 	};
@@ -80,7 +78,6 @@ inline namespace traits {
 		using Parameters = TypeSeq<Args...>;
 
 		static constexpr FunctionAttributes kAttributes{
-		    FunctionAttribute::kNone,
 		    FunctionAttribute::kNoexcept,
 		    FunctionAttribute::kVariadic,
 		};

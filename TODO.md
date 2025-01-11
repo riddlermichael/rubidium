@@ -95,6 +95,7 @@
 - [ ] look at Chromium's `base::Location`
 - [ ] compare `Array` and `absl::FixedArray`
 - [ ] see `absl::Nullable` etc.
+- [ ] `noexcept` detection
 
 ### Data structures
 
@@ -236,6 +237,7 @@
 - [x] ~~`HighResolutionClock`~~
 - [ ] time(rs) and testing
 - [ ] `Nanosecond`, `Microsecond`, `Millisecond`, `Second`, `Minute`, `Hour`, `Day` types
+- [ ] clock resolution
 
 ### `utf`
 

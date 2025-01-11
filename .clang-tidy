@@ -47,7 +47,6 @@ CheckOptions:
   - { key: readability-identifier-naming.ClassConstantCase, value: CamelCase }
   - { key: readability-identifier-naming.ClassConstantPrefix, value: k }
   - { key: readability-identifier-naming.ClassMemberCase, value: camelBack }
-  - { key: readability-identifier-naming.ClassMemberPrefix, value: s_ }
   - { key: readability-identifier-naming.ClassMethodCase, value: camelBack }
   - { key: readability-identifier-naming.EnumCase, value: CamelCase }
   - { key: readability-identifier-naming.EnumConstantCase, value: CamelCase }
@@ -64,10 +63,6 @@ CheckOptions:
   - { key: readability-identifier-naming.ProtectedMemberCase, value: camelBack }
   - { key: readability-identifier-naming.ProtectedMethodCase, value: camelBack }
   - { key: readability-identifier-naming.PublicMemberCase, value: camelBack }
-  - { key: readability-identifier-naming.StaticConstantCase, value: camelBack }
-  - { key: readability-identifier-naming.StaticConstantPrefix, value: sc_ }
-  - { key: readability-identifier-naming.StaticVariableCase, value: camelBack }
-  - { key: readability-identifier-naming.StaticVariablePrefix, value: s_ }
   - { key: readability-identifier-naming.StructCase, value: CamelCase }
   - { key: readability-identifier-naming.ValueTemplateParameterCase, value: camelBack }
   - { key: readability-identifier-naming.TypeAliasCase, value: CamelCase }

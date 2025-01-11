@@ -1,6 +1,6 @@
 #pragma once
 
-#include <rb/time/Duration.hpp>
+#include <rb/time/TimePoint.hpp>
 
 namespace rb::time {
 
@@ -11,97 +11,86 @@ namespace rb::time {
 /// The SystemTime isn't monotonic because the system time may be adjusted between calls to now().
 ///
 /// A clock is *steady* if the time between clock ticks is constant.
+/// SystemTime is **not** steady.
 class SystemTime final {
+	using Impl = TimePoint<Clock<ClockId::kRealtime>>;
+
 public:
 	using Result = core::Expected<Duration, Duration>;
 
 	static SystemTime const kUnixEpoch;
 
-	static constexpr SystemTime from(std::time_t t) noexcept;
+	static constexpr SystemTime from(std::time_t t) noexcept {
+		return SystemTime{seconds(t)};
+	}
 
-	static constexpr SystemTime from(std::timespec ts) noexcept;
+	static constexpr SystemTime from(std::timespec ts) noexcept {
+		return SystemTime{Duration::from(ts)};
+	}
 
-	static SystemTime now() noexcept;
+	static SystemTime now() noexcept {
+		return SystemTime{Impl::now()};
+	}
 
 	constexpr SystemTime() noexcept = default;
 
-	constexpr bool operator==(SystemTime rhs) const noexcept;
+	constexpr bool operator==(SystemTime rhs) const noexcept {
+		return impl_ == rhs.impl_;
+	}
 
-	constexpr bool operator<(SystemTime rhs) const noexcept;
+	constexpr bool operator<(SystemTime rhs) const noexcept {
+		return impl_ < rhs.impl_;
+	}
 
-	constexpr SystemTime& operator+=(Duration dur) noexcept;
+	constexpr SystemTime& operator+=(Duration dur) noexcept {
+		impl_ += dur;
+		return *this;
+	}
 
-	constexpr SystemTime& operator-=(Duration dur) noexcept;
+	constexpr SystemTime& operator-=(Duration dur) noexcept {
+		impl_ -= dur;
+		return *this;
+	}
 
-	constexpr std::time_t toTimeT() const noexcept;
+	constexpr std::time_t toTimeT() const noexcept {
+		return toTimespec().tv_sec;
+	}
 
-	constexpr std::timespec toTimespec() const noexcept;
+	constexpr std::timespec toTimespec() const noexcept {
+		return impl_.sinceEpoch().toTimespec();
+	}
 
-	constexpr bool isInf() const noexcept;
+	constexpr bool isInf() const noexcept {
+		return impl_.isInf();
+	}
 
-	constexpr Result since(SystemTime rhs) const noexcept;
+	constexpr Result since(SystemTime rhs) const noexcept {
+		auto const duration = impl_.since(rhs.impl_);
+		if (duration.isNegative()) {
+			return core::err(duration);
+		}
+		return core::ok(duration);
+	}
 
 	Result elapsed() const noexcept;
 
 private:
-	friend std::ostream& operator<<(std::ostream& os, SystemTime clock);
-
-	constexpr explicit SystemTime(Duration rep) noexcept
-	    : rep_{rep} {
+	friend std::ostream& operator<<(std::ostream& os, SystemTime systemTime) {
+		return os << "SystemTime{" << systemTime.impl_.sinceEpoch() << "}";
 	}
 
-	Duration rep_;
+	constexpr explicit SystemTime(Impl impl) noexcept
+	    : impl_{impl} {
+	}
+
+	constexpr explicit SystemTime(Duration dur) noexcept
+	    : impl_{Impl::from(dur)} {
+	}
+
+	Impl impl_;
 };
 
-std::ostream& operator<<(std::ostream& os, SystemTime clock);
-
 inline SystemTime const SystemTime::kUnixEpoch;
-
-constexpr SystemTime SystemTime::from(std::time_t t) noexcept {
-	return SystemTime{seconds(t)};
-}
-
-constexpr SystemTime SystemTime::from(std::timespec ts) noexcept {
-	return SystemTime{Duration::from(ts)};
-}
-
-constexpr bool SystemTime::operator==(SystemTime rhs) const noexcept {
-	return rep_ == rhs.rep_;
-}
-
-constexpr bool SystemTime::operator<(SystemTime rhs) const noexcept {
-	return rep_ < rhs.rep_;
-}
-
-constexpr SystemTime& SystemTime::operator+=(Duration dur) noexcept {
-	rep_ += dur;
-	return *this;
-}
-
-constexpr SystemTime& SystemTime::operator-=(Duration dur) noexcept {
-	rep_ -= dur;
-	return *this;
-}
-
-constexpr std::time_t SystemTime::toTimeT() const noexcept {
-	return toTimespec().tv_sec;
-}
-
-constexpr std::timespec SystemTime::toTimespec() const noexcept {
-	return rep_.toTimespec();
-}
-
-constexpr bool SystemTime::isInf() const noexcept {
-	return rep_.isInf();
-}
-
-constexpr SystemTime::Result SystemTime::since(SystemTime rhs) const noexcept {
-	auto const duration = rep_ - rhs.rep_;
-	if (duration.isNegative()) {
-		return core::err(-duration);
-	}
-	return core::ok(duration);
-}
 
 #pragma region synthesized operators
 
