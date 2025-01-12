@@ -223,7 +223,6 @@
 - [ ] thread stack size
 - [ ] thread timed join (i.e., wait)
 - [ ] `Thread::spawn` (like in `std`)
-- [ ] `std::this_thread::sleep_for`
 
 ### `thread`
 

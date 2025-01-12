@@ -56,7 +56,7 @@ public:
 	}
 
 	constexpr core::Option<std::timespec> toTimespec() const noexcept {
-		std::timespec ts = {static_cast<std::time_t>(secs_), nsecs_};
+		std::timespec ts = {static_cast<std::time_t>(secs_), static_cast<long>(nsecs_)};
 		if (ts.tv_sec == secs_) { // no time_t narrowing
 			return ts;
 		}
