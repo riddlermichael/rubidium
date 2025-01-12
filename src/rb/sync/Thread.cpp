@@ -86,7 +86,7 @@ void Thread::sleepFor(time::Duration timeout) noexcept {
 		constexpr auto kMaxTimeT = static_cast<i64>(max<std::time_t>);
 		std::timespec ts = {
 		    static_cast<std::time_t>(kMaxTimeT < secs ? kMaxTimeT : secs),
-		    nsecs,
+		    static_cast<long>(nsecs),
 		};
 		secs -= static_cast<i64>(ts.tv_sec);
 		if (nanosleep(&ts, &ts) == -1) {

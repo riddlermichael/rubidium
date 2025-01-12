@@ -47,18 +47,18 @@ enum class ClockId {
 	kUptime = 4,
 	kBootTime = kUptime,
 
+	/// This is a clock that measures CPU time consumed by this process
+	/// (i.e., CPU time consumed by all threads in the process).
+	kProcessCpuTime = 5,
+
+	/// This is a clock that measures CPU time consumed by this thread.
+	kThreadCpuTime = 6,
+
 	/// A system-wide clock derived from wall-clock time but counting leap seconds.
 	/// This clock does not experience discontinuities or frequency adjustments
 	/// caused by inserting leap seconds as kRealtime does.
 	/// The acronym TAI refers to International Atomic Time.
-	kTai = 5,
-
-	/// This is a clock that measures CPU time consumed by this process
-	/// (i.e., CPU time consumed by all threads in the process).
-	kProcessCpuTime = 6,
-
-	/// This is a clock that measures CPU time consumed by this thread.
-	kThreadCpuTime = 7,
+	kTai = 7,
 };
 
 template <ClockId clockId>
@@ -107,16 +107,6 @@ public:
 	static Duration now() noexcept;
 };
 
-#ifndef RB_OS_WIN
-
-template <>
-class Clock<ClockId::kTai> {
-public:
-	static constexpr bool kIsMonotonic = false;
-
-	static Duration now() noexcept;
-};
-
 template <>
 class Clock<ClockId::kProcessCpuTime> {
 public:
@@ -129,6 +119,16 @@ template <>
 class Clock<ClockId::kThreadCpuTime> {
 public:
 	static constexpr bool kIsMonotonic = true;
+
+	static Duration now() noexcept;
+};
+
+#ifndef RB_OS_WIN
+
+template <>
+class Clock<ClockId::kTai> {
+public:
+	static constexpr bool kIsMonotonic = false;
 
 	static Duration now() noexcept;
 };

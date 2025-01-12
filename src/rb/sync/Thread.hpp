@@ -2,7 +2,7 @@
 
 #include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
-#include <rb/time/MonoTime.hpp>
+#include <rb/time/Instant.hpp>
 
 namespace rb::sync {
 

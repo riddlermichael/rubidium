@@ -1,6 +1,7 @@
 #pragma once
 
 #include <rb/time/TimePoint.hpp>
+#include <rb/time/windows.hpp>
 
 namespace rb::time {
 
@@ -13,7 +14,7 @@ namespace rb::time {
 /// A clock is *steady* if the time between clock ticks is constant.
 /// SystemTime is **not** steady.
 class SystemTime final {
-	using Impl = TimePoint<Clock<ClockId::kRealtime>>;
+	using Impl = RealtimeTimePoint;
 
 public:
 	using Result = core::Expected<Duration, Duration>;
@@ -27,6 +28,12 @@ public:
 	static constexpr SystemTime from(std::timespec ts) noexcept {
 		return SystemTime{Duration::from(ts)};
 	}
+
+#ifdef RB_OS_WIN
+	static constexpr SystemTime from(FILETIME fileTime) noexcept {
+		return SystemTime{toDurationUnix(fileTime)};
+	}
+#endif
 
 	static SystemTime now() noexcept {
 		return SystemTime{Impl::now()};

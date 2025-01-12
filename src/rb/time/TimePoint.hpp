@@ -8,6 +8,7 @@ template <class Clock,
     RB_REQUIRES_T(IsClock<Clock>)>
 class TimePoint final {
 public:
+	// it should be a package method
 	static constexpr TimePoint from(Duration dur) noexcept {
 		return TimePoint{dur};
 	}
@@ -107,5 +108,16 @@ constexpr TimePoint<Clock> operator-(TimePoint<Clock> lhs, Duration rhs) noexcep
 }
 
 #pragma endregion synthesized operators
+
+using MonotonicTimePoint = TimePoint<Clock<ClockId::kMonotonic>>;
+using MonotonicFastTimePoint = TimePoint<Clock<ClockId::kMonotonicFast>>;
+using RealtimeTimePoint = TimePoint<Clock<ClockId::kRealtime>>;
+using RealtimeFastTimePoint = TimePoint<Clock<ClockId::kRealtimeFast>>;
+using UptimeTimePoint = TimePoint<Clock<ClockId::kUptime>>;
+using ProcessCpuTimePoint = TimePoint<Clock<ClockId::kProcessCpuTime>>;
+using ThreadCpuTimePoint = TimePoint<Clock<ClockId::kThreadCpuTime>>;
+#ifndef RB_OS_WIN
+using TaiTimePoint = TimePoint<Clock<ClockId::kTai>>;
+#endif
 
 } // namespace rb::time

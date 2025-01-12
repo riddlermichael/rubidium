@@ -1,36 +1,19 @@
 #include "Clock.hpp"
 
+#include <rb/time/windows.hpp>
+
 using namespace rb::time;
 
 #ifdef RB_OS_WIN
 
 	#include <Windows.h>
 
-	#include <rb/core/os.hpp>
-
-namespace {
-
-u64 getQpcFrequency() noexcept {
-	LARGE_INTEGER frequency;
-	QueryPerformanceFrequency(&frequency);
-	return frequency.QuadPart;
-}
-
-Duration toDuration(FILETIME fileTime) noexcept {
-	constexpr u64 kTicksFrom1601ToUnixEpoch = 116444736000000000ULL;
-	constexpr u64 kTicksPerSecond = 10000000;
-	constexpr u64 kNanosecondsPerTick = 100;
-	auto const ticksSince1601 = rb::core::bitCast<u64>(fileTime);
-	auto const ticks = ticksSince1601 - kTicksFrom1601ToUnixEpoch;
-	auto const secs = static_cast<i64>(ticks / kTicksPerSecond);
-	auto const nsecs = static_cast<i64>((ticks % kTicksPerSecond) * kNanosecondsPerTick);
-	return impl::duration(secs, nsecs * Duration::kTicksPerNanosecond);
-}
-
-} // namespace
-
 Duration Clock<ClockId::kMonotonic>::now() noexcept {
-	static u64 const kQpcFrequency = getQpcFrequency();
+	static u64 const kQpcFrequency = [] {
+		LARGE_INTEGER frequency;
+		QueryPerformanceFrequency(&frequency);
+		return frequency.QuadPart;
+	}();
 
 	LARGE_INTEGER count;
 	QueryPerformanceCounter(&count);
@@ -47,17 +30,35 @@ Duration Clock<ClockId::kMonotonicFast>::now() noexcept {
 Duration Clock<ClockId::kRealtime>::now() noexcept {
 	FILETIME fileTime;
 	GetSystemTimePreciseAsFileTime(&fileTime);
-	return toDuration(fileTime);
+	return toDurationUnix(fileTime);
 }
 
 Duration Clock<ClockId::kRealtimeFast>::now() noexcept {
 	FILETIME fileTime;
 	GetSystemTimeAsFileTime(&fileTime);
-	return toDuration(fileTime);
+	return toDurationUnix(fileTime);
 }
 
 Duration Clock<ClockId::kUptime>::now() noexcept {
 	return milliseconds(GetTickCount64());
+}
+
+Duration Clock<ClockId::kProcessCpuTime>::now() noexcept {
+	FILETIME creationTime;
+	FILETIME exitTime;
+	FILETIME kernelTime;
+	FILETIME userTime;
+	GetProcessTimes(GetCurrentProcess(), &creationTime, &exitTime, &kernelTime, &userTime);
+	return toDuration(kernelTime) + toDuration(userTime);
+}
+
+Duration Clock<ClockId::kThreadCpuTime>::now() noexcept {
+	FILETIME creationTime;
+	FILETIME exitTime;
+	FILETIME kernelTime;
+	FILETIME userTime;
+	GetThreadTimes(GetCurrentThread(), &creationTime, &exitTime, &kernelTime, &userTime);
+	return toDuration(kernelTime) + toDuration(userTime);
 }
 
 #else
@@ -93,16 +94,16 @@ Duration Clock<ClockId::kUptime>::now() noexcept {
 	return getTime(CLOCK_BOOTTIME);
 }
 
-Duration Clock<ClockId::kTai>::now() noexcept {
-	return getTime(CLOCK_TAI); // since Linux 3.10; Linux-specific
-}
-
 Duration Clock<ClockId::kProcessCpuTime>::now() noexcept {
 	return getTime(CLOCK_PROCESS_CPUTIME_ID);
 }
 
 Duration Clock<ClockId::kThreadCpuTime>::now() noexcept {
 	return getTime(CLOCK_THREAD_CPUTIME_ID);
+}
+
+Duration Clock<ClockId::kTai>::now() noexcept {
+	return getTime(CLOCK_TAI); // since Linux 3.10; Linux-specific
 }
 
 #endif
