@@ -2,11 +2,11 @@
 
 #include <rb/sync/impl.hpp>
 
-#include <rb/core/error/NotImplementedError.hpp>
-
 using namespace rb::sync;
 
 #if RB_USE(PTHREADS)
+
+	#ifdef _POSIX_SPIN_LOCKS
 
 struct SpinLock::Impl {
 	pthread_spinlock_t impl;
@@ -32,6 +32,8 @@ bool SpinLock::tryLock() noexcept {
 void SpinLock::unlock() {
 	RB_SYNC_CHECK_ERRNO(pthread_spin_unlock(RB_SYNC_IMPL));
 }
+
+	#endif
 
 #elif RB_USE(WIN32_THREADS)
 

@@ -30,9 +30,9 @@ struct AttributeGuard {
 RecursiveMutex::RecursiveMutex()
     : pImpl_(core::makeUnique<Impl>()) {
 	pthread_mutexattr_t attr{};
-	AttributeGuard _(attr);
+	AttributeGuard const _(attr);
 	RB_SYNC_CHECK_ERRNO(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
-	#if !defined(RB_COMPILER_MINGW) && !defined(RB_OS_CYGWIN)
+	#ifdef PTHREAD_MUTEX_ROBUST
 	RB_SYNC_CHECK_ERRNO(pthread_mutexattr_setrobust(&attr, PTHREAD_MUTEX_ROBUST));
 	#endif
 	RB_SYNC_CHECK_ERRNO(pthread_mutex_init(RB_SYNC_IMPL, &attr));

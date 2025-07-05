@@ -29,12 +29,13 @@ struct SharedMutex::Impl {
 
 SharedMutex::SharedMutex(Policy policy)
     : pImpl_(core::makeUnique<Impl>()) {
+	RB_UNUSED(policy);
 	pthread_rwlockattr_t attr{};
-	AttributeGuard _(attr);
+	AttributeGuard const _(attr);
 
 	#ifdef RB_OS_WIN
 	RB_UNUSED(policy);
-	#else
+	#elifdef RB_OS_LINUX
 	RB_SYNC_CHECK_ERRNO(pthread_rwlockattr_setkind_np(&attr, policy));
 	#endif
 

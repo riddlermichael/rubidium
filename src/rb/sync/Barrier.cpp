@@ -6,6 +6,8 @@ using namespace rb::sync;
 
 #if RB_USE(PTHREADS)
 
+	#ifdef _POSIX_BARRIERS
+
 struct Barrier::Impl {
 	pthread_barrier_t impl;
 };
@@ -25,6 +27,8 @@ void Barrier::wait() noexcept(false) {
 		throw core::OsError::fromRawCode(error);
 	}
 }
+
+	#endif
 
 #elif RB_USE(WIN32_THREADS)
 

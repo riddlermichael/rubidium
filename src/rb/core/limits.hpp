@@ -177,7 +177,7 @@ template <>
 inline constexpr unsigned long min<unsigned long> = 0;
 
 template <>
-inline constexpr unsigned long long min<unsigned long long> = ULLONG_MAX;
+inline constexpr unsigned long long min<unsigned long long> = 0;
 
 template <>
 inline constexpr f32 min<f32> = RB_F32_MIN;
