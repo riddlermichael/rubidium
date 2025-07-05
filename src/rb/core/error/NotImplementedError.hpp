@@ -15,4 +15,4 @@ inline namespace error {
 } // namespace error
 } // namespace rb::core
 
-#define RB_NOT_IMPLEMENTED throw rb::core::NotImplementedError(RB_SOURCE_LOCATION)
+#define RB_NOT_IMPLEMENTED() throw rb::core::NotImplementedError(RB_SOURCE_LOCATION)

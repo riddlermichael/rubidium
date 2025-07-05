@@ -20,9 +20,9 @@ public:
 	    czstring func = RB_BUILTIN_FUNCTION,
 	    unsigned column = RB_BUILTIN_COLUMN) noexcept {
 		SourceLocation location;
-		location.file_ = file != nullptr ? file : "";
+		location.file_ = file ? file : "";
 		location.line_ = line;
-		location.func_ = func != nullptr ? func : "";
+		location.func_ = func ? func : "";
 		location.column_ = column;
 		return location;
 	}

@@ -173,7 +173,7 @@ constexpr Duration duration(i64 seconds, i64 ticks) noexcept {
 	return {seconds, static_cast<u32>(ticks)};
 }
 
-template <i64 n>
+template <std::intmax_t n>
 constexpr Duration fromInt64(i64 value, std::ratio<1, n> /*unused*/) noexcept {
 	static_assert(n <= Duration::kNanosecondsPerSecond, "Unsupported ratio");
 

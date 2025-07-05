@@ -24,12 +24,13 @@ static_assert(sizeof(f64) == 8);
 
 namespace rb::core {
 
-using czstring = char const*;
-using zstring = char*;
+using czstring = char const* /*__null_terminated*/;
+using zstring = char* /*__null_terminated*/;
 
-} // namespace core
+} // namespace rb::core
 
 // NOLINTEND(readability-identifier-naming)
+// ReSharper disable CppRedundantCastExpression
 
 namespace rb::core {
 inline namespace literals {

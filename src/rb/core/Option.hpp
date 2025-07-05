@@ -18,7 +18,7 @@ namespace rb::core {
  *
  * NoneOption must be a non-aggregate [LiteralType](https://en.cppreference.com/w/cpp/named_req/LiteralType)
  * And cannot have a default constructor or an initializer-list constructor.
- * This constraints on NoneOption's constructors exist to support both `op = {};` and `op = kNone;`
+ * These constraints on NoneOption's constructors exist to support both `op = {};` and `op = kNone;`
  * as the syntax for disengaging an Option object.
  */
 struct NoneOption {

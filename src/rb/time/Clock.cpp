@@ -1,12 +1,10 @@
 #include "Clock.hpp"
 
-#include <rb/time/windows.hpp>
-
 using namespace rb::time;
 
 #ifdef RB_OS_WIN
 
-	#include <Windows.h>
+	#include <rb/time/windows.hpp>
 
 Duration Clock<ClockId::kMonotonic>::now() noexcept {
 	static u64 const kQpcFrequency = [] {
@@ -78,20 +76,8 @@ Duration Clock<ClockId::kMonotonic>::now() noexcept {
 	return getTime(CLOCK_MONOTONIC);
 }
 
-Duration Clock<ClockId::kMonotonicFast>::now() noexcept {
-	return getTime(CLOCK_MONOTONIC_COARSE);
-}
-
 Duration Clock<ClockId::kRealtime>::now() noexcept {
 	return getTime(CLOCK_REALTIME);
-}
-
-Duration Clock<ClockId::kRealtimeFast>::now() noexcept {
-	return getTime(CLOCK_REALTIME_COARSE);
-}
-
-Duration Clock<ClockId::kUptime>::now() noexcept {
-	return getTime(CLOCK_BOOTTIME);
 }
 
 Duration Clock<ClockId::kProcessCpuTime>::now() noexcept {
@@ -102,8 +88,24 @@ Duration Clock<ClockId::kThreadCpuTime>::now() noexcept {
 	return getTime(CLOCK_THREAD_CPUTIME_ID);
 }
 
+	#ifndef RB_OS_DARWIN
+Duration Clock<ClockId::kRealtimeFast>::now() noexcept {
+	return getTime(CLOCK_REALTIME_COARSE);
+}
+
+Duration Clock<ClockId::kUptime>::now() noexcept {
+	return getTime(CLOCK_BOOTTIME);
+}
+
+Duration Clock<ClockId::kMonotonicFast>::now() noexcept {
+	return getTime(CLOCK_MONOTONIC_COARSE);
+}
+	#endif
+
+	#ifdef RB_OS_LINUX
 Duration Clock<ClockId::kTai>::now() noexcept {
 	return getTime(CLOCK_TAI); // since Linux 3.10; Linux-specific
 }
+	#endif
 
 #endif

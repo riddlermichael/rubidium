@@ -96,6 +96,7 @@
 - [ ] compare `Array` and `absl::FixedArray`
 - [ ] see `absl::Nullable` etc.
 - [ ] `noexcept` detection
+- [ ] `czstring`: `__null_terminated` support
 
 ### Data structures
 
@@ -241,6 +242,7 @@
 - [ ] time(rs) and testing
 - [ ] `Nanosecond`, `Microsecond`, `Millisecond`, `Second`, `Minute`, `Hour`, `Day` types
 - [ ] clock resolution
+- [ ] macOS: `kMonotonicFast`, `kRealtimeFast`, `kUptime`
 
 ### `utf`
 

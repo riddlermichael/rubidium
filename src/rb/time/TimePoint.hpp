@@ -110,13 +110,17 @@ constexpr TimePoint<Clock> operator-(TimePoint<Clock> lhs, Duration rhs) noexcep
 #pragma endregion synthesized operators
 
 using MonotonicTimePoint = TimePoint<Clock<ClockId::kMonotonic>>;
-using MonotonicFastTimePoint = TimePoint<Clock<ClockId::kMonotonicFast>>;
 using RealtimeTimePoint = TimePoint<Clock<ClockId::kRealtime>>;
-using RealtimeFastTimePoint = TimePoint<Clock<ClockId::kRealtimeFast>>;
-using UptimeTimePoint = TimePoint<Clock<ClockId::kUptime>>;
 using ProcessCpuTimePoint = TimePoint<Clock<ClockId::kProcessCpuTime>>;
 using ThreadCpuTimePoint = TimePoint<Clock<ClockId::kThreadCpuTime>>;
-#ifndef RB_OS_WIN
+
+#ifndef RB_OS_DARWIN
+using MonotonicFastTimePoint = TimePoint<Clock<ClockId::kMonotonicFast>>;
+using RealtimeFastTimePoint = TimePoint<Clock<ClockId::kRealtimeFast>>;
+using UptimeTimePoint = TimePoint<Clock<ClockId::kUptime>>;
+#endif
+
+#ifdef RB_OS_LINUX
 using TaiTimePoint = TimePoint<Clock<ClockId::kTai>>;
 #endif
 

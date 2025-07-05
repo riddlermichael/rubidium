@@ -76,33 +76,9 @@ public:
 };
 
 template <>
-class Clock<ClockId::kMonotonicFast> {
-public:
-	static constexpr bool kIsMonotonic = true;
-
-	static Duration now() noexcept;
-};
-
-template <>
 class Clock<ClockId::kRealtime> {
 public:
 	static constexpr bool kIsMonotonic = false;
-
-	static Duration now() noexcept;
-};
-
-template <>
-class Clock<ClockId::kRealtimeFast> {
-public:
-	static constexpr bool kIsMonotonic = false;
-
-	static Duration now() noexcept;
-};
-
-template <>
-class Clock<ClockId::kUptime> {
-public:
-	static constexpr bool kIsMonotonic = true;
 
 	static Duration now() noexcept;
 };
@@ -123,7 +99,33 @@ public:
 	static Duration now() noexcept;
 };
 
-#ifndef RB_OS_WIN
+#ifndef RB_OS_DARWIN
+template <>
+class Clock<ClockId::kMonotonicFast> {
+public:
+	static constexpr bool kIsMonotonic = true;
+
+	static Duration now() noexcept;
+};
+
+template <>
+class Clock<ClockId::kRealtimeFast> {
+public:
+	static constexpr bool kIsMonotonic = false;
+
+	static Duration now() noexcept;
+};
+
+template <>
+class Clock<ClockId::kUptime> {
+public:
+	static constexpr bool kIsMonotonic = true;
+
+	static Duration now() noexcept;
+};
+#endif
+
+#ifdef RB_OS_LINUX
 
 template <>
 class Clock<ClockId::kTai> {
