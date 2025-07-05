@@ -779,22 +779,22 @@ public:
 	}
 
 	constexpr T const& expect(char const* msg) const& noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return this->get();
 	}
 
 	constexpr T& expect(char const* msg) & noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return this->get();
 	}
 
 	constexpr T&& expect(char const* msg) && noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return RB_MOVE(this->get());
 	}
 
 	constexpr T const&& expect(char const* msg) const&& noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return RB_MOVE(this->get());
 	}
 
@@ -1086,12 +1086,12 @@ public:
 	}
 
 	constexpr T const& expect(char const* msg) const noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return *ptr_;
 	}
 
 	constexpr T& expect(char const* msg) noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return *ptr_;
 	}
 

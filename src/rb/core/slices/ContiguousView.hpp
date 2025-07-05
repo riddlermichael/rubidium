@@ -19,7 +19,7 @@ namespace impl {
 	protected:
 		constexpr ContiguousViewStorage(T* data, usize size) noexcept
 		    : data_(data) {
-			RB_ASSERT_MSG(size == n, "ContiguousView size mismatch");
+			RB_ASSERT_MSG("ContiguousView size mismatch", size == n);
 		}
 
 		constexpr T* data() const noexcept {
@@ -169,13 +169,13 @@ public:
 
 	template <bool _ = true, RB_REQUIRES(_&& n != 0)>
 	constexpr T& front() const noexcept {
-		RB_ASSERT_MSG(!empty(), "Call front() on empty ContiguousView");
+		RB_ASSERT_MSG("Call front() on empty ContiguousView", !empty());
 		return data()[0];
 	}
 
 	template <bool _ = true, RB_REQUIRES(_&& n != 0)>
 	constexpr T& back() const noexcept {
-		RB_ASSERT_MSG(!empty(), "Call back() on empty ContiguousView");
+		RB_ASSERT_MSG("Call back() on empty ContiguousView", !empty());
 		return data()[size() - 1];
 	}
 
@@ -221,13 +221,13 @@ public:
 
 	template <bool _ = true, RB_REQUIRES(_&& n == kDynExtent)>
 	constexpr void popFront() noexcept {
-		RB_ASSERT_MSG(!empty(), "Call popFront() on empty ContiguousView");
+		RB_ASSERT_MSG("Call popFront() on empty ContiguousView", !empty());
 		Super::popFrontImpl();
 	}
 
 	template <bool _ = true, RB_REQUIRES(_&& n == kDynExtent)>
 	constexpr void popBack() noexcept {
-		RB_ASSERT_MSG(!empty(), "Call popBack() on empty ContiguousView");
+		RB_ASSERT_MSG("Call popBack() on empty ContiguousView", !empty());
 		Super::popBackImpl();
 	}
 };

@@ -28,7 +28,7 @@ inline namespace slices {
 		    : begin(begin)
 		    , end(end)
 		    , step(step) {
-			RB_ASSERT_MSG(step != 0, "Step must be non-zero");
+			RB_ASSERT_MSG("Step must be non-zero", step != 0);
 		}
 
 		template <class U,

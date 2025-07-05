@@ -261,8 +261,8 @@ public:
 		impl_.swap(rhs.impl_);
 	}
 
-#define RB_ENSURE_VALUE RB_ASSERT_MSG(impl_.index() == 0, "Expected doesn't contain a value")
-#define RB_ENSURE_ERROR RB_ASSERT_MSG(impl_.index() == 1, "Expected doesn't contain an error")
+#define RB_ENSURE_VALUE RB_ASSERT_MSG("Expected doesn't contain a value", impl_.index() == 0)
+#define RB_ENSURE_ERROR RB_ASSERT_MSG("Expected doesn't contain an error", impl_.index() == 1)
 
 	constexpr T& value() & noexcept {
 		RB_ENSURE_VALUE;
@@ -333,22 +333,22 @@ public:
 	}
 
 	constexpr T const& expect(czstring msg) const& noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return value();
 	}
 
 	constexpr T& expect(czstring msg) & noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return value();
 	}
 
 	constexpr T&& expect(czstring msg) && noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return RB_MOVE(value());
 	}
 
 	constexpr T const&& expect(czstring msg) const&& noexcept {
-		RB_ASSERT_CUSTOM_MSG(hasValue(), msg);
+		RB_ASSERT_CUSTOM_MSG(msg, hasValue());
 		return RB_MOVE(value());
 	}
 
@@ -550,7 +550,7 @@ public:
 		impl_.swap(rhs.impl_);
 	}
 
-#define RB_ENSURE_ERROR RB_ASSERT_MSG(hasError(), "Expected doesn't contain an error");
+#define RB_ENSURE_ERROR RB_ASSERT_MSG("Expected doesn't contain an error", hasError());
 
 	constexpr E& error() & noexcept {
 		RB_ENSURE_ERROR;

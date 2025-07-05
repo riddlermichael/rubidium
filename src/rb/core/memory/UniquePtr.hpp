@@ -172,7 +172,7 @@ inline namespace memory {
 			return ptr();
 		}
 
-#define RB_ENSURE_NONNULL RB_ASSERT_MSG(*this, "dereference null")
+#define RB_ENSURE_NONNULL RB_ASSERT_MSG("dereference null", *this)
 
 		AddLValueRef<T const> operator*() const RB_NOEXCEPT_LIKE(*ptr()) {
 			RB_ENSURE_NONNULL;

@@ -28,7 +28,7 @@ inline namespace slices {
 		    : begin_(begin)
 		    , end_(end)
 		    , step_(step) {
-			RB_ASSERT_MSG(step != 0, "Step must be non-zero");
+			RB_ASSERT_MSG("Step must be non-zero", step != 0);
 			auto const sz = size();
 			end_ = begin_ + sz * step_; // 'range-based for' uses `begin != end`, not `begin < end`
 		}

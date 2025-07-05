@@ -29,7 +29,7 @@ inline namespace slices {
 		constexpr StepIterator(It it, Index step) noexcept(isNothrowCopyConstructible<It>)
 		    : it_(it)
 		    , step_(step) {
-			RB_ASSERT_MSG(step != 0, "Step must be non-zero");
+			RB_ASSERT_MSG("Step must be non-zero", step != 0);
 		}
 
 		constexpr Index step() const noexcept {
@@ -123,13 +123,13 @@ inline namespace slices {
 
 		constexpr Index operator-(Self const& rhs) const RB_NOEXCEPT_LIKE(it_ - rhs.it_) {
 			Index const n = it_ - rhs.it_;
-			RB_ASSERT_MSG(n % rhs.step_ == 0, "Iterator is unreachable");
+			RB_ASSERT_MSG("Iterator is unreachable", n % rhs.step_ == 0);
 			return n / rhs.step_;
 		}
 
 		constexpr Index operator-(It const& it) const RB_NOEXCEPT_LIKE(it_ - it) {
 			Index const n = it_ - it;
-			RB_ASSERT_MSG(n % step_ == 0, "Iterator is unreachable");
+			RB_ASSERT_MSG("Iterator is unreachable", n % step_ == 0);
 			return n / step_;
 		}
 

@@ -273,3 +273,4 @@
 - [ ] sockets
 - [ ] regular expressions
 - [ ] quaternions
+- [ ] `RB_DEBUG`

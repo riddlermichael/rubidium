@@ -285,7 +285,7 @@ public:
 	/// otherwise, the function does nothing.
 	/// Reserve() does not change the size of the vector.
 	void reserve(usize newCapacity) {
-		RB_ASSERT_MSG(newCapacity <= kMaxSize, "Too big capacity");
+		RB_ASSERT_MSG("Too big capacity", newCapacity <= kMaxSize);
 		if (newCapacity <= capacity_) {
 			return;
 		}
