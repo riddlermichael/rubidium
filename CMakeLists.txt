@@ -24,6 +24,19 @@ include(utils)
 include(CTest)
 dump(BUILD_TESTING)
 
+# compile options and sanitizers' settings act on current directory and below
+include(sanitizers)
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+if(NOT DEFINED CMAKE_CXX_VISIBILITY_PRESET AND NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
+    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+endif()
+
 add_subdirectory(src)
 
 if(${IS_TOP_LEVEL_PROJECT} AND ${BUILD_TESTING})

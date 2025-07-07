@@ -33,9 +33,7 @@ SharedMutex::SharedMutex(Policy policy)
 	pthread_rwlockattr_t attr{};
 	AttributeGuard const _(attr);
 
-	#ifdef RB_OS_WIN
-	RB_UNUSED(policy);
-	#elifdef RB_OS_LINUX
+	#ifdef RB_OS_LINUX
 	RB_SYNC_CHECK_ERRNO(pthread_rwlockattr_setkind_np(&attr, policy));
 	#endif
 
