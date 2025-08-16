@@ -6,9 +6,14 @@ using namespace rb::sync;
 
 #if RB_USE(PTHREADS)
 
+// sem_init/sem_destroy was deprecated
+// https://stackoverflow.com/q/27736618/4884522
+// https://stackoverflow.com/q/1413785/4884522
+
 	#include <semaphore.h>
 
-struct Semaphore::Impl {
+struct Semaphore::Impl
+{
 	sem_t impl;
 };
 
@@ -43,7 +48,8 @@ void Semaphore::release() {
 
 #elif RB_USE(WIN32_THREADS)
 
-struct Semaphore::Impl {
+struct Semaphore::Impl
+{
 	HANDLE impl;
 };
 

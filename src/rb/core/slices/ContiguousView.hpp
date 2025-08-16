@@ -84,9 +84,10 @@ template <class T,
     usize n = kDynExtent>
 class RB_EXPORT ContiguousView
     : impl::ContiguousViewStorage<T, n>
-    , public Sliceable<ContiguousView<T, ConstSliceView, SliceView, n>, ConstSliceView, SliceView> {
+    , public Sliceable<ContiguousView<T, ConstSliceView, SliceView, n>, ConstSliceView, SliceView> //
+{
 	using Super = impl::ContiguousViewStorage<T, n>;
-	using Base = Sliceable<ContiguousView<T, ConstSliceView, SliceView, n>, ConstSliceView, SliceView>;
+	using Base = Sliceable<ContiguousView, ConstSliceView, SliceView>;
 
 public:
 	RB_USE_BASE_CONTAINER_TYPES(Base)
