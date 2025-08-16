@@ -19,51 +19,80 @@ AllowAllParametersOfDeclarationOnNextLine: true
 AllowBreakBeforeNoexceptSpecifier: OnlyWithParen # 18
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: true
-# AllowShortCompoundRequirementOnASingleLine: true # 18
+AllowShortCompoundRequirementOnASingleLine: true # 18
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: None
+#AllowShortNamespacesOnASingleLine: false # 20
 AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
 AttributeMacros: [ ]
 BinPackArguments: true
-BinPackParameters: true
+#BinPackLongBracedList: true # 21
+BinPackParameters: BinPack
 BitFieldColonSpacing: Both
 BracedInitializerIndentWidth: 4 # 17
-# BreakAdjacentStringLiterals: true # 18
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterEnum: true
+  AfterExternBlock: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterObjCDeclaration: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyNamespace: true
+  SplitEmptyRecord: true
+BreakAdjacentStringLiterals: true # 18
 BreakAfterAttributes: Leave # 16
+BreakAfterReturnType: Automatic # 19
 BreakBeforeBinaryOperators: All
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: Always
+#BreakBeforeTemplateCloser: true # 21
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
+BreakFunctionDefinitionParameters: false # 19
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: false
+BreakTemplateDeclarations: Yes # 19
 ColumnLimit: 0
 CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-EmptyLineAfterAccessModifier: Leave
-EmptyLineBeforeAccessModifier: LogicalBlock
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
+#EnumTrailingComma: Leave # 21
 FixNamespaceComments: true
 ForEachMacros: [ ]
 IncludeBlocks: Preserve
 IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentCaseLabels: true
+#IndentExportBlock: false # 20
 IndentExternBlock: NoIndent
 IndentGotoLabels: false
 IndentPPDirectives: BeforeHash
 IndentRequiresClause: true # 15
 IndentWidth: 4
 IndentWrappedFunctionNames: false
+InsertBraces: true # 15
 InsertNewlineAtEOF: true # 16
-KeepEmptyLinesAtTheStartOfBlocks: false
+KeepEmptyLines: # 19
+  AtEndOfFile: true
+  AtStartOfBlock: false
+  AtStartOfFile: false
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
@@ -74,16 +103,19 @@ QualifierAlignment: Custom # 14
 QualifierOrder: [ 'friend', 'static', 'inline', 'constexpr', 'type', 'const', 'volatile', 'restrict' ] # 14
 ReferenceAlignment: Pointer
 ReflowComments: false
-RemoveParentheses: ReturnStatement # 17 WARN
-RemoveSemicolon: true # 16 WARN
+#RemoveEmptyLinesInUnwrappedLines: true # 20
+RemoveParentheses: ReturnStatement # 17
+RemoveSemicolon: true # 16
 RequiresClausePosition: OwnLine # 15
 RequiresExpressionIndentation: OuterScope # 16
 SeparateDefinitionBlocks: Always # 14
 ShortNamespaceLines: 1
+SkipMacroDefinitionBody: false # 18
 SortIncludes: CaseInsensitive
 SortUsingDeclarations: Lexicographic
 SpaceAfterCStyleCast: true
 SpaceAfterLogicalNot: false
+#SpaceAfterOperatorKeyword: false # 21
 SpaceAfterTemplateKeyword: true
 SpaceAroundPointerQualifiers: Default
 SpaceBeforeAssignmentOperators: true
@@ -111,3 +143,4 @@ TypeNames: [ ] # 17
 TypenameMacros: [ 'RB_REQUIRES_RETURN', 'RB_REQUIRES_RETURN_T' ]
 UseTab: ForIndentation
 WhitespaceSensitiveMacros: [ 'RB_STRINGIFY' ]
+#WrapNamespaceBodyWithEmptyLines: Always # 20
