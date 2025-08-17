@@ -12,10 +12,16 @@ using namespace rb::sync;
 
 	#include <semaphore.h>
 
-struct Semaphore::Impl
-{
+	#include <rb/core/warnings.hpp>
+
+struct Semaphore::Impl {
 	sem_t impl;
 };
+
+RB_WARNING_PUSH
+RB_WARNING_DEPRECATED
+
+// ReSharper disable CppDeprecatedEntity
 
 Semaphore::Semaphore(unsigned count)
     : pImpl_(core::makeUnique<Impl>()) {
@@ -29,6 +35,8 @@ Semaphore::~Semaphore() noexcept(false) {
 		throw core::OsError::fromErrno();
 	}
 }
+
+RB_WARNING_POP
 
 void Semaphore::acquire() {
 	if (sem_wait(RB_SYNC_IMPL)) {
@@ -48,8 +56,7 @@ void Semaphore::release() {
 
 #elif RB_USE(WIN32_THREADS)
 
-struct Semaphore::Impl
-{
+struct Semaphore::Impl {
 	HANDLE impl;
 };
 

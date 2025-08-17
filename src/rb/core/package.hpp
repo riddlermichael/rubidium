@@ -43,5 +43,6 @@
 #include <rb/core/swap.hpp>
 #include <rb/core/types.hpp>
 #include <rb/core/Version.hpp>
+#include <rb/core/warnings.hpp>
 
 #include <rb/rb_version.hpp>
