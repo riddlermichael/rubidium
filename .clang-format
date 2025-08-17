@@ -35,15 +35,15 @@ BitFieldColonSpacing: Both
 BracedInitializerIndentWidth: 4 # 17
 BraceWrapping:
   AfterCaseLabel: false
-  AfterClass: true
+  AfterClass: false
   AfterControlStatement: MultiLine
-  AfterEnum: true
+  AfterEnum: false
   AfterExternBlock: false
   AfterFunction: false
   AfterNamespace: false
   AfterObjCDeclaration: false
-  AfterStruct: true
-  AfterUnion: true
+  AfterStruct: false
+  AfterUnion: false
   BeforeCatch: false
   BeforeElse: false
   BeforeLambdaBody: false
