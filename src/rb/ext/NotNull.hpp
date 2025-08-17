@@ -3,7 +3,7 @@
 #include <initializer_list>
 
 #include <rb/core/assert.hpp>
-#include <rb/core/in_place.hpp>
+#include <rb/core/InPlace.hpp>
 #include <rb/core/traits/assignable.hpp>
 #include <rb/core/traits/constructible.hpp>
 #include <rb/core/traits/destructible.hpp>

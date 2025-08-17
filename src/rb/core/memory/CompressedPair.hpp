@@ -3,7 +3,7 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <tuple>
 
-#include <rb/core/in_place.hpp>
+#include <rb/core/InPlace.hpp>
 #include <rb/core/memory/EmptyBase.hpp>
 #include <rb/core/swap.hpp>
 
