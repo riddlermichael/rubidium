@@ -62,7 +62,7 @@ public:
 		return static_cast<bool>(storage_);
 	}
 
-#if __cpp_rtti
+#ifdef __cpp_rtti
 	/// @return The `typeid` of the contained value if instance is non-empty, otherwise `typeid(void)`.
 	constexpr TypeInfo const& type() const noexcept {
 		return hasValue() ? storage_->typeInfo() : typeid(void);
@@ -101,7 +101,7 @@ private:
 
 		virtual IStoragePtr clone() const = 0;
 
-#if __cpp_rtti
+#ifdef __cpp_rtti
 		virtual TypeInfo const& typeInfo() const noexcept = 0;
 #endif
 
@@ -127,7 +127,7 @@ private:
 			return UniquePtr<Storage>::from(data);
 		}
 
-#if __cpp_rtti
+#ifdef __cpp_rtti
 		TypeInfo const& typeInfo() const noexcept override {
 			return typeid(T);
 		}
@@ -157,8 +157,9 @@ private:
 		if constexpr (!isSame<Decay<U>, U> || !isCopyConstructible<U>) {
 			return nullptr;
 		}
-#if __cpp_rtti
-		else if (storage_ && type() == typeid(T)) {
+#ifdef __cpp_rtti
+		else if (storage_ && type() == typeid(T))
+		{
 			return storage_->get();
 		}
 #endif
