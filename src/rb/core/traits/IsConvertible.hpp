@@ -4,6 +4,8 @@
 #include <rb/core/traits/IsVoid.hpp>
 #include <rb/core/traits/ops.hpp>
 
+// ReSharper disable CppFunctionIsNotImplemented
+
 namespace rb::core {
 
 namespace impl {

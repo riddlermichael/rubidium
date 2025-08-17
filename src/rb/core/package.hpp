@@ -17,6 +17,7 @@
 #include <rb/core/byte.hpp>
 #include <rb/core/compiler.hpp>
 #include <rb/core/CompilerInfo.hpp>
+#include <rb/core/decayCopy.hpp>
 #include <rb/core/endian.hpp>
 #include <rb/core/enums.hpp>
 #include <rb/core/ErrorCode.hpp>
