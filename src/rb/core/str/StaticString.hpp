@@ -5,6 +5,7 @@
 #include <string>
 
 #include <rb/core/str/StringView.hpp>
+#include <rb/core/warnings.hpp>
 #include <rb/fmt/charconv.hpp>
 
 namespace rb::core {
@@ -254,21 +255,21 @@ inline namespace literals {
 
 #ifndef RB_COMPILER_MSVC
 
-	#pragma clang diagnostic push
-	#pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
+	RB_WARNING_PUSH
+	RB_STRING_LITERAL_OPERATOR_TEMPLATE
 
 	template <class Char, Char... chars>
-	constexpr auto operator"" _ss() noexcept {
+	constexpr auto operator""_ss() noexcept {
 		return StaticString<sizeof...(chars), Char>({chars...});
 	}
 
-	#pragma clang diagnostic pop
+	RB_WARNING_POP
 
 #endif
 
 	// 123_ss -> "123"
 	template <char... chars>
-	constexpr auto operator"" _ss() noexcept {
+	constexpr auto operator""_ss() noexcept {
 		return StaticString({chars...});
 	}
 

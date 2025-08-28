@@ -39,18 +39,18 @@ namespace impl {
 
 		template <class Arg, class... Args, class F,
 		    RB_REQUIRES(isFunction<F>)>
-		static auto call(F C::*f, Arg&& arg, Args&&... args) RB_NOEXCEPT_LIKE((get(RB_FWD(arg)).*f)(RB_FWD(args)...))
+		static auto call(F C::* f, Arg&& arg, Args&&... args) RB_NOEXCEPT_LIKE((get(RB_FWD(arg)).*f)(RB_FWD(args)...))
 		    -> decltype((get(RB_FWD(arg)).*f)(RB_FWD(args)...));
 
 		template <class Arg>
-		static auto call(P C::*f, Arg&& arg) RB_NOEXCEPT_LIKE(get(RB_FWD(arg)).*f)
+		static auto call(P C::* f, Arg&& arg) RB_NOEXCEPT_LIKE(get(RB_FWD(arg)).*f)
 		    -> decltype(get(RB_FWD(arg)).*f);
 	};
 
 #pragma clang diagnostic pop
 
 	template <class C, class P, class Arg, class... Args>
-	constexpr decltype(auto) invokeMemberPointer(P C::*f, Arg&& arg, Args&&... args) {
+	constexpr decltype(auto) invokeMemberPointer(P C::* f, Arg&& arg, Args&&... args) {
 		if constexpr (isFunction<P>) {
 			if constexpr (isBaseOf<C, Decay<Arg>>) {
 				return (RB_FWD(arg).*f)(RB_FWD(args)...);

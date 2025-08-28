@@ -15,9 +15,16 @@
 #endif
 
 #if defined(RB_COMPILER_CLANG)
-	#define RB_WARNING_DEPRECATED _Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wdeprecated-declarations"))
+	#define RB_WARNING_DEPRECATED \
+		_Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wdeprecated-declarations"))
+	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE \
+		_Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wgnu-string-literal-operator-template"))
 #elif defined(RB_COMPILER_GCC_LIKE)
-	#define RB_WARNING_DEPRECATED _Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wdeprecated-declarations"))
+	#define RB_WARNING_DEPRECATED \
+		_Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wdeprecated-declarations"))
+	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE \
+		_Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wpedantic"))
 #elif defined(RB_COMPILER_MSVC)
 	#define RB_WARNING_DEPRECATED
+	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE
 #endif

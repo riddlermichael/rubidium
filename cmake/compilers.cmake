@@ -1,4 +1,4 @@
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(COMPILER_CLANG ON)
     if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
         set(COMPILER_CLANG_MSVC ON)
@@ -26,18 +26,24 @@ endif()
 
 if(${COMPILER_GCC})
     add_compile_options(-fdiagnostics-color=always)
+
     add_compile_options(-Wall)
     add_compile_options(-Wextra)
+    add_compile_options(-pedantic)
+    add_compile_options(-Wshadow=local)
+
     add_compile_options(-Wno-unknown-pragmas)
     add_compile_options(-Wno-nonnull-compare)
     add_compile_options(-Wno-parentheses)
-    #    add_compile_options(-fanalyzer)
+    # add_compile_options(-fanalyzer)
 elseif(${COMPILER_CLANG})
     add_compile_options(-fcolor-diagnostics)
-    add_compile_options(-pedantic)
+
     add_compile_options(-Wall)
     add_compile_options(-Wextra)
+    add_compile_options(-pedantic)
     add_compile_options(-Wthread-safety)
+    add_compile_options(-Wshadow -Wshadow-field -Wshadow-field-in-constructor-modified -Wshadow-uncaptured-local)
 
     add_compile_options(-Wno-unknown-pragmas)
     add_compile_options(-Wno-logical-op-parentheses)

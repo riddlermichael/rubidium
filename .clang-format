@@ -12,7 +12,7 @@ AlignConsecutiveShortCaseStatements: # 17
   AcrossEmptyLines: true
   AlignCaseColons: true
 AlignEscapedNewlines: Left
-AlignOperands: AlignAfterOperator
+AlignOperands: DontAlign
 AlignTrailingComments: false
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true

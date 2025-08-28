@@ -20,6 +20,7 @@ using ::timespec;
 
 #include <rb/core/error/InvalidArgumentError.hpp>
 #include <rb/core/Option.hpp>
+#include <rb/time/I64.hpp>
 
 namespace rb::time {
 
@@ -35,7 +36,7 @@ public:
 	constexpr TimeSpec() noexcept = default;
 
 	constexpr explicit TimeSpec(i64 seconds) noexcept
-	    : secs_(seconds) {
+	    : secs_{seconds} {
 	}
 
 	constexpr explicit TimeSpec(i64 seconds, u32 nanoseconds)
@@ -60,11 +61,11 @@ public:
 		if (ts.tv_sec == secs_) { // no time_t narrowing
 			return ts;
 		}
-		return {};
+		return core::kNone;
 	}
 
 private:
-	i64 secs_ = 0;
+	impl::I64 secs_;
 	u32 nsecs_ = 0;
 };
 

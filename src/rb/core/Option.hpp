@@ -43,48 +43,48 @@ namespace impl {
 	template <class T, bool = isTriviallyDestructible<T>>
 	union OptionStorage {
 		constexpr OptionStorage() noexcept
-		    : empty() {
+		    : empty{} {
 		}
 
 		template <class... Args>
 		constexpr OptionStorage(InPlace /*unused*/, Args&&... args) // NOLINT(google-explicit-constructor)
-		    : value(RB_FWD(args)...) {
+		    : value{RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args>
 		constexpr OptionStorage(std::initializer_list<U> il, Args&&... args)
-		    : value(il, RB_FWD(args)...) {
+		    : value{il, RB_FWD(args)...} {
 		}
 
 		template <class F, class Arg>
 		constexpr OptionStorage(OptionFunc<F> f, Arg&& arg)
-		    : value(invoke(RB_FWD(f.func), RB_FWD(arg))) {
+		    : value{invoke(RB_FWD(f.func), RB_FWD(arg))} {
 		}
 
 		Empty empty;
 		T value;
 	};
 
+	// Not trivially destructible
 	template <class T>
-	union OptionStorage<T, false> { // Not trivially destructible
-
+	union OptionStorage<T, false> {
 		constexpr OptionStorage() noexcept
-		    : empty() {
+		    : empty{} {
 		}
 
 		template <class... Args>
 		constexpr OptionStorage(InPlace /*unused*/, Args&&... args) // NOLINT(google-explicit-constructor)
-		    : value(RB_FWD(args)...) {
+		    : value{RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args>
 		constexpr OptionStorage(std::initializer_list<U> il, Args&&... args)
-		    : value(il, RB_FWD(args)...) {
+		    : value{il, RB_FWD(args)...} {
 		}
 
 		template <class F, class Arg>
 		constexpr OptionStorage(OptionFunc<F> f, Arg&& arg)
-		    : value(invoke(RB_FWD(f.func), RB_FWD(arg))) {
+		    : value{invoke(RB_FWD(f.func), RB_FWD(arg))} {
 		}
 
 		// User-provided destructor is needed when T has non-trivial dtor
@@ -95,53 +95,38 @@ namespace impl {
 		T value;
 	};
 
-	template <class T, class This>
-	class EngageImpl {
-	public:
-		constexpr bool engaged() const noexcept {
-			return engaged_;
-		}
-
-		constexpr void setEngaged(bool engaged) noexcept {
-			engaged_ = engaged;
-		}
-
-	private:
-		bool engaged_ = false;
-	};
-
-	// This class template manages construction/destruction of the contained value for an Option
 	template <class T>
-	struct OptionPayloadBase : EngageImpl<T, OptionPayloadBase<T>> {
+	struct OptionPayloadBase {
 		using StoredType = RemoveConst<T>;
 
 		OptionStorage<StoredType> payload;
+		bool engaged = false;
 
 		OptionPayloadBase() = default;
 		~OptionPayloadBase() = default;
 
 		template <class... Args>
 		constexpr OptionPayloadBase(InPlace inPlace, Args&&... args) // NOLINT(google-explicit-constructor)
-		    : payload(inPlace, RB_FWD(args)...) {
-			this->setEngaged(true);
+		    : payload{inPlace, RB_FWD(args)...}
+		    , engaged{true} {
 		}
 
 		template <class U, class... Args>
 		constexpr OptionPayloadBase(std::initializer_list<U> il, Args&&... args)
-		    : payload(il, RB_FWD(args)...) {
-			this->setEngaged(true);
+		    : payload{il, RB_FWD(args)...}
+		    , engaged{true} {
 		}
 
 		// Constructor used by OptionBase copy constructor when the contained value is not trivially copy-constructible
 		constexpr OptionPayloadBase(bool /*engaged*/, OptionPayloadBase const& rhs) {
-			if (rhs.engaged()) {
+			if (rhs.engaged) {
 				this->construct(rhs.get());
 			}
 		}
 
 		// Constructor used by OptionBase move constructor when the contained value is not trivially move-constructible
 		constexpr OptionPayloadBase(bool /*engaged*/, OptionPayloadBase&& rhs) {
-			if (rhs.engaged()) {
+			if (rhs.engaged) {
 				this->construct(RB_MOVE(rhs.get()));
 			}
 		}
@@ -157,10 +142,10 @@ namespace impl {
 
 		// Used to perform non-trivial copy assignment
 		constexpr void copyAssign(OptionPayloadBase const& rhs) {
-			if (this->engaged() && rhs.engaged()) {
+			if (engaged && rhs.engaged) {
 				this->get() = rhs.get();
 			} else {
-				if (rhs.engaged()) {
+				if (rhs.engaged) {
 					this->construct(rhs.get());
 				} else {
 					this->resetImpl();
@@ -171,10 +156,10 @@ namespace impl {
 		// Used to perform non-trivial move assignment
 		constexpr void moveAssign(OptionPayloadBase&& rhs)
 		    noexcept(isNothrowMoveConstructible<T> && isNothrowMoveAssignable<T>) {
-			if (this->engaged() && rhs.engaged()) {
+			if (engaged && rhs.engaged) {
 				this->get() = RB_MOVE(rhs.get());
 			} else {
-				if (rhs.engaged()) {
+				if (rhs.engaged) {
 					this->construct(RB_MOVE(rhs.get()));
 				} else {
 					this->resetImpl();
@@ -184,22 +169,22 @@ namespace impl {
 
 		template <class... Args>
 		constexpr void construct(Args&&... args) noexcept(isNothrowConstructible<StoredType, Args...>) {
-			::new (addressOf(this->payload.value)) T(RB_FWD(args)...);
-			this->setEngaged(true);
+			::new (addressOf(this->payload.value)) T{RB_FWD(args)...};
+			engaged = true;
 		}
 
 		constexpr void destroy() noexcept {
 			payload.value.~StoredType();
-			this->setEngaged(false);
+			engaged = false;
 		}
 
 		template <class F, class U>
 		constexpr void apply(OptionFunc<F> f, U&& arg) {
-			::new (addressOf(this->payload)) OptionStorage<StoredType>(f, RB_FWD(arg));
-			this->setEngaged(true);
+			::new (addressOf(this->payload)) OptionStorage<StoredType>{f, RB_FWD(arg)};
+			engaged = true;
 		}
 
-		// The get() operations have `engaged()` as a precondition.
+		// The get() operations have `engaged` as a precondition.
 		// They exist to access the contained value with the appropriate
 		// const-qualification, because the payload has had the `const` removed.
 
@@ -213,11 +198,12 @@ namespace impl {
 
 		// `resetImpl` is a 'safe' operation with no precondition
 		constexpr void resetImpl() noexcept {
-			if (this->engaged()) {
+			if (engaged) {
 				destroy();
 			}
 		}
 	};
+	// This class template manages construction/destruction of the contained value for an Option
 
 	// Class template that manages the payload for Options
 	template <
@@ -270,7 +256,8 @@ namespace impl {
 
 		// Non-trivial move assignment
 		constexpr OptionPayload& operator=(OptionPayload&& rhs) //
-		    noexcept(isNothrowMoveConstructible<T> && isNothrowMoveAssignable<T>) {
+		    noexcept(isNothrowMoveConstructible<T> && isNothrowMoveAssignable<T>) //
+		{
 			this->moveAssign(RB_MOVE(rhs));
 			return *this;
 		}
@@ -305,7 +292,7 @@ namespace impl {
 	// Payload for optionals with non-trivial destructors
 	template <class T, bool copy, bool move>
 	struct OptionPayload<T, false, copy, move> : OptionPayload<T, true, false, false> {
-		// Base class implements all the constructors And assignment operators
+		// Base class implements all the constructors and assignment operators
 		using OptionPayload<T, true, false, false>::OptionPayload;
 
 		OptionPayload() = default;
@@ -341,7 +328,7 @@ namespace impl {
 		}
 
 		constexpr bool engaged() const noexcept {
-			return static_cast<U const*>(this)->payload.engaged();
+			return static_cast<U const*>(this)->payload.engaged;
 		}
 
 		constexpr T& get() noexcept {
@@ -378,21 +365,21 @@ namespace impl {
 		template <class... Args,
 		    RB_REQUIRES(isConstructible<T, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, Args&&... args)
-		    : payload(inPlace, RB_FWD(args)...) {
+		    : payload{inPlace, RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args,
 		    RB_REQUIRES(isConstructible<T, std::initializer_list<U>&, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, std::initializer_list<U> il, Args&&... args)
-		    : payload(inPlace, il, RB_FWD(args)...) {
+		    : payload{inPlace, il, RB_FWD(args)...} {
 		}
 
 		constexpr OptionBase(OptionBase const& rhs)
-		    : payload(rhs.payload.engaged(), rhs.payload) {
+		    : payload{rhs.payload.engaged, rhs.payload} {
 		}
 
 		constexpr OptionBase(OptionBase&& rhs) noexcept(isNothrowMoveConstructible<T>)
-		    : payload(rhs.payload.engaged(), RB_MOVE(rhs.payload)) {
+		    : payload{rhs.payload.engaged, RB_MOVE(rhs.payload)} {
 		}
 
 		OptionBase& operator=(OptionBase const&) = default;
@@ -408,17 +395,17 @@ namespace impl {
 		template <class... Args,
 		    RB_REQUIRES(isConstructible<T, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, Args&&... args)
-		    : payload(inPlace, RB_FWD(args)...) {
+		    : payload{inPlace, RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args,
 		    RB_REQUIRES(isConstructible<T, std::initializer_list<U>&, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, std::initializer_list<U> il, Args&&... args)
-		    : payload(inPlace, il, RB_FWD(args)...) {
+		    : payload{inPlace, il, RB_FWD(args)...} {
 		}
 
 		constexpr OptionBase(OptionBase const& rhs)
-		    : payload(rhs.payload.engaged(), rhs.payload) {
+		    : payload{rhs.payload.engaged, rhs.payload} {
 		}
 
 		constexpr OptionBase(OptionBase&& rhs) noexcept = default;
@@ -436,19 +423,19 @@ namespace impl {
 		template <class... Args,
 		    RB_REQUIRES(isConstructible<T, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, Args&&... args)
-		    : payload(inPlace, RB_FWD(args)...) {
+		    : payload{inPlace, RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args,
 		    RB_REQUIRES(isConstructible<T, std::initializer_list<U>&, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, std::initializer_list<U> il, Args&&... args)
-		    : payload(inPlace, il, RB_FWD(args)...) {
+		    : payload{inPlace, il, RB_FWD(args)...} {
 		}
 
 		constexpr OptionBase(OptionBase const& rhs) = default;
 
 		constexpr OptionBase(OptionBase&& rhs) noexcept(isNothrowMoveConstructible<T>)
-		    : payload(rhs.payload.engaged(), RB_MOVE(rhs.payload)) {
+		    : payload{rhs.payload.engaged, RB_MOVE(rhs.payload)} {
 		}
 
 		OptionBase& operator=(OptionBase const&) = default;
@@ -464,13 +451,13 @@ namespace impl {
 		template <class... Args,
 		    RB_REQUIRES(isConstructible<T, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, Args&&... args)
-		    : payload(inPlace, RB_FWD(args)...) {
+		    : payload{inPlace, RB_FWD(args)...} {
 		}
 
 		template <class U, class... Args,
 		    RB_REQUIRES(isConstructible<T, std::initializer_list<U>&, Args...>)>
 		constexpr explicit OptionBase(InPlace inPlace, std::initializer_list<U> il, Args&&... args)
-		    : payload(inPlace, il, RB_FWD(args)...) {
+		    : payload{inPlace, il, RB_FWD(args)...} {
 		}
 
 		constexpr OptionBase(OptionBase const& rhs) = default;
@@ -520,8 +507,8 @@ inline constexpr bool isOption = IsOption<T>::value;
  */
 template <class T>
 class RB_EXPORT Option final
-    : private impl::OptionBase<T>
-    , private EnableCopyMove<
+    : impl::OptionBase<T>
+    , EnableCopyMove<
           isCopyConstructible<T>,
           isCopyConstructible<T> && isCopyAssignable<T>,
           isMoveConstructible<T>,
@@ -549,13 +536,13 @@ public:
 	template <class U = T,
 	    RB_REQUIRES_T(And<NotSelf<U>, NotTag<U>, IsConstructible<T, U>, IsConvertible<T, U>>)>
 	constexpr Option(U&& value) noexcept(isNothrowConstructible<T, U>)
-	    : Super(kInPlace, RB_FWD(value)) {
+	    : Super{kInPlace, RB_FWD(value)} {
 	}
 
 	template <class U = T,
 	    RB_REQUIRES_T(And<NotSelf<U>, NotTag<U>, IsConstructible<T, U>, Not<IsConvertible<T, U>>>)>
 	constexpr explicit Option(U&& value) noexcept(isNothrowConstructible<T, U>)
-	    : Super(kInPlace, RB_FWD(value)) {
+	    : Super{kInPlace, RB_FWD(value)} {
 	}
 
 	template <class U,
@@ -608,15 +595,15 @@ public:
 
 	template <class... Args,
 	    RB_REQUIRES(isConstructible<T, Args...>)>
-	constexpr explicit Option(InPlace /*kInPlace*/, Args&&... args) noexcept(isNothrowConstructible<T, Args...>)
-	    : Super(kInPlace, RB_FWD(args)...) {
+	constexpr explicit Option(InPlace inPlace, Args&&... args) noexcept(isNothrowConstructible<T, Args...>)
+	    : Super{inPlace, RB_FWD(args)...} {
 	}
 
 	template <class U, class... Args,
 	    RB_REQUIRES(isConstructible<T, std::initializer_list<U>&, Args...>)>
-	constexpr explicit Option(InPlace /*kInPlace*/, std::initializer_list<U> il, Args&&... args) //
+	constexpr explicit Option(InPlace inPlace, std::initializer_list<U> il, Args&&... args) //
 	    noexcept(isNothrowConstructible<T, std::initializer_list<U>&, Args...>)
-	    : Super(kInPlace, il, RB_FWD(args)...) {
+	    : Super{inPlace, il, RB_FWD(args)...} {
 	}
 
 	// NOLINTEND(google-explicit-constructor,bugprone-forwarding-reference-overload)
@@ -679,7 +666,6 @@ public:
 		} else {
 			this->reset();
 		}
-
 		return *this;
 	}
 
@@ -701,7 +687,7 @@ public:
 	}
 
 	void swap(Option& rhs) noexcept(isNothrowMoveConstructible<T> && isNothrowSwappable<T>) {
-		using rb::core::swap;
+		using core::swap;
 
 		if (this->engaged() && rhs.engaged()) {
 			swap(this->get(), rhs.get());
@@ -827,7 +813,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), **this);
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -837,7 +823,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), **this);
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -847,7 +833,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), RB_MOVE(**this));
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -857,43 +843,43 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), RB_MOVE(**this));
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) & {
 		using U = InvokeResult<F, T&>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, **this);
+			return Option<U>{impl::OptionFunc<F>{f}, **this};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) const& {
 		using U = InvokeResult<F, T const&>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, **this);
+			return Option<U>{impl::OptionFunc<F>{f}, **this};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) && {
 		using U = InvokeResult<F, T>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, RB_MOVE(**this));
+			return Option<U>{impl::OptionFunc<F>{f}, RB_MOVE(**this)};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) const&& {
 		using U = InvokeResult<F, T const>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, RB_MOVE(**this));
+			return Option<U>{impl::OptionFunc<F>{f}, RB_MOVE(**this)};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F,
@@ -950,12 +936,12 @@ public:
 	template <class U,
 	    RB_REQUIRES_T(And<NotSelf<U>, IsConvertible<U*, T*>>)>
 	constexpr Option(InPlace /*unused*/, U& value RB_LIFETIME_BOUND) noexcept
-	    : ptr_(addressOf(value)) {
+	    : ptr_{addressOf(value)} {
 	}
 
 	template <class U>
 	constexpr Option(U& value RB_LIFETIME_BOUND) noexcept
-	    : Option(kInPlace, value) {
+	    : Option{kInPlace, value} {
 	}
 
 	template <class U,
@@ -1120,7 +1106,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), **this);
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -1130,7 +1116,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), **this);
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -1140,7 +1126,7 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), RB_MOVE(**this));
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
@@ -1150,43 +1136,43 @@ public:
 		if (hasValue()) {
 			return invoke(RB_FWD(f), RB_MOVE(**this));
 		}
-		return U();
+		return U{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) & {
 		using U = InvokeResult<F, T&>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, **this);
+			return Option<U>{impl::OptionFunc<F>{f}, **this};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) const& {
 		using U = InvokeResult<F, T const&>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, **this);
+			return Option<U>{impl::OptionFunc<F>{f}, **this};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) && {
 		using U = InvokeResult<F, T>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, RB_MOVE(**this));
+			return Option<U>{impl::OptionFunc<F>{f}, RB_MOVE(**this)};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F>
 	constexpr auto map(F&& f) const&& {
 		using U = InvokeResult<F, T const>;
 		if (hasValue()) {
-			return Option<U>(impl::OptionFunc<F>{f}, RB_MOVE(**this));
+			return Option<U>{impl::OptionFunc<F>{f}, RB_MOVE(**this)};
 		}
-		return Option<U>();
+		return Option<U>{};
 	}
 
 	template <class F,
@@ -1223,7 +1209,7 @@ private:
 
 	template <class F, class Arg>
 	constexpr explicit Option(impl::OptionFunc<F> f, Arg&& arg) noexcept(isNothrowInvocable<F, Arg>)
-	    : Option(invoke(RB_FWD(f.func), RB_FWD(arg))) {
+	    : Option{invoke(RB_FWD(f.func), RB_FWD(arg))} {
 	}
 
 	T* ptr_ = nullptr;
@@ -1236,12 +1222,16 @@ Option(T) -> Option<T>;
 // rel ops
 template <class T, class U, RB_REQUIRES_T(IsEqualityComparable<T const&, U const&>)>
 constexpr bool operator==(Option<T> const& lhs, Option<U> const& rhs) RB_NOEXCEPT_LIKE(*lhs == *rhs) {
-	return lhs ? (rhs && *lhs == *rhs) : !rhs;
+	return lhs
+	    ? rhs && *lhs == *rhs
+	    : !rhs;
 }
 
 template <class T, class U, RB_REQUIRES_T(IsInequalityComparable<T const&, U const&>)>
 constexpr bool operator!=(Option<T> const& lhs, Option<U> const& rhs) RB_NOEXCEPT_LIKE(*lhs != *rhs) {
-	return lhs ? (!rhs || *lhs != *rhs) : rhs;
+	return lhs
+	    ? !rhs || *lhs != *rhs
+	    : rhs;
 }
 
 // FIXME add other rel ops
@@ -1273,7 +1263,9 @@ constexpr bool operator!=(NoneOption /*lhs*/, Option<T> const& rhs) noexcept {
 template <class T, class Char, class Traits,
     RB_REQUIRES_T(IsWritableTo<T, std::basic_ostream<Char, Traits>>)>
 std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, Option<T> const& opt) {
-	return opt ? (os << *opt) : (os << "none");
+	return opt
+	    ? os << *opt
+	    : os << "none";
 }
 
 } // namespace rb::core

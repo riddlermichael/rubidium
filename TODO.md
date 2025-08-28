@@ -95,8 +95,13 @@
 - [ ] look at Chromium's `base::Location`
 - [ ] compare `Array` and `absl::FixedArray`
 - [ ] see `absl::Nullable` etc.
+  - [ ] Rust: `ptr::NonNull`, `num::NonZero`
+  - [ ] should work in case of `struct { NonZero field; }`
 - [ ] `noexcept` detection
 - [ ] `czstring`: `__null_terminated` support
+- [ ] range checking in literals `_i8` etc.
+- [ ] `SourceLocation` with compile-time strings
+- [ ] [safe](https://t.ly/W6-H9) `min`
 
 ### Data structures
 

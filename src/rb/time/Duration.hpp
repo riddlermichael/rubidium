@@ -7,7 +7,6 @@
 #include <rb/core/quorem.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/enums.hpp>
-#include <rb/time/I64.hpp>
 #include <rb/time/TimeSpec.hpp>
 
 #define RB_REQUIRES_INTEGRAL(T) RB_REQUIRES(rb::core::isIntegral<T> || rb::core::isEnum<T>)
