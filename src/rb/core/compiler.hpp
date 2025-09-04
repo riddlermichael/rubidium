@@ -43,5 +43,5 @@
 		#define RB_COMPILER_VERSION_STRING __VERSION__
 	#endif
 #else
-	#error "Unsupported compiler"
+	#error Unsupported compiler
 #endif

@@ -32,8 +32,8 @@ inline namespace str {
 		Char data_[kSize + 1] = {};
 
 	public:
-		using Super = Sliceable<StaticString<kSize, Char>, StringViewImpl<Char>, StringViewImpl<Char>>;
-		using This = StaticString;
+		using Self = StaticString;
+		using Super = Sliceable<Self, StringViewImpl<Char>, StringViewImpl<Char>>;
 
 		using ConstIterator = Char const*;
 		using Difference = isize;
@@ -211,7 +211,7 @@ inline namespace str {
 		/// Replaces the part of the string indicated by [@p pos, @p pos + @p count) with a new string @p s.
 		template <usize count,
 		    RB_REQUIRES(count <= kSize)>
-		constexpr This& replace(usize pos, StaticString<count, Char> const& s) noexcept { // NOLINT(bugprone-exception-escape)
+		constexpr Self& replace(usize pos, StaticString<count, Char> const& s) noexcept { // NOLINT(bugprone-exception-escape)
 			RB_CHECK_RANGE(pos, 0, kSize - count + 1);
 			auto* ptr = data_ + pos;
 			for (auto ch : s) {
@@ -223,7 +223,7 @@ inline namespace str {
 		/// Replaces the part of the string indicated by [@p pos, @p pos + @p count) with a new string @p s.
 		template <usize pos, usize count,
 		    RB_REQUIRES(pos + count <= kSize)>
-		constexpr This& replace(StaticString<count, Char> const& s) noexcept {
+		constexpr Self& replace(StaticString<count, Char> const& s) noexcept {
 			auto* ptr = data_ + pos;
 			for (auto ch : s) {
 				*ptr++ = ch;

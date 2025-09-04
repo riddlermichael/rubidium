@@ -15,7 +15,7 @@ inline namespace str {
 } // namespace str
 
 template <class Char, usize n>
-struct ContainerTraits<str::StringViewImpl<Char, n>> {
+struct ContainerTraits<StringViewImpl<Char, n>> {
 	using Value = RemoveCv<Char>;
 	using Iterator = Char*;
 	using ConstIterator = Char const*;

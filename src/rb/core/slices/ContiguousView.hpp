@@ -118,14 +118,14 @@ public:
 
 	// ctor.3
 	template <class It, class End,
-	    RB_REQUIRES(!isConvertible<End, usize> && (n == kDynExtent))>
+	    RB_REQUIRES(!isConvertible<End, usize> && n == kDynExtent)>
 	constexpr ContiguousView(It first, End last) RB_NOEXCEPT_LIKE(last - first)
 	    : Super(toAddress(first), last - first) {
 	}
 
 	// ctor.3
 	template <class It, class End,
-	    RB_REQUIRES(!isConvertible<End, usize> && (n != kDynExtent))>
+	    RB_REQUIRES(!isConvertible<End, usize> && n != kDynExtent)>
 	constexpr explicit ContiguousView(It first, End last) RB_NOEXCEPT_LIKE(last - first)
 	    : Super(toAddress(first), last - first) {
 	}

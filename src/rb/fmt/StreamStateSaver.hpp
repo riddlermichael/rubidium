@@ -2,6 +2,8 @@
 
 #include <ostream>
 
+#include <rb/core/helpers.hpp>
+
 namespace rb::fmt {
 
 template <class Stream>
@@ -19,6 +21,8 @@ public:
 		stream_.precision(precision_);
 		stream_.fill(fillCh_);
 	}
+
+	RB_DISABLE_COPY(StreamStateSaver)
 
 private:
 	Stream& stream_;

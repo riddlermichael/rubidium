@@ -342,8 +342,8 @@ constexpr Duration Duration::operator-() const noexcept {
 
 	if (ticks_ == 0) {
 		return seconds_ == core::min<i64>
-		         ? kInfinity
-		         : Duration{-seconds_, 0};
+		    ? kInfinity
+		    : Duration{-seconds_, 0};
 	}
 
 	if (isInf()) {
@@ -696,9 +696,9 @@ inline Duration const Duration::kSecond = seconds(1);
 inline Duration const Duration::kMinute = minutes(1);
 inline Duration const Duration::kHour = hours(1);
 
-inline Duration const Duration::kInfinity = Duration::inf();
+inline Duration const Duration::kInfinity = inf();
 inline Duration const Duration::kNegativeInfinity = {core::min<i64>, kInfTicks};
-inline Duration const Duration::kNaN = Duration::nan();
+inline Duration const Duration::kNaN = nan();
 
 constexpr Duration Duration::from(std::timespec ts) noexcept {
 	if (static_cast<u64>(ts.tv_nsec) < kNanosecondsPerSecond) {

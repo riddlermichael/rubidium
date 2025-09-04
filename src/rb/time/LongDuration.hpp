@@ -552,10 +552,10 @@ inline LongDuration const LongDuration::kSecond = seconds(1);
 inline LongDuration const LongDuration::kMinute = minutes(1);
 inline LongDuration const LongDuration::kHour = hours(1);
 
-inline LongDuration const LongDuration::kInfinity = LongDuration::inf();
-inline LongDuration const LongDuration::kNegativeInfinity = -LongDuration::inf();
+inline LongDuration const LongDuration::kInfinity = inf();
+inline LongDuration const LongDuration::kNegativeInfinity = -inf();
 #if RB_ENABLED(DURATION_NAN)
-inline LongDuration const LongDuration::kNaN = LongDuration::nan();
+inline LongDuration const LongDuration::kNaN = nan();
 #endif
 
 // units
@@ -575,7 +575,7 @@ template <class T>
 Quantity(T, Unit) -> Quantity<core::RemoveCvRef<T>>;
 
 template <class T>
-using QuantityList = std::vector<Quantity<T>>;
+using QuantityList = std::vector<Quantity<T>>; // TODO use containers::Vector
 
 template <class T>
 struct SplitResult {

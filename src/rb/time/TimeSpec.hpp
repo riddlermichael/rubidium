@@ -69,7 +69,7 @@ private:
 	u32 nsecs_ = 0;
 };
 
-inline std::ostream& operator<<(std::ostream& os, TimeSpec const& ts) {
+inline std::ostream& operator<<(std::ostream& os, TimeSpec ts) {
 	return os << "TimeSpec{secs: " << ts.seconds() << ", nsecs: " << ts.nanoseconds() << "}";
 }
 

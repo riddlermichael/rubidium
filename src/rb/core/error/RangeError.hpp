@@ -9,7 +9,7 @@ namespace rb::core {
 inline namespace error {
 
 	class RB_EXPORT RangeError final : public Error {
-		static constexpr czstring kDefaultMessage = "Out of range";
+		static constexpr auto kDefaultMessage = "Out of range";
 
 	public:
 		// TODO

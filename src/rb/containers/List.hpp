@@ -145,6 +145,7 @@ public:
 			return node_ != rhs.node_;
 		}
 
+		// ReSharper disable once CppNonExplicitConversionOperator
 		constexpr operator ConstIterator() const noexcept { // NOLINT(*-explicit-constructor)
 			return ConstIterator{node_};
 		}

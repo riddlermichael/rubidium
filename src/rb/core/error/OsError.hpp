@@ -6,6 +6,7 @@
 namespace rb::core {
 inline namespace error {
 
+	// ReSharper disable once CppClassCanBeFinal
 	class RB_EXPORT OsError : public Error {
 	public:
 		using RawCode = unsigned;

@@ -63,7 +63,7 @@ public:
 	    , patch_(patch) {
 	}
 
-	constexpr bool operator<(Version const& rhs) const noexcept {
+	constexpr bool operator<(Version rhs) const noexcept {
 		if (major_ < rhs.major_) {
 			return true;
 		}
@@ -83,7 +83,7 @@ public:
 		return patch_ < rhs.patch_;
 	}
 
-	constexpr bool operator==(Version const& rhs) const noexcept {
+	constexpr bool operator==(Version rhs) const noexcept {
 		return major_ == rhs.major_
 		    && minor_ == rhs.minor_
 		    && patch_ == rhs.patch_;
@@ -127,23 +127,23 @@ private:
 
 // synthesized operators
 
-constexpr bool operator>(Version const& lhs, Version const& rhs) noexcept {
+constexpr bool operator>(Version lhs, Version rhs) noexcept {
 	return rhs < lhs;
 }
 
-constexpr bool operator>=(Version const& lhs, Version const& rhs) noexcept {
+constexpr bool operator>=(Version lhs, Version rhs) noexcept {
 	return !(lhs < rhs);
 }
 
-constexpr bool operator<=(Version const& lhs, Version const& rhs) noexcept {
+constexpr bool operator<=(Version lhs, Version rhs) noexcept {
 	return !(rhs < lhs);
 }
 
-constexpr bool operator!=(Version const& lhs, Version const& rhs) noexcept {
+constexpr bool operator!=(Version lhs, Version rhs) noexcept {
 	return !(lhs == rhs);
 }
 
-inline std::ostream& operator<<(std::ostream& os, Version const& v) {
+inline std::ostream& operator<<(std::ostream& os, Version v) {
 	return os << v.major() << '.' << v.minor() << '.' << v.patch();
 }
 

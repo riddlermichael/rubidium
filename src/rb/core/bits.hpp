@@ -46,9 +46,6 @@ constexpr bool getBit(T x, usize pos) noexcept {
 	return (pos < 8 * sizeof(T)) && ((x >> pos) & 1U);
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "Simplify"
-
 template <class From, class To>
 inline constexpr bool isBitCastable = //
     sizeof(From) == sizeof(To)
@@ -58,8 +55,6 @@ inline constexpr bool isBitCastable = //
     && isDefaultConstructible<To>
 #endif
     ;
-
-#pragma clang diagnostic pop
 
 // Test: bitCast<i32>(3.14159265358979F) == 0x40490fdb
 
@@ -107,28 +102,28 @@ constexpr u16 bswap(u16 value) noexcept {
 
 constexpr u64 bswap(u64 value) noexcept {
 	return 0
-	     | ((value & 0x0000'0000'0000'00ffULL) << 56)
-	     | ((value & 0x0000'0000'0000'ff00ULL) << 40)
-	     | ((value & 0x0000'0000'00ff'0000ULL) << 24)
-	     | ((value & 0x0000'0000'ff00'0000ULL) << 8)
-	     | ((value & 0x0000'00ff'0000'0000ULL) >> 8)
-	     | ((value & 0x0000'ff00'0000'0000ULL) >> 24)
-	     | ((value & 0x00ff'0000'0000'0000ULL) >> 40)
-	     | ((value & 0xff00'0000'0000'0000ULL) >> 56);
+	    | ((value & 0x0000'0000'0000'00ffULL) << 56)
+	    | ((value & 0x0000'0000'0000'ff00ULL) << 40)
+	    | ((value & 0x0000'0000'00ff'0000ULL) << 24)
+	    | ((value & 0x0000'0000'ff00'0000ULL) << 8)
+	    | ((value & 0x0000'00ff'0000'0000ULL) >> 8)
+	    | ((value & 0x0000'ff00'0000'0000ULL) >> 24)
+	    | ((value & 0x00ff'0000'0000'0000ULL) >> 40)
+	    | ((value & 0xff00'0000'0000'0000ULL) >> 56);
 }
 
 constexpr u32 bswap(u32 value) noexcept {
 	return 0
-	     | ((value & 0x0000'00ffU) << 24)
-	     | ((value & 0x0000'ff00U) << 8)
-	     | ((value & 0x00ff'0000U) >> 8)
-	     | ((value & 0xff00'0000U) >> 24);
+	    | ((value & 0x0000'00ffU) << 24)
+	    | ((value & 0x0000'ff00U) << 8)
+	    | ((value & 0x00ff'0000U) >> 8)
+	    | ((value & 0xff00'0000U) >> 24);
 }
 
 constexpr u16 bswap(u16 value) noexcept {
 	return 0
-	     | ((value & 0x00ffU) << 8)
-	     | ((value & 0xff00U) >> 8);
+	    | ((value & 0x00ffU) << 8)
+	    | ((value & 0xff00U) >> 8);
 }
 
 #endif

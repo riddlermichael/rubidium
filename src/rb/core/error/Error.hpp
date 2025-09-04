@@ -15,11 +15,9 @@ inline namespace error {
 		/// Construct Error with @p msg and @p location.
 		explicit Error(czstring msg, RB_SOURCE_LOCATION_DECL) noexcept;
 
-		Error(Error const&) noexcept = default;
 		Error(Error&&) noexcept = default;
 		virtual ~Error() = default;
 
-		Error& operator=(Error const& rhs) noexcept = default;
 		Error& operator=(Error&& rhs) noexcept = default;
 
 		/// Initializes the source location of this error to the specified value.

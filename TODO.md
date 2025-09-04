@@ -130,6 +130,7 @@
 - [ ] fix `iterables.hpp` (`<<` is very eager)
 - [ ] `charconv` for floating-point
 - [ ] `quoted` for `char const*` (compare with `std::quoted`)
+- [ ] `StreamStateSaver`: use trait for `Stream`
 - [ ] [Abseil strings library](https://abseil.io/docs/cpp/guides/strings)
 
 ### `fs`

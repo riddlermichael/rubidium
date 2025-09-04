@@ -13,7 +13,7 @@ inline namespace slices {
 	template <class It>
 	class RB_EXPORT StepIterator final {
 		using Traits = IteratorTraits<It>;
-		using Self = StepIterator<It>;
+		using Self = StepIterator;
 
 		static_assert(isBaseOf<RandomAccessIteratorTag, typename Traits::Category>,
 		    "Iterator must be random-access at least");

@@ -38,6 +38,8 @@ struct Once::Executor {
 		onceCallable = nullptr;
 		onceCall = nullptr;
 	}
+
+	RB_DISABLE_COPY(Executor)
 };
 
 template <class Fn, class... Args>
@@ -46,7 +48,7 @@ void Once::operator()(Fn&& fn, Args&&... args) {
 		core::invoke(RB_FWD(fn), RB_FWD(args)...);
 	};
 
-	Executor exec(invokable);
+	Executor exec{invokable};
 	RB_SYNC_CHECK_ERRNO(pthread_once(&once_, onceCall));
 }
 

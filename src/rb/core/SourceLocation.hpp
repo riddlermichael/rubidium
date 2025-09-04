@@ -37,7 +37,7 @@ public:
 
 	constexpr SourceLocation() noexcept = default;
 
-	bool operator==(SourceLocation rhs) const noexcept {
+	bool operator==(SourceLocation const& rhs) const noexcept {
 		return std::strcmp(file_, rhs.file_) == 0
 		    && line_ == rhs.line_
 #if RB_HAS(BUILTIN_COLUMN)
@@ -46,7 +46,7 @@ public:
 		    ;
 	}
 
-	bool operator!=(SourceLocation rhs) const noexcept {
+	bool operator!=(SourceLocation const& rhs) const noexcept {
 		return !(*this == rhs);
 	}
 
@@ -73,13 +73,13 @@ private:
 	unsigned column_ = 0;
 };
 
-inline std::ostream& operator<<(std::ostream& os, SourceLocation loc) {
+inline std::ostream& operator<<(std::ostream& os, SourceLocation const& loc) {
 	os << loc.file() << ":" << loc.line();
 #if RB_ENABLED(FULL_SOURCE_LOCATION_INFO)
 	#if RB_HAS(BUILTIN_COLUMN) // NOLINT(*-redundant-preprocessor)
 	os << ":" << loc.column();
 	#endif
-	czstring func = loc.func();
+	czstring const func = loc.func();
 	if (func && func[0]) {
 		os << " (" << func << ")";
 	}

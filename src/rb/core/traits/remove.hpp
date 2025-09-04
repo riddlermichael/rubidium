@@ -74,7 +74,7 @@ namespace impl {
 inline namespace traits {
 
 	template <class T>
-	using RemoveConst = typename rb::core::impl::RemoveConstImpl<T>::Type;
+	using RemoveConst = typename impl::RemoveConstImpl<T>::Type;
 
 	template <class T>
 	using RemoveVolatile = typename impl::RemoveVolatile<T>::Type;

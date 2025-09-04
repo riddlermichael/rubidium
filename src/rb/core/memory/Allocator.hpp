@@ -17,7 +17,7 @@ inline namespace memory {
 			return static_cast<T*>(::operator new(n * sizeof(Value)));
 		}
 
-		[[nodiscard]] constexpr AllocationResult<T*, Size> allocateAtLeast(Size n) {
+		[[nodiscard]] constexpr AllocationResult<T*> allocateAtLeast(Size n) {
 			return {allocate(n), n};
 		}
 

@@ -22,7 +22,7 @@ struct ContainerTraits<Array<T>> {
 /// Owning counterpart of rb::core::Span, or std::unique_ptr<T[]> with `size()`, or std::vector<T> without resizing.
 template <class T>
 class RB_EXPORT Array final : public Sliceable<Array<T>, Span<T const>, Span<T>> {
-	using Super = Sliceable<Array<T>, Span<T const>, Span<T>>;
+	using Super = Sliceable<Array, Span<T const>, Span<T>>;
 	using Alloc = ArrayAllocator<T>;
 	using AllocTraits = AllocatorTraits<Alloc>;
 

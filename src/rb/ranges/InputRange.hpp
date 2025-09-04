@@ -26,6 +26,7 @@ public:
 		return core::empty(s_);
 	}
 
+	// ReSharper disable once CppMemberFunctionMayBeConst
 	constexpr void popFront() RB_NOEXCEPT_LIKE(popFrontImpl()) {
 		popFrontImpl();
 	}
@@ -50,8 +51,8 @@ private:
 
 template <class E, class S,
     RB_REQUIRES(!isInputRange<S>
-                && core::isReadableFrom<E, S>
-                && core::isDefaultConstructible<E>)>
+        && core::isReadableFrom<E, S>
+        && core::isDefaultConstructible<E>)>
 constexpr auto range(S& s) noexcept {
 	return InputRange<S, E>{s};
 }

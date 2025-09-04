@@ -3,27 +3,27 @@
 #include <cstring>
 
 RB_RETURNS_NONNULL void* operator new(std::size_t size, rb::ext::ZeroMemory /*kZeroMemory*/) {
-	void* const ptr = ::operator new(size);
+	void* ptr = operator new(size);
 	std::memset(ptr, 0, size);
 	return ptr;
 }
 
 void operator delete(void* ptr, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete(ptr);
+	operator delete(ptr);
 }
 
 RB_RETURNS_NONNULL void* operator new[](std::size_t size, rb::ext::ZeroMemory /*kZeroMemory*/) {
-	void* const ptr = ::operator new[](size);
+	void* ptr = operator new[](size);
 	std::memset(ptr, 0, size);
 	return ptr;
 }
 
 void operator delete[](void* ptr, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete[](ptr);
+	operator delete[](ptr);
 }
 
 void* operator new(std::size_t size, std::nothrow_t /*nothrow*/, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	void* const ptr = ::operator new(size, std::nothrow);
+	void* ptr = operator new(size, std::nothrow);
 	if (ptr) {
 		std::memset(ptr, 0, size);
 	}
@@ -31,11 +31,11 @@ void* operator new(std::size_t size, std::nothrow_t /*nothrow*/, rb::ext::ZeroMe
 }
 
 void operator delete(void* ptr, std::nothrow_t /*nothrow*/, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete(ptr, std::nothrow);
+	operator delete(ptr, std::nothrow);
 }
 
 void* operator new[](std::size_t size, std::nothrow_t /*nothrow*/, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	void* const ptr = ::operator new[](size, std::nothrow);
+	void* ptr = operator new[](size, std::nothrow);
 	if (ptr) {
 		std::memset(ptr, 0, size);
 	}
@@ -43,19 +43,19 @@ void* operator new[](std::size_t size, std::nothrow_t /*nothrow*/, rb::ext::Zero
 }
 
 void operator delete[](void* ptr, std::nothrow_t /*nothrow*/, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete[](ptr, std::nothrow);
+	operator delete[](ptr, std::nothrow);
 }
 
 #ifdef __cpp_aligned_new
 
 RB_RETURNS_NONNULL void* operator new(std::size_t size, std::align_val_t align, rb::ext::ZeroMemory /*kZeroMemory*/) {
-	void* const ptr = ::operator new(size, align);
+	void* ptr = operator new(size, align);
 	std::memset(ptr, 0, size);
 	return ptr;
 }
 
 void operator delete(void* ptr, std::align_val_t align, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete(ptr, align);
+	operator delete(ptr, align);
 }
 
 RB_RETURNS_NONNULL void* operator new[](
@@ -63,13 +63,13 @@ RB_RETURNS_NONNULL void* operator new[](
     std::align_val_t align,
     rb::ext::ZeroMemory /*kZeroMemory*/) //
 {
-	void* const ptr = ::operator new[](size, align);
+	void* ptr = operator new[](size, align);
 	std::memset(ptr, 0, size);
 	return ptr;
 }
 
 void operator delete[](void* ptr, std::align_val_t align, rb::ext::ZeroMemory /*kZeroMemory*/) noexcept {
-	::operator delete[](ptr, align);
+	operator delete[](ptr, align);
 }
 
 void* operator new(
@@ -78,7 +78,7 @@ void* operator new(
     std::nothrow_t /*nothrow*/,
     rb::ext::ZeroMemory /*kZeroMemory*/) noexcept //
 {
-	void* const ptr = ::operator new(size, align, std::nothrow);
+	void* ptr = operator new(size, align, std::nothrow);
 	if (ptr) {
 		std::memset(ptr, 0, size);
 	}
@@ -91,7 +91,7 @@ void operator delete(
     std::nothrow_t /*nothrow*/,
     rb::ext::ZeroMemory /*kZeroMemory*/) noexcept //
 {
-	::operator delete(ptr, align, std::nothrow);
+	operator delete(ptr, align, std::nothrow);
 }
 
 void* operator new[](
@@ -100,7 +100,7 @@ void* operator new[](
     std::nothrow_t /*nothrow*/,
     rb::ext::ZeroMemory /*kZeroMemory*/) noexcept //
 {
-	void* const ptr = ::operator new[](size, align, std::nothrow);
+	void* ptr = operator new[](size, align, std::nothrow);
 	if (ptr) {
 		std::memset(ptr, 0, size);
 	}
@@ -113,7 +113,7 @@ void operator delete[](
     std::nothrow_t /*nothrow*/,
     rb::ext::ZeroMemory /*kZeroMemory*/) noexcept //
 {
-	::operator delete[](ptr, align, std::nothrow);
+	operator delete[](ptr, align, std::nothrow);
 }
 
 #endif

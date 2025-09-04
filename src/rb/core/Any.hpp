@@ -38,6 +38,8 @@ public:
 	    : storage_(StoragePtr<T>::from(RB_FWD(args)...)) {
 	}
 
+	~Any() = default;
+
 	Any& operator=(Any const& rhs) {
 		if (this != &rhs) {
 			storage_ = rhs.storage_->clone();
@@ -95,6 +97,9 @@ private:
 	using IStoragePtr = UniquePtr<IStorage>;
 
 	struct IStorage {
+		IStorage() noexcept = default;
+		RB_DISABLE_COPY(IStorage)
+
 		virtual ~IStorage() = default;
 
 		virtual void const* get() const noexcept = 0;
@@ -110,7 +115,7 @@ private:
 
 	template <class T,
 	    RB_REQUIRES(isCopyConstructible<T>)>
-	struct Storage : IStorage {
+	struct Storage final : IStorage {
 		explicit Storage(T const& data)
 		    : data(data) {
 		}
