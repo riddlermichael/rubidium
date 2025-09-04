@@ -55,6 +55,7 @@ endif()
 
 add_library(${LIB} ${HEADERS} ${SOURCES})
 add_library(Rb::Rb ALIAS ${LIB})
+target_compile_features(${LIB} PUBLIC cxx_std_17)
 target_compile_definitions(${LIB}
     PUBLIC $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:RB_STATIC>
     PRIVATE RB_EXPORTS)
