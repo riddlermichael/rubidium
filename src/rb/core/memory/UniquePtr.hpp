@@ -72,7 +72,6 @@ inline namespace memory {
 		using SafeConvertible = IsConvertible<typename UniquePtr<U, D>::Pointer, Pointer>;
 
 	public:
-
 		template <class DD = D>
 		static auto borrow(Pointer& p) noexcept
 		    -> RB_REQUIRES_RETURN_T(UniquePtr, And<impl::DeleterEnableDefault<DD>, impl::SafeDelete<T>>) {
@@ -255,7 +254,7 @@ inline namespace memory {
 			return storage_.first();
 		}
 
-		Pointer release() noexcept {
+		[[nodiscard]] Pointer release() noexcept {
 			Pointer p = ptr();
 			ptr() = nullptr;
 			return p;
@@ -289,8 +288,8 @@ inline namespace memory {
 	    RB_REQUIRES_T(IsWritableTo<AddLValueRef<T const>, std::basic_ostream<Char, Traits>>)>
 	std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, UniquePtr<T, D> const& ptr) {
 		return ptr
-		         ? os << os.widen('&') << *ptr
-		         : os << os.widen('n') << os.widen('u') << os.widen('l') << os.widen('l');
+		    ? os << os.widen('&') << *ptr
+		    : os << os.widen('n') << os.widen('u') << os.widen('l') << os.widen('l');
 	}
 
 } // namespace memory

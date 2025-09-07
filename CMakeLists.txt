@@ -18,14 +18,17 @@ project(rubidium
 set(MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE INTERNAL "CMake module path" FORCE)
-include(utils)
-
-# **MUST** be placed before **ANY** `add_subdirectory`
-include(CTest)
-dump(BUILD_TESTING)
+include(Utils)
 
 # compile options and sanitizers' settings act on current directory and below
-include(sanitizers)
+include(Sanitizers)
+
+option(BUILD_TESTING "Build tests")
+if(${BUILD_TESTING})
+    include(CTest)
+    enable_testing()
+    add_subdirectory(test)
+endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 17)

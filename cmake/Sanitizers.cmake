@@ -1,4 +1,4 @@
-include(compilers)
+include(Compilers)
 
 option(USE_ASAN "Enable address sanitizer")
 option(USE_HWASAN "Enable hardware-assisted address sanitizer")

@@ -229,8 +229,8 @@ inline namespace memory {
 	    RB_REQUIRES_T(IsWritableTo<traits::AddLValueRef<T const>, std::basic_ostream<Char, Traits>>)>
 	std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, OwnerPtr<T> const& ptr) {
 		return ptr
-		         ? os << os.widen('&') << *ptr
-		         : os << os.widen('n') << os.widen('u') << os.widen('l') << os.widen('l');
+		    ? os << os.widen('&') << *ptr
+		    : os << os.widen('n') << os.widen('u') << os.widen('l') << os.widen('l');
 	}
 
 } // namespace memory

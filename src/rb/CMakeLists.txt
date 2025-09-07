@@ -15,7 +15,7 @@ set(VERSION_FILE "${GENERATED_INCLUDE_DIR}/${PRODUCT_NAME}/${PRODUCT_NAME}_versi
 configure_file(version.hpp.in "${VERSION_FILE}")
 
 # collect features
-include(features)
+include(Features)
 
 # collect sources
 set(MODULES
@@ -84,5 +84,5 @@ endif()
 use_sanitizers(${LIB})
 
 if(IS_TOP_LEVEL_PROJECT AND NOT CMAKE_SKIP_INSTALL_RULES)
-    include(deploy)
+    include(Deploy)
 endif()
