@@ -136,6 +136,7 @@ constexpr bool operator>=(Version lhs, Version rhs) noexcept {
 }
 
 constexpr bool operator<=(Version lhs, Version rhs) noexcept {
+	// ReSharper disable once CppRedundantComplexityInComparison
 	return !(rhs < lhs);
 }
 

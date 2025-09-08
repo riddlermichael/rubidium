@@ -93,6 +93,7 @@ SplitExpected<u128> split(LongDuration dur, Span<Unit const> units) {
 	QuantityList<u128> quantities;
 	bool const isPositive = dur.isPositive();
 	dur = abs(dur);
+	quantities.reserve(uniqueUnits.size());
 	for (auto const& unit : uniqueUnits) {
 		auto const& [quo, rem] = quorem(dur, unit.duration);
 		u128 const count{quo};

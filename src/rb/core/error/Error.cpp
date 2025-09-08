@@ -37,6 +37,7 @@ SourceLocation const& Error::location() const noexcept {
 	return loc_;
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 Error const* Error::cause() const noexcept { // NOLINT(*-convert-member-functions-to-static)
 	return nullptr;
 }
@@ -45,6 +46,7 @@ void Error::printTo(std::ostream& os) const {
 	os << *this;
 	int level = 1;
 	Error const* cause = this->cause();
+	// ReSharper disable once CppDFAConstantConditions
 	while (cause) {
 		os << "\n";
 		for (int i = 0; i < level; ++i) {

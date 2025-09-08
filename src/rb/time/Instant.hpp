@@ -80,6 +80,7 @@ constexpr bool operator>=(Instant lhs, Instant rhs) noexcept {
 }
 
 constexpr bool operator<=(Instant lhs, Instant rhs) noexcept {
+	// ReSharper disable once CppRedundantComplexityInComparison
 	return !(rhs < lhs);
 }
 

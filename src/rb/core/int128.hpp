@@ -489,9 +489,9 @@ inline std::ostream& operator<<(std::ostream& os, u128 const& value) {
 		if (adjustField == std::ios::left) {
 			rep.append(count, os.fill());
 		} else if (value
-		           && adjustField == std::ios::internal
-		           && (flags & std::ios::showbase)
-		           && (flags & std::ios::basefield) == std::ios::hex) {
+		    && adjustField == std::ios::internal
+		    && (flags & std::ios::showbase)
+		    && (flags & std::ios::basefield) == std::ios::hex) {
 			rep.insert(2_UZ, count, os.fill());
 		} else {
 			rep.insert(0_UZ, count, os.fill());
@@ -646,7 +646,8 @@ constexpr QuoRem<u128> quorem(u128 dividend, i128 divisor) noexcept {
 // NOLINTBEGIN(readability-identifier-naming)
 
 template <bool kUnsigned>
-struct std::numeric_limits<rb::core::Int128<kUnsigned>> { // NOLINT(cert-dcl58-cpp)
+class std::numeric_limits<rb::core::Int128<kUnsigned>> { // NOLINT(cert-dcl58-cpp)
+public:
 	using Int128 = rb::core::Int128<kUnsigned>;
 
 	static constexpr bool is_specialized = true;

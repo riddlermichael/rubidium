@@ -3,6 +3,8 @@
 #include <rb/core/helpers.hpp>
 #include <rb/core/memory/AllocationResult.hpp>
 
+// ReSharper disable CppMemberFunctionMayBeStatic
+
 namespace rb::core {
 inline namespace memory {
 

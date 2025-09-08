@@ -8,6 +8,8 @@
 #include <rb/core/warnings.hpp>
 #include <rb/fmt/charconv.hpp>
 
+// ReSharper disable CppMemberFunctionMayBeStatic
+
 namespace rb::core {
 
 inline namespace str {
@@ -92,6 +94,7 @@ inline namespace str {
 		}
 
 		/// StaticString cannot be constructed from `nullptr`.
+		// ReSharper disable once CppNonExplicitConvertingConstructor
 		StaticString(std::nullptr_t) = delete;
 
 		template <usize n>

@@ -35,6 +35,7 @@ public:
 		if (!e_) {
 			popFrontImpl();
 		}
+		// ReSharper disable once CppDFANullDereference
 		return *e_;
 	}
 

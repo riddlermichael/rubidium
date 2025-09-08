@@ -90,6 +90,8 @@ public:
 private:
 	template <class T>
 	friend constexpr T const* cast(Any const* any) noexcept;
+	template <class T>
+	friend constexpr T* cast(Any* any) noexcept;
 
 	friend std::ostream& operator<<(std::ostream& os, Any const& any);
 
@@ -242,7 +244,12 @@ constexpr T const* cast(Any const* any) noexcept {
 
 template <class T>
 constexpr T* cast(Any* any) noexcept {
-	return const_cast<T*>(cast<T>(static_cast<Any const*>(any))); // NOLINT(*-pro-type-const-cast)
+	if constexpr (isObject<T>) {
+		if (any) {
+			return const_cast<T*>(static_cast<T const*>(any->cast<T>())); // NOLINT(*-pro-type-const-cast)
+		}
+	}
+	return nullptr;
 }
 
 template <class T, class... Args>

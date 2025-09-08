@@ -83,7 +83,7 @@ struct ArrayAllocator final {
 					ptr = T::operator new[](nbBytes);
 				}
 			} else {
-				ptr = ::operator new[](nbBytes, align);
+				ptr = operator new[](nbBytes, align);
 			}
 		} else
 #endif
@@ -91,7 +91,7 @@ struct ArrayAllocator final {
 			if constexpr (useClassSpecificNewDelete) {
 				ptr = T::operator new[](nbBytes);
 			} else {
-				ptr = ::operator new[](nbBytes);
+				ptr = operator new[](nbBytes);
 			}
 		}
 		return static_cast<T*>(ptr);
@@ -116,7 +116,7 @@ struct ArrayAllocator final {
 			if constexpr (useClassSpecificNewDelete) {
 	#ifdef __cpp_sized_deallocation
 				if constexpr (hasOperatorDeleteArray<T, usize, std::align_val_t>
-				              && !hasOperatorDeleteArray<T, std::align_val_t>) {
+				    && !hasOperatorDeleteArray<T, std::align_val_t>) {
 					T::operator delete[](ptr, nbBytes, align);
 				} else
 	#endif

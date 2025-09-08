@@ -585,7 +585,7 @@ private:
 
 	template <class... Args>
 	Node* construct(Args&&... args) noexcept(core::isNothrowConstructible<T, Args...>) {
-		auto* node = static_cast<Node*>(::operator new(sizeof(Node)));
+		auto* node = static_cast<Node*>(operator new(sizeof(Node)));
 		try {
 			auto* ptr = core::addressOf(node->value);
 			core::construct(ptr, RB_FWD(args)...);

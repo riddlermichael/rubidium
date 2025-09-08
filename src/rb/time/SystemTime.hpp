@@ -110,6 +110,7 @@ constexpr bool operator>=(SystemTime lhs, SystemTime rhs) noexcept {
 }
 
 constexpr bool operator<=(SystemTime lhs, SystemTime rhs) noexcept {
+	// ReSharper disable once CppRedundantComplexityInComparison
 	return !(rhs < lhs);
 }
 

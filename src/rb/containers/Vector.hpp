@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rb/core/error/NotImplementedError.hpp>
+
 #include <rb/core/error/RangeError.hpp>
 #include <rb/core/exchange.hpp>
 #include <rb/core/memory/Allocator.hpp>
@@ -311,7 +313,9 @@ public:
 		capacity_ = newCapacity;
 	}
 
+	// ReSharper disable once CppMemberFunctionMayBeStatic
 	void shrinkToFit() {
+		RB_NOT_IMPLEMENTED();
 	}
 
 	constexpr void swap(Vector& rhs) noexcept {

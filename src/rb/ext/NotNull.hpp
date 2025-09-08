@@ -135,6 +135,7 @@ public:
 
 	// clang-format on
 
+	// ReSharper disable once CppNonExplicitConvertingConstructor
 	template <bool _ = true, RB_REQUIRES(_&& core::isPointer<T>)>
 	NotNull(std::nullptr_t) = delete;
 

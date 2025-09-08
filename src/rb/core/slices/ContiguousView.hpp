@@ -26,6 +26,7 @@ namespace impl {
 			return data_;
 		}
 
+		// ReSharper disable once CppMemberFunctionMayBeStatic
 		constexpr usize size() const noexcept {
 			return n;
 		}
