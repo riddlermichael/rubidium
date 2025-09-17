@@ -53,10 +53,8 @@ elseif(${COMPILER_CLANG})
         add_compile_options(/EHsc)
     endif()
 elseif(${COMPILER_MSVC})
-    set(PROCESSOR_COUNT "$ENV{NUMBER_OF_PROCESSORS}")
-    set(CMAKE_CXX_MP_NUM_PROCESSORS ${PROCESSOR_COUNT} CACHE STRING
-        "The maximum number of processes for the /MP flag")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${CMAKE_CXX_MP_NUM_PROCESSORS}")
+    cmake_host_system_information(RESULT NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${NUMBER_OF_LOGICAL_CORES}")
 
     add_compile_options(/EHsc)
     add_compile_options(/analyze)

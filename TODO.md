@@ -280,3 +280,4 @@
 - [ ] regular expressions
 - [ ] quaternions
 - [ ] `RB_DEBUG`
+- [ ] `cmake_host_system_information`
