@@ -58,6 +58,7 @@ elseif(${COMPILER_MSVC})
         "The maximum number of processes for the /MP flag")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP${CMAKE_CXX_MP_NUM_PROCESSORS}")
 
+    add_compile_options(/Wall)
     add_compile_options(/EHsc)
     add_compile_options(/analyze)
     # disable "unknown pragma" warnings

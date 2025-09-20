@@ -23,7 +23,7 @@
 
 ### `core`
 
-- [ ] `opCmp`
+- [ ] `opCmp` (see [std::cmp_equal](https://en.cppreference.com/w/cpp/utility/intcmp.html))
 - [ ] `reflect`
   - [ ] enums
   - [ ] `TypeInfo`
@@ -35,7 +35,7 @@
   - [ ] immutable string
   - [ ] ref-counted pointer instead of `std::shared_ptr`
   - [ ] `cause`
-- [ ] `Option` like in C++23
+- [ ] `Option` like in C++26
   - [ ] `Option<T&>` and `Option<T&&>`?
 - [ ] `Variant`
 - [ ] `Tuple`
@@ -53,6 +53,7 @@
   - [ ] `BitMask` trait
 - [ ] `CompressedPair` for both template args
 - [ ] own string class
+  - [ ] check [constructors](https://t.ly/vzrcn)
 - [ ] allocator-aware library wrappers for dynamic allocation
 - [ ] `AllocUniquePtr`/`AllocOwnerPtr`
 - [ ] strong typedef (or `newtype`) idiom
@@ -102,6 +103,10 @@
 - [ ] range checking in literals `_i8` etc.
 - [ ] `SourceLocation` with compile-time strings
 - [ ] [safe](https://t.ly/W6-H9) `min`
+- [ ] `std::function` ([see](https://t.ly/OqKdm))
+- [ ] Iterators like in Rust
+- [ ] [Dreams](https://habr.com/ru/articles/330402) about `std::of`
+- [ ] [SharedPtr](https://t.ly/Un-7M)
 
 ### Data structures
 
@@ -191,6 +196,7 @@
 - [ ] `Uniform`
 - [ ] `BitGen` as a range
 - [ ] add open-close interval type to `uniform`
+- [ ] [uniform](https://t.ly/Stl6W) distribution for `std::byte`/`core::byte`
 
 ### `ranges`
 
@@ -280,3 +286,4 @@
 - [ ] regular expressions
 - [ ] quaternions
 - [ ] `RB_DEBUG`
+- [ ] Jeff Alger ([see](https://t.ly/yOAXW))
