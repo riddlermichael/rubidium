@@ -287,3 +287,4 @@
 - [ ] quaternions
 - [ ] `RB_DEBUG`
 - [ ] Jeff Alger ([see](https://t.ly/yOAXW))
+- [ ] `cmake_host_system_information`
