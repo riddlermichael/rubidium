@@ -35,7 +35,7 @@ if(${COMPILER_GCC})
     add_compile_options(-Wno-unknown-pragmas)
     add_compile_options(-Wno-nonnull-compare)
     add_compile_options(-Wno-parentheses)
-    # add_compile_options(-fanalyzer)
+    add_compile_options(-fanalyzer -Wno-analyzer-use-of-uninitialized-value)
 elseif(${COMPILER_CLANG})
     add_compile_options(-fcolor-diagnostics)
 
