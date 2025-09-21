@@ -9,7 +9,7 @@ inline namespace error {
 	// ReSharper disable once CppClassCanBeFinal
 	class RB_EXPORT OsError : public Error {
 	public:
-		using RawCode = unsigned;
+		using RawCode = u32;
 
 		static OsError fromErrno(int error = errno, RB_SOURCE_LOCATION_DECL);
 		static OsError fromRawCode(RawCode rawCode, RB_SOURCE_LOCATION_DECL);

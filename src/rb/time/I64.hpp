@@ -14,8 +14,9 @@ public:
 	}
 
 	constexpr I64& operator=(i64 value) noexcept {
-		hi_ = value >> 32;
-		lo_ = value;
+		auto const val = static_cast<u64>(value);
+		hi_ = static_cast<u32>(val >> 32);
+		lo_ = static_cast<u32>(val);
 		return *this;
 	}
 

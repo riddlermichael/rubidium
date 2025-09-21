@@ -29,7 +29,7 @@ OsError OsError::lastOsError(SourceLocation const& location) noexcept {
 }
 
 OsError::OsError(ErrorCode errorCode, SourceLocation const& location)
-    : OsError(errorCode, -1, location) {
+    : OsError(errorCode, static_cast<RawCode>(-1), location) {
 }
 
 OsError::OsError(ErrorCode errorCode, RawCode rawCode, SourceLocation const& location)
@@ -63,8 +63,8 @@ void OsError::printMessage(std::ostream& os) const {
 	}
 
 	for (char* p = buf + nChars - 1;
-	     p >= buf && (*p == '\n' || *p == '\r' || *p == '.');
-	     --p) {
+	    p >= buf && (*p == '\n' || *p == '\r' || *p == '.');
+	    --p) {
 		*p = '\0';
 	}
 	os << " (" << buf << ")";

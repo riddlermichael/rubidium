@@ -4,7 +4,9 @@
 
 #include <rb/core/error/Error.hpp>
 
-namespace rb::core {
+using namespace rb::core;
+
+namespace {
 
 RB_HIDDEN void terminateHandler() {
 	std::exception_ptr const exceptionPtr = std::current_exception();
@@ -25,12 +27,12 @@ RB_HIDDEN void terminateHandler() {
 	}
 }
 
+} // namespace
+
 TerminateHandlerSetter::TerminateHandlerSetter() noexcept {
 	std::set_terminate(terminateHandler);
 }
 
-void throwAssert(czstring msg, SourceLocation const& location) {
+void rb::core::throwAssert(czstring msg, SourceLocation const& location) {
 	throw AssertError(msg, location);
 }
-
-} // namespace rb::core

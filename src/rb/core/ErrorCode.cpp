@@ -79,6 +79,7 @@ czstring toString(ErrorCode errorCode) noexcept {
 		case ErrorCode::kOperationInProgress            : return "Operation in progress";
 		case ErrorCode::kOperationNotPermitted          : return "Operation not permitted";
 		case ErrorCode::kOperationNotSupported          : return "Operation not supported on socket";
+		// NOLINTNEXTLINE(clang-analyzer-alpha.deadcode.UnreachableCode)
 		case ErrorCode::kOperationWouldBlock            : return "Operation would block";
 		case ErrorCode::kOwnerDead                      : return "Owner died";
 		case ErrorCode::kPermissionDenied               : return "Permission denied";

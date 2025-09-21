@@ -4,19 +4,21 @@
 
 #include <rb/core/slices/primitives.hpp>
 
+using namespace std::string_view_literals;
+
 using namespace rb::core;
 using namespace rb::time;
 
 namespace {
 
-Unit const kHourUnit{LongDuration::kHour, "h"};
-Unit const kMinuteUnit{LongDuration::kMinute, "min"};
-Unit const kSecondUnit{LongDuration::kSecond, "s"};
-Unit const kMillisecondUnit{LongDuration::kMillisecond, "ms"};
-Unit const kMicrosecondUnit{LongDuration::kMicrosecond, "us"};
-Unit const kNanosecondUnit{LongDuration::kNanosecond, "ns"};
+Unit const kHourUnit{LongDuration::kHour, "h"sv};
+Unit const kMinuteUnit{LongDuration::kMinute, "min"sv};
+Unit const kSecondUnit{LongDuration::kSecond, "s"sv};
+Unit const kMillisecondUnit{LongDuration::kMillisecond, "ms"sv};
+Unit const kMicrosecondUnit{LongDuration::kMicrosecond, "us"sv};
+Unit const kNanosecondUnit{LongDuration::kNanosecond, "ns"sv};
 
-std::vector<Unit> getUnits(LongDuration dur) noexcept {
+std::vector<Unit> getUnits(LongDuration dur) {
 	dur = abs(dur);
 	if (dur < LongDuration::kSecond) {
 		if (dur < LongDuration::kMicrosecond) {
@@ -55,7 +57,7 @@ SplitExpected<u128> split(LongDuration dur, Span<Unit const> units) {
 		return err(SplitError::kNaN);
 	}
 	{
-		Unit const* const it = std::find_if(units.begin(), units.end(), [](Unit const& unit) {
+		Unit const* it = std::find_if(units.begin(), units.end(), [](Unit const& unit) {
 			return unit.duration.isNaN();
 		});
 		if (it != units.end()) {
@@ -69,7 +71,7 @@ SplitExpected<u128> split(LongDuration dur, Span<Unit const> units) {
 	}
 
 	{
-		Unit const* const it = std::find_if(units.begin(), units.end(), [](Unit const& unit) {
+		Unit const* it = std::find_if(units.begin(), units.end(), [](Unit const& unit) {
 			return !unit.duration || unit.symbol.empty();
 		});
 		if (it != units.end()) {

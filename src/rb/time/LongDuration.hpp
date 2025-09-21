@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ratio>
+#include <string_view>
 #include <vector>
 
 #include <rb/core/features.hpp>
@@ -562,7 +563,7 @@ inline LongDuration const LongDuration::kNaN = nan();
 
 struct Unit {
 	LongDuration duration;
-	std::string symbol;
+	std::string_view symbol;
 };
 
 template <class T>
