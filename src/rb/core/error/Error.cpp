@@ -44,9 +44,9 @@ Error const* Error::cause() const noexcept { // NOLINT(*-convert-member-function
 
 void Error::printTo(std::ostream& os) const {
 	os << *this;
+	/*
 	int level = 1;
 	Error const* cause = this->cause();
-	// ReSharper disable once CppDFAConstantConditions
 	while (cause) {
 		os << "\n";
 		for (int i = 0; i < level; ++i) {
@@ -56,6 +56,7 @@ void Error::printTo(std::ostream& os) const {
 		cause = cause->cause();
 		++level;
 	}
+	*/
 	os << std::endl;
 }
 

@@ -21,6 +21,7 @@ czstring toString(ErrorCode errorCode) noexcept {
 	}
 
 	// ReSharper disable once CppDFAUnreachableCode
+	// NOLINTBEGIN(clang-analyzer-alpha.deadcode.UnreachableCode)
 	switch (errorCode) {
 		case ErrorCode::kNotImplemented                 : return "Not implemented";
 		case ErrorCode::kUnknown                        : return "Unknown error";
@@ -80,7 +81,6 @@ czstring toString(ErrorCode errorCode) noexcept {
 		case ErrorCode::kOperationInProgress            : return "Operation in progress";
 		case ErrorCode::kOperationNotPermitted          : return "Operation not permitted";
 		case ErrorCode::kOperationNotSupported          : return "Operation not supported on socket";
-		// NOLINTNEXTLINE(clang-analyzer-alpha.deadcode.UnreachableCode)
 		case ErrorCode::kOperationWouldBlock            : return "Operation would block";
 		case ErrorCode::kOwnerDead                      : return "Owner died";
 		case ErrorCode::kPermissionDenied               : return "Permission denied";
@@ -105,6 +105,7 @@ czstring toString(ErrorCode errorCode) noexcept {
 
 		default                                         : return "Undefined error";
 	}
+	// NOLINTEND(clang-analyzer-alpha.deadcode.UnreachableCode)
 }
 
 ErrorCode fromRawError(unsigned rawCode) noexcept {
