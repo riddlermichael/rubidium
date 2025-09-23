@@ -1,5 +1,6 @@
 #pragma once
 
+// ReSharper disable CppUnusedIncludeDirective
 #include <cstring>
 #include <ostream>
 

@@ -37,6 +37,7 @@ Checks: >
   -performance-avoid-endl,
   -performance-enum-size,
   -performance-noexcept-destructor,
+  -portability-avoid-pragma-once,
   -readability-function-cognitive-complexity,
   -readability-identifier-length,
   -readability-implicit-bool-conversion,

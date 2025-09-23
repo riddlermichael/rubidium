@@ -1,5 +1,6 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <rb/core/move.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/assignable.hpp>

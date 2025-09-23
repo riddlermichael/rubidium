@@ -1,5 +1,7 @@
 #pragma once
 
+// ReSharper disable CppInconsistentNaming, CppUnusedIncludeDirective
+
 #include <ostream>
 
 #include <rb/core/enums.hpp>

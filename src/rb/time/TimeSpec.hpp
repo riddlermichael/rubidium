@@ -3,6 +3,7 @@
 #include <ostream>
 #include <tuple>
 
+// ReSharper disable CppUnusedIncludeDirective
 #include <rb/core/compiler.hpp>
 #include <rb/core/os.hpp>
 #if defined(RB_COMPILER_MINGW) || defined(RB_OS_CYGWIN)

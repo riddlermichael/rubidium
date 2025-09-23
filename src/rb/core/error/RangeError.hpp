@@ -2,7 +2,6 @@
 
 #include <rb/core/error/Error.hpp>
 #include <rb/core/helpers.hpp>
-#include <rb/core/move.hpp>
 #include <rb/core/traits/requirements.hpp>
 
 namespace rb::core {
@@ -34,9 +33,6 @@ inline namespace error {
 		}
 	};
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "Simplify"
-
 	/// Check if @p value is in range [@p begin, @p end).
 	/// @throw RangeError @p value is ot of range [@p begin, @p end).
 	template <bool excludeEnd = true, class T>
@@ -46,8 +42,6 @@ inline namespace error {
 			throw RangeError(value, begin, end, excludeEnd, location);
 		}
 	}
-
-#pragma clang diagnostic pop
 
 } // namespace error
 } // namespace rb::core

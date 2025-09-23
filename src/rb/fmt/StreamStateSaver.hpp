@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ostream>
+#include <ios>
 
 #include <rb/core/helpers.hpp>
 

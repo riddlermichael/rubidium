@@ -16,7 +16,7 @@ inline namespace memory {
 
 		[[nodiscard]] constexpr T* allocate(Size n) {
 			RB_CHECK_COMPLETENESS(T);
-			return static_cast<T*>(::operator new(n * sizeof(Value)));
+			return static_cast<T*>(operator new(n * sizeof(Value)));
 		}
 
 		[[nodiscard]] constexpr AllocationResult<T*> allocateAtLeast(Size n) {

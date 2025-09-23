@@ -1,7 +1,6 @@
 #pragma once
 
 #include <initializer_list>
-#include <ostream>
 #include <string>
 
 #include <rb/core/str/StringView.hpp>

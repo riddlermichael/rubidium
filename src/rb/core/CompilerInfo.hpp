@@ -8,10 +8,10 @@ namespace rb::core {
 class CompilerInfo final {
 public:
 	enum class Id {
-		kClang,
-		kGcc,
-		kMingw,
-		kMsvc,
+		kClang = 0,
+		kGcc = 1,
+		kMingw = 2,
+		kMsvc = 3,
 #if defined(RB_COMPILER_CLANG)
 		kThisId = kClang
 #elif defined(RB_COMPILER_GCC)

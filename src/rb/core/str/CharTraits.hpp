@@ -1,5 +1,6 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <cstring>
 
 #include <rb/core/assert.hpp>
@@ -60,11 +61,13 @@ inline namespace str {
 				return __builtin_memcmp(lhs, rhs, count);
 			}
 #if defined(RB_COMPILER_MSVC) || defined(RB_COMPILER_CLANG)
-			else if constexpr (isSame<CharT, wchar_t>) {
+			else if constexpr (isSame<CharT, wchar_t>)
+			{
 				return __builtin_wmemcmp(lhs, rhs, count);
 			}
 #endif
-			else {
+			else
+			{
 				return cmp(lhs, rhs, count);
 			}
 		}

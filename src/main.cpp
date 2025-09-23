@@ -1,5 +1,6 @@
 #include <iostream>
 
+// ReSharper disable CppUnusedIncludeDirective
 #include <rb/containers/package.hpp>
 #include <rb/core/package.hpp>
 #include <rb/ext/package.hpp>

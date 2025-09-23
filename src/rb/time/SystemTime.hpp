@@ -1,7 +1,9 @@
 #pragma once
 
 #include <rb/time/TimePoint.hpp>
-#include <rb/time/windows.hpp>
+#ifdef RB_OS_WIN
+	#include <rb/time/windows.hpp>
+#endif
 
 namespace rb::time {
 

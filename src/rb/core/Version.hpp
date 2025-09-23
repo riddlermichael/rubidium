@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #include <rb/core/Option.hpp>
 #include <rb/core/Span.hpp>
 #include <rb/fmt/charconv.hpp>

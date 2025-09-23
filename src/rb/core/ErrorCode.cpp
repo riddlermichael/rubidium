@@ -1,5 +1,6 @@
 #include "ErrorCode.hpp"
 
+// ReSharper disable CppUnusedIncludeDirective
 #include <rb/core/compiler.hpp>
 #include <rb/core/os.hpp>
 #ifdef RB_OS_WIN

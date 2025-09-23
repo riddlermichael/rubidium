@@ -1,5 +1,6 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <ostream>
 
 #include <rb/core/export.hpp>
