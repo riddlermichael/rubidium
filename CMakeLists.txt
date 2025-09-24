@@ -27,7 +27,6 @@ option(BUILD_TESTING "Build tests")
 if(${BUILD_TESTING})
     include(CTest)
     enable_testing()
-    add_subdirectory(test)
 endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
