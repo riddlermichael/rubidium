@@ -4,7 +4,7 @@ FetchContent_Declare(
     Catch2
     DOWNLOAD_EXTRACT_TIMESTAMP ON
     URL "${CMAKE_SOURCE_DIR}/ext/Catch2.zip"
-    URL_MD5 f9c35c606b0fc90eed6ea30dd6202318
+    URL_MD5 6425a4357694b9f74ce313095b734a77
 )
 FetchContent_MakeAvailable(Catch2)
 list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")

@@ -1,10 +1,24 @@
 include(Compilers)
 
 option(USE_ASAN "Enable address sanitizer")
+if(USE_ASAN)
+    message(STATUS ">>> Address sanitizer enabled")
+endif()
+
 option(USE_HWASAN "Enable hardware-assisted address sanitizer")
+if(USE_HWASAN)
+    message(STATUS ">>> Hardware-assisted address sanitizer enabled")
+endif()
+
 option(USE_TSAN "Enable thread sanitizer")
+if(USE_TSAN)
+    message(STATUS ">>> Thread sanitizer enabled")
+endif()
 
 option(USE_UBSAN "Enable undefined behavior sanitizer")
+if(USE_UBSAN)
+    message(STATUS ">>> Undefined behavior sanitizer enabled")
+endif()
 if(${USE_UBSAN} AND ${COMPILER_GCC}) # gcc itself doesn't define this macro yet
     add_compile_definitions(__SANITIZE_UNDEFINED__) # really should be global
 endif()
@@ -15,6 +29,9 @@ elseif(${USE_MSAN})
     message(FATAL_ERROR "Memory sanitizer is supported only in clang")
 else()
     set(USE_MSAN OFF CACHE BOOL "Enable memory sanitizer")
+endif()
+if(USE_MSAN)
+    message(STATUS ">>> Memory sanitizer enabled")
 endif()
 
 if((${USE_ASAN} AND ${USE_HWASAN})
