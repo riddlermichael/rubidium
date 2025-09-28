@@ -61,7 +61,7 @@ inline namespace traits {
 	inline constexpr bool isNothrowDestructible = IsNothrowDestructible<T>::value;
 
 	template <class T>
-	inline constexpr bool isTriviallyDestructible = //
+	inline constexpr bool isTriviallyDestructible =
 	    isDestructible<T> &&
 #if defined(RB_COMPILER_CLANG)
 	    __is_trivially_destructible(T)

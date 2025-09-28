@@ -47,7 +47,7 @@ constexpr bool getBit(T x, usize pos) noexcept {
 }
 
 template <class From, class To>
-inline constexpr bool isBitCastable = //
+inline constexpr bool isBitCastable =
     sizeof(From) == sizeof(To)
     && isTriviallyCopyable<From>
     && isTriviallyCopyable<To>

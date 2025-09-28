@@ -57,7 +57,7 @@ public:
 	template <class T,
 	    RB_REQUIRES(isFloatingPoint<T>&& kUnsigned)>
 	constexpr Int128(T value) {
-		bool const inRange = //
+		bool const inRange =
 		    std::isfinite(value)
 		    && (value > -1)
 		    && (std::numeric_limits<T>::max_exponent <= 128 || value < std::ldexp(static_cast<T>(1), 128));

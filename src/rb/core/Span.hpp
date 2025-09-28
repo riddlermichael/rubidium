@@ -20,7 +20,7 @@ struct ContainerTraits<Span<T, n>> {
 };
 
 template <class C>
-inline constexpr bool isSpanNothrowConstructibleFrom = //
+inline constexpr bool isSpanNothrowConstructibleFrom =
     noexcept(core::data(RB_DECLVAL(C&))) && noexcept(core::size(RB_DECLVAL(C&)));
 
 template <class T, usize n = kDynExtent>

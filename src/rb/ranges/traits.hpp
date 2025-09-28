@@ -192,12 +192,12 @@ namespace impl {
 	using PutDetector = decltype(put(RB_DECLVAL(core::AddLValueRef<R>), RB_DECLVAL(E)));
 
 	template <class R, class E>
-	inline constexpr bool isPutNothrow = //
+	inline constexpr bool isPutNothrow =
 	    hasDoPut<R, E> && isDoPutNothrow<R, E>()
 	    || !hasDoPut<R, E>
-	           && noexcept(put(RB_DECLVAL(R&), RB_DECLVAL(ValueType<E>)))
-	           && noexcept(empty(RB_DECLVAL(E)))
-	           && noexcept(popFront(RB_DECLVAL(E)));
+	        && noexcept(put(RB_DECLVAL(R&), RB_DECLVAL(ValueType<E>)))
+	        && noexcept(empty(RB_DECLVAL(E)))
+	        && noexcept(popFront(RB_DECLVAL(E)));
 } // namespace impl
 
 template <class R, class E>

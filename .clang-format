@@ -55,7 +55,7 @@ BraceWrapping:
 BreakAdjacentStringLiterals: true # 18
 BreakAfterAttributes: Leave # 16
 BreakAfterReturnType: Automatic # 19
-BreakBeforeBinaryOperators: All
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakBeforeConceptDeclarations: Always
 #BreakBeforeTemplateCloser: true # 21
