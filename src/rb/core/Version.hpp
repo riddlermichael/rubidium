@@ -55,6 +55,7 @@ public:
 		return Version{major, minor, patch};
 	}
 
+	// ReSharper disable CppDFAConstantParameter
 	constexpr explicit Version(u32 major = 0, u32 minor = 0, u32 patch = 0) noexcept
 	    : major_(major)
 	    , minor_(minor)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #include <rb/core/SourceLocation.hpp>
 
 namespace rb::core {

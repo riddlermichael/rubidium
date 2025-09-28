@@ -30,16 +30,12 @@ public:
 
 	static CompilerInfo const kThis;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "ConstantParameter"
-
+	// ReSharper disable once CppDFAConstantParameter
 	constexpr CompilerInfo(Id id, Version version, czstring desc = nullptr) noexcept
-	    : id_(id)
-	    , version_(version)
-	    , desc_(desc) {
+	    : id_{id}
+	    , version_{version}
+	    , desc_{desc} {
 	}
-
-#pragma clang diagnostic pop
 
 	constexpr Id id() const noexcept {
 		return id_;
@@ -60,7 +56,7 @@ private:
 };
 
 constexpr CompilerInfo CompilerInfo::kThis{Id::kThisId, kThisVersion
-// there is no string description for MSVC compiler except a string version
+// there is no string description for MSVC compilers except a string version
 #ifndef RB_COMPILER_MSVC
     ,
     RB_COMPILER_VERSION_STRING
