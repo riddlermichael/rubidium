@@ -48,6 +48,7 @@ jobs:
           -S ${{ github.workspace }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx-compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          -DUSE_TIDY=ON
 
       - name: Build
         run: >
