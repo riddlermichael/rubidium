@@ -24,6 +24,43 @@ else()
     set(COMPILER_MSVC OFF)
 endif()
 
+option(USE_TIDY "Run clang-tidy along with build")
+if(USE_TIDY)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+
+    option(USE_CLAZY "Enable clazy checks")
+    if(USE_CLAZY)
+        set(CLAZY_PLUGIN_PATH "ClazyClangTidy" CACHE STRING "Path to clazy plugin")
+
+        get_filename_component(CLAZY_PLUGIN_REAL_PATH "${CLAZY_PLUGIN_PATH}" REALPATH)
+        if(IS_DIRECTORY "${CLAZY_PLUGIN_REAL_PATH}")
+            message(FATAL_ERROR "Invalid path to clazy plugin: it's a directory")
+        endif()
+
+        if(IS_ABSOLUTE "${CLAZY_PLUGIN_PATH}") # on non-Windows hosts, any path that begins with a ~ evaluates to true
+            if(NOT EXISTS "${CLAZY_PLUGIN_REAL_PATH}")
+                message(FATAL_ERROR "Invalid path to clazy plugin: file doesn't exist")
+            endif()
+            list(APPEND CMAKE_CXX_CLANG_TIDY "-load=${CLAZY_PLUGIN_REAL_PATH}")
+        else()
+            list(APPEND CMAKE_FIND_LIBRARY_PREFIXES "")
+            find_library(CLAZY_PLUGIN
+                NAMES "${CLAZY_PLUGIN_PATH}"
+                PATHS /usr/local/lib)
+            if(NOT CLAZY_PLUGIN)
+                message(WARNING "Clazy plugin not found")
+            endif()
+            list(APPEND CMAKE_CXX_CLANG_TIDY "-load=${CLAZY_PLUGIN}")
+        endif()
+    elseif(CLAZY_PLUGIN_PATH)
+        message(FATAL_ERROR "Clazy plugin can be used only when USE_CLAZY=ON")
+    endif()
+elseif(USE_CLAZY)
+    message(FATAL_ERROR "Clazy checks can be enabled only when USE_TIDY=ON")
+endif()
+
+# TODO: clang-tidy ../src/main.cpp -load=/usr/local/lib/ClazyClangTidy.dylib
+
 if(${COMPILER_GCC})
     add_compile_options(-fdiagnostics-color=always)
 
