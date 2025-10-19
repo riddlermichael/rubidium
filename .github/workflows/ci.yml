@@ -44,7 +44,6 @@ jobs:
       - name: Configure
         run: >
           cmake
-          -G Ninja
           -B ${{ steps.vars.outputs.build-output-dir }}
           -S ${{ github.workspace }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx-compiler }}
