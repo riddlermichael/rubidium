@@ -15,7 +15,6 @@ Checks: >
   portability-*,
   readability-*,
   -bugprone-easily-swappable-parameters,
-  -cert-dcl21-cpp,
   -cert-err33-c,
   -clazy-rule-of-three,
   -cppcoreguidelines-avoid-c-arrays,
