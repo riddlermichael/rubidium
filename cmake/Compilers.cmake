@@ -51,6 +51,11 @@ elseif(USE_CLAZY)
     message(FATAL_ERROR "Clazy checks can be enabled only when USE_TIDY=ON")
 endif()
 
+option(USE_CPPLINT "Run cpplint along with build")
+if(USE_CPPLINT)
+    set(CMAKE_CXX_CPPLINT cpplint --verbose=0 --quiet)
+endif()
+
 if(${COMPILER_GCC})
     add_compile_options(-fdiagnostics-color=always)
 

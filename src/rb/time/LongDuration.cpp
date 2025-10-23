@@ -18,7 +18,7 @@ Unit const kMillisecondUnit{LongDuration::kMillisecond, "ms"sv};
 Unit const kMicrosecondUnit{LongDuration::kMicrosecond, "us"sv};
 Unit const kNanosecondUnit{LongDuration::kNanosecond, "ns"sv};
 
-std::vector<Unit> getUnits(LongDuration dur) {
+std::vector<Unit> getUnits(LongDuration dur) { // NOLINT(build/include_what_you_use)
 	dur = abs(dur);
 	if (dur < LongDuration::kSecond) {
 		if (dur < LongDuration::kMicrosecond) {
