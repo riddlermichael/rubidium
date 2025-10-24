@@ -6,6 +6,32 @@ function(dump var)
     endif()
 endfunction()
 
+function(show_os_info)
+    set(FEATURES
+        OS_NAME
+        OS_RELEASE
+        OS_VERSION
+        OS_PLATFORM # see CMAKE_HOST_SYSTEM_PROCESSOR
+    )
+    foreach(FEATURE IN LISTS FEATURES)
+        cmake_host_system_information(RESULT ${FEATURE} QUERY ${FEATURE})
+        dump(${FEATURE})
+    endforeach()
+
+    if(CMAKE_VERSION VERSION_LESS 3.22)
+        return()
+    endif()
+
+    list(APPEND
+        CMAKE_GET_OS_RELEASE_FALLBACK_SCRIPTS
+        ${CMAKE_SOURCE_DIR}/cmake/000-FallbackOsRelease.cmake
+    )
+    cmake_host_system_information(RESULT DISTRIB_INFO QUERY DISTRIB_INFO)
+    foreach(INFO IN LISTS DISTRIB_INFO)
+        dump(${INFO})
+    endforeach()
+endfunction()
+
 function(add_module MODULE ROOT)
     set(OPTIONS)
     set(ONE_VALUE_ARGS HEADERS SOURCES)
