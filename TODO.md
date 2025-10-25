@@ -155,6 +155,8 @@
 
 ### `math`
 
+- [ ] math constants ([std](https://en.cppreference.com/w/cpp/header/numbers.html),
+  [boost](https://www.boost.org/doc/libs/latest/libs/math/doc/html/math_toolkit/constants.html))
 - [ ] `constexpr` versions of functions in `<cmath>`
   - [ ] `frexp`
   - [ ] `ldexp`

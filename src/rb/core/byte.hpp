@@ -18,6 +18,14 @@ namespace rb::core {
 enum class byte : unsigned char { // NOLINT(readability-identifier-naming)
 };
 
+inline namespace literals {
+
+	constexpr byte operator""_b(unsigned long long value) noexcept {
+		return static_cast<byte>(value);
+	}
+
+} // namespace literals
+
 /**
  * Equivalent to <tt>return T(value);</tt>.
  * This overload only participates in overload resolution if @c core::isIntegral&lt;T&gt; is @c true.
