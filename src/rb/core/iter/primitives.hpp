@@ -3,6 +3,7 @@
 #include <initializer_list>
 
 #include <rb/core/helpers.hpp>
+#include <rb/core/requires.hpp>
 #include <rb/core/traits/CommonType.hpp>
 #include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/Signed.hpp>
