@@ -49,6 +49,8 @@
 #define RB_IS_LITTLE_ENDIAN (RB_BYTE_ORDER == RB_LITTLE_ENDIAN)
 #define RB_IS_BIG_ENDIAN (RB_BYTE_ORDER == RB_BIG_ENDIAN)
 
+namespace rb::core {
+
 enum class Endian {
 	kLittle = RB_LITTLE_ENDIAN,
 	kBig = RB_BIG_ENDIAN,
@@ -59,3 +61,5 @@ enum : bool {
 	kIsLittleEndian = RB_IS_LITTLE_ENDIAN,
 	kIsBigEndian = RB_IS_BIG_ENDIAN,
 };
+
+} // namespace rb::core
