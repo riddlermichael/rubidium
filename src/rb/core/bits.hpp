@@ -71,7 +71,7 @@ constexpr auto bitCast(From const& from) noexcept
 #else
 	static_assert(isTriviallyConstructible<To>, "Destination type must be trivially constructible");
 	To to;
-	std::memcpy(addres sOf(to), addressOf(from), sizeof(To));
+	std::memcpy(addressOf(to), addressOf(from), sizeof(To));
 	return to;
 #endif
 }
