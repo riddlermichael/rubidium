@@ -107,4 +107,12 @@ std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& o
 	return os;
 }
 
+constexpr byte bswap(byte value) noexcept {
+	return value;
+}
+
+constexpr std::byte bswap(std::byte value) noexcept {
+	return value;
+}
+
 } // namespace rb::core
