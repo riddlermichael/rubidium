@@ -11,3 +11,9 @@
 #else
 	#define RB_CONSTEXPR20 inline
 #endif
+
+#ifdef __cpp_conditional_explicit
+	#define RB_IMPLICIT explicit(false)
+#else
+	#define RB_IMPLICIT
+#endif

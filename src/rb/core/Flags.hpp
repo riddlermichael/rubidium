@@ -14,7 +14,8 @@ class Flags {
 public:
 	constexpr Flags() noexcept = default;
 
-	constexpr explicit Flags(E flag) noexcept
+	// ReSharper disable once CppNonExplicitConvertingConstructor
+	constexpr Flags(E flag) noexcept // NOLINT(*-explicit-constructor)
 	    : value_(toUnderlying(flag)) {
 	}
 
