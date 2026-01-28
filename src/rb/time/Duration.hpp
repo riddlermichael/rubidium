@@ -311,8 +311,8 @@ constexpr Duration::QuoRemResult Duration::quorem(Duration rhs) const noexcept {
 }
 
 constexpr Duration Duration::from(core::i128 ticks) noexcept {
-	auto const [quo, rem]
-	    = core::quorem(ticks, core::i128{kTicksPerSecond});
+	auto const [quo, rem] =
+	    core::quorem(ticks, core::i128{kTicksPerSecond});
 
 	auto const seconds = static_cast<i64>(quo);
 	auto const remTicks = static_cast<u32>(rem);
@@ -898,7 +898,7 @@ constexpr auto Duration::toChrono() const noexcept
 
 constexpr std::timespec Duration::toTimespec() const noexcept {
 	std::timespec ts = {};
-	if (!isInf()) {
+	if (!isInf()) { // TODO NaN
 		auto seconds = static_cast<i64>(seconds_);
 		u32 ticks = ticks_;
 		if (seconds < 0) {

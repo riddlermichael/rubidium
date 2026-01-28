@@ -1,5 +1,7 @@
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <rb/core/move.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/assignable.hpp>
 #include <rb/core/traits/constructible.hpp>
@@ -12,9 +14,9 @@ namespace rb::core {
 template <class T>
 constexpr auto swap(T& lhs, T& rhs) noexcept(isNothrowMoveConstructible<T> && isNothrowMoveAssignable<T>)
     -> EnableIf<isMoveConstructible<T> && isMoveAssignable<T>> {
-	T t = lhs;
-	lhs = rhs;
-	rhs = t;
+	T t = RB_MOVE(lhs);
+	lhs = RB_MOVE(rhs);
+	rhs = RB_MOVE(t);
 	return;
 }
 

@@ -3,12 +3,13 @@
 #include <rb/core/processor.hpp>
 
 // Machine byte-order, reuse preprocessor provided macros when available
-#if defined(__ORDER_BIG_ENDIAN__)
+#ifdef __ORDER_BIG_ENDIAN__
 	#define RB_BIG_ENDIAN __ORDER_BIG_ENDIAN__
 #else
 	#define RB_BIG_ENDIAN 4321
 #endif
-#if defined(__ORDER_LITTLE_ENDIAN__)
+
+#ifdef __ORDER_LITTLE_ENDIAN__
 	#define RB_LITTLE_ENDIAN __ORDER_LITTLE_ENDIAN__
 #else
 	#define RB_LITTLE_ENDIAN 1234
@@ -57,7 +58,7 @@ enum class Endian {
 	kNative = RB_BYTE_ORDER
 };
 
-enum : bool {
+enum : bool { // NOLINT(*-use-enum-class)
 	kIsLittleEndian = RB_IS_LITTLE_ENDIAN,
 	kIsBigEndian = RB_IS_BIG_ENDIAN,
 };

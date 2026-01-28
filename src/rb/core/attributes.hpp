@@ -73,10 +73,17 @@
 
 #if defined(RB_COMPILER_GCC_LIKE)
 	#define RB_ALWAYS_INLINE __attribute__((always_inline))
+	#if RB_HAS_ATTRIBUTE(noipa)
+		#define RB_NEVER_INLINE __attribute__((noinline, noipa))
+	#else
+		#define RB_NEVER_INLINE __attribute__((noinline))
+	#endif
 #elif defined(RB_COMPILER_MSVC)
 	#define RB_ALWAYS_INLINE __forceinline
+	#define RB_NEVER_INLINE __declspec(noinline)
 #else
 	#define RB_ALWAYS_INLINE inline
+	#define RB_NEVER_INLINE
 #endif
 
 #if defined(RB_COMPILER_GCC_LIKE)

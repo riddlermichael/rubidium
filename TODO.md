@@ -257,6 +257,7 @@
 - [ ] `Nanosecond`, `Microsecond`, `Millisecond`, `Second`, `Minute`, `Hour`, `Day` types
 - [ ] clock resolution
 - [ ] macOS: `kMonotonicFast`, `kRealtimeFast`, `kUptime`
+- [ ] `DURATION_NAN` feature: why only for `LongDuration`?
 
 ### `utf`
 
@@ -269,6 +270,9 @@
 
 ## Unsorted
 
+- [ ] disable exceptions:
+  - GCC/Clang: `-fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables`
+  - MSVC: https://share.google/aimode/p548iQFwXTMTfjyvQ
 - [ ] processes
 - [ ] `getopt`
   - [ ] see Abseil flags

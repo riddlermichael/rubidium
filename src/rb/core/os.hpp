@@ -37,7 +37,6 @@
 			#define RB_OS_DARWIN32
 		#endif
 		#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-			#define QT_PLATFORM_UIKIT
 			#if defined(TARGET_OS_WATCH) && TARGET_OS_WATCH
 				#define RB_OS_WATCHOS
 			#elif defined(TARGET_OS_TV) && TARGET_OS_TV

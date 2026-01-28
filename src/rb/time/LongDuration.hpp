@@ -185,12 +185,7 @@ namespace impl {
 
 ///
 RB_CONST constexpr LongDuration abs(LongDuration dur) noexcept {
-#if RB_ENABLED(DURATION_NAN)
-	if (RB_UNLIKELY(dur.isNaN())) {
-		return LongDuration::kNaN;
-	}
-#endif
-	return dur.isPositive() ? dur : -dur;
+	return dur.isNegative() ? -dur : dur;
 }
 
 /// Truncates the @p dur (toward zero) to a multiple of a non-zero @p unit.
@@ -255,7 +250,7 @@ constexpr bool LongDuration::operator==(LongDuration rhs) const noexcept {
 }
 
 constexpr bool LongDuration::operator!=(LongDuration rhs) const noexcept {
-	return ticks_ != rhs.ticks_;
+	return !(*this == rhs);
 }
 
 constexpr bool LongDuration::operator<(LongDuration rhs) const noexcept {

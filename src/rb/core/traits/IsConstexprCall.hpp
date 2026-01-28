@@ -14,7 +14,7 @@ namespace impl {
 
 	// we use good old approach with ellipsis because we work with values, not types
 	template <auto f, auto... args>
-	constexpr bool isConstexprCall(...) { // NOLINT(cert-dcl50-cpp)
+	constexpr bool isConstexprCall(...) { // NOLINT(cert-dcl50-cpp, *-avoid-variadic-functions)
 		return false;
 	}
 

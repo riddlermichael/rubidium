@@ -83,7 +83,7 @@ SplitExpected<u128> split(LongDuration dur, Span<Unit const> units) {
 	std::sort(v.begin(), v.end(), UnitComparator{});
 	auto const uniqueIt = std::unique(v.begin(), v.end(), equals);
 	Span const uniqueUnits{v.begin(), uniqueIt};
-	if (uniqueUnits.empty()) {
+	if (uniqueUnits.size() != v.size()) {
 		return err(SplitError::kNotUnique);
 	}
 

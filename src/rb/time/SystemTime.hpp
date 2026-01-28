@@ -81,7 +81,9 @@ public:
 		return core::ok(duration);
 	}
 
-	Result elapsed() const noexcept;
+	Result elapsed() const noexcept {
+		return now().since(*this);
+	}
 
 private:
 	friend std::ostream& operator<<(std::ostream& os, SystemTime systemTime) {
