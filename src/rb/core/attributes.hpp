@@ -138,3 +138,24 @@
 	#define RB_CONST
 	#define RB_PURE
 #endif
+
+#if defined(RB_COMPILER_CLANG)
+	#define RB_CLOSED_ENUM __attribute__((enum_extensibility(closed)))
+	#define RB_OPEN_ENUM __attribute__((enum_extensibility(open)))
+#else
+	#define RB_CLOSED_ENUM
+	#define RB_OPEN_ENUM
+#endif
+
+#if defined(RB_COMPILER_CLANG) \
+    || defined(RB_COMPILER_GCC_LIKE) && __GNUC__ >= 15
+	#define RB_FLAG_ENUM __attribute__((flag_enum))
+#else
+	#define RB_FLAG_ENUM
+#endif
+
+#define RB_CLOSED_FLAG_ENUM \
+	RB_CLOSED_ENUM RB_FLAG_ENUM
+
+#define RB_OPEN_FLAG_ENUM \
+	RB_OPEN_ENUM RB_FLAG_ENUM
