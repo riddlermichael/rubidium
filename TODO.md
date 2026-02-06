@@ -36,6 +36,7 @@
   - [ ] ref-counted pointer instead of `std::shared_ptr`
   - [ ] `cause`
 - [ ] `Option` like in C++26
+  - [ ] `Option<void>`
   - [ ] `Option<T&>` and `Option<T&&>`?
 - [ ] `Variant`
 - [ ] `Tuple`

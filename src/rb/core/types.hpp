@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+// ReSharper disable CppInconsistentNaming
 // NOLINTBEGIN(readability-identifier-naming)
 
 using i8 = std::int8_t;
