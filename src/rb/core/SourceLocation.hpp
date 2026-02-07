@@ -86,7 +86,7 @@ namespace impl {
 			++lhs;
 			++rhs;
 		}
-		return *reinterpret_cast<u8 const*>(lhs) - *reinterpret_cast<u8 const*>(rhs); // NOLINT(*-pro-type-reinterpret-cast)
+		return static_cast<u8>(*lhs) - static_cast<u8>(*rhs);
 	}
 
 } // namespace impl

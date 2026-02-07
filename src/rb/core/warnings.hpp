@@ -19,12 +19,17 @@
 		_Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wdeprecated-declarations"))
 	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE \
 		_Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wgnu-string-literal-operator-template"))
+	#define RB_WARNING_SWITCH_ENUM \
+		_Pragma(RB_STRINGIFY(clang diagnostic ignored "-Wswitch-enum"))
 #elif defined(RB_COMPILER_GCC_LIKE)
 	#define RB_WARNING_DEPRECATED \
 		_Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wdeprecated-declarations"))
 	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE \
 		_Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wpedantic"))
+	#define RB_WARNING_SWITCH_ENUM \
+		_Pragma(RB_STRINGIFY(GCC diagnostic ignored "-Wswitch-enum"))
 #elif defined(RB_COMPILER_MSVC)
 	#define RB_WARNING_DEPRECATED
 	#define RB_STRING_LITERAL_OPERATOR_TEMPLATE
+	#define RB_WARNING_SWITCH_ENUM
 #endif

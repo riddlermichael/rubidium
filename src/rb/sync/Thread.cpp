@@ -1,5 +1,8 @@
 #include "Thread.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <cstring>
+
 #include <rb/sync/impl.hpp>
 
 using namespace rb::core;
