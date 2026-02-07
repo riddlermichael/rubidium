@@ -1,13 +1,12 @@
 #pragma once
 
-#include <rb/core/compiler.hpp>
 #include <rb/core/Version.hpp>
 
 namespace rb::core {
 
 class CompilerInfo final {
 public:
-	enum class Id {
+	enum class RB_OPEN_ENUM Id {
 		kClang = 0,
 		kGcc = 1,
 		kMingw = 2,

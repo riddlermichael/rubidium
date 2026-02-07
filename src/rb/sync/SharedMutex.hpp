@@ -1,5 +1,6 @@
 #pragma once
 
+#include <rb/core/attributes.hpp>
 #include <rb/core/export.hpp>
 #include <rb/core/memory/UniquePtr.hpp>
 #include <rb/sync.hpp>
@@ -9,7 +10,7 @@ namespace rb::sync {
 
 class RB_EXPORT RB_CAPABILITY("rb::sync::SharedMutex") SharedMutex {
 public:
-	enum Policy {
+	enum RB_OPEN_ENUM Policy { // NOLINT(*-use-enum-class)
 		kPreferReaders,
 		kPreferWriters,
 		kPreferWritersNonrecursive

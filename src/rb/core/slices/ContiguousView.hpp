@@ -8,7 +8,7 @@
 
 namespace rb::core {
 
-enum : usize {
+enum : usize { // NOLINT(*-use-enum-class)
 	kDynExtent = static_cast<usize>(-1)
 };
 
@@ -93,7 +93,7 @@ class RB_EXPORT ContiguousView
 public:
 	RB_USE_BASE_CONTAINER_TYPES(Base)
 
-	enum : usize {
+	enum : usize { // NOLINT(*-use-enum-class)
 		kExtent = n
 	};
 

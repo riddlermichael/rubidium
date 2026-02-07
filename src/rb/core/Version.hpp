@@ -11,7 +11,7 @@ namespace rb::core {
 /// without pre-release and build components.
 class Version final {
 public:
-	enum Component {
+	enum class Component {
 		kMajor,
 		kMinor,
 		kPatch,
@@ -57,9 +57,9 @@ public:
 
 	// ReSharper disable CppDFAConstantParameter
 	constexpr explicit Version(u32 major = 0, u32 minor = 0, u32 patch = 0) noexcept
-	    : major_(major)
-	    , minor_(minor)
-	    , patch_(patch) {
+	    : major_{major}
+	    , minor_{minor}
+	    , patch_{patch} {
 	}
 
 	constexpr bool operator<(Version rhs) const noexcept {
@@ -107,10 +107,10 @@ public:
 
 	constexpr Version bump(Component component) const noexcept {
 		switch (component) {
-			case kMajor: return Version{major_ + 1};
-			case kMinor: return Version{major_, minor_ + 1};
-			case kPatch: return Version{major_, minor_, patch_ + 1};
-			default    : RB_UNREACHABLE();
+			case Component::kMajor: return Version{major_ + 1};
+			case Component::kMinor: return Version{major_, minor_ + 1};
+			case Component::kPatch: return Version{major_, minor_, patch_ + 1};
+			default               : RB_UNREACHABLE();
 		}
 	}
 

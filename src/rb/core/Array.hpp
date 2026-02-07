@@ -29,7 +29,7 @@ class RB_EXPORT Array final : public Sliceable<Array<T>, Span<T const>, Span<T>>
 	enum class Op {
 		kDefault,
 		kCopy,
-		kMove
+		kMove,
 	};
 
 public:
@@ -83,8 +83,8 @@ public:
 	Array(Array const&) = delete;
 
 	constexpr Array(Array&& rhs) noexcept
-	    : size_(rhs.size_)
-	    , data_(rhs.data_) {
+	    : size_{rhs.size_}
+	    , data_{rhs.data_} {
 		rhs.size_ = 0;
 		rhs.data_ = nullptr;
 	}
@@ -106,7 +106,7 @@ public:
 	constexpr Array& operator=(Array&& rhs) noexcept {
 		if (this != &rhs) {
 			this->~Array();
-			new (this) Array(RB_MOVE(rhs));
+			new (this) Array{RB_MOVE(rhs)};
 		}
 		return *this;
 	}

@@ -2,13 +2,14 @@
 
 #include <cerrno>
 
+#include <rb/core/attributes.hpp>
 #include <rb/core/types.hpp>
 
 namespace rb::core {
 
 /// Twin of [`std::errc`](https://en.cppreference.com/w/cpp/error/errc).
 /// @see https://docs.microsoft.com/en-us/cpp/c-runtime-library/errno-constants?view=msvc-170
-enum class ErrorCode {
+enum class RB_OPEN_ENUM ErrorCode {
 	kNotImplemented = -2,
 	kUnknown = -1,
 	kOk = 0,

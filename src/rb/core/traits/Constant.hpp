@@ -2,7 +2,8 @@
 
 #include <rb/core/traits/remove.hpp>
 
-// NOLINTBEGIN(readability-identifier-naming)
+// ReSharper disable CppInconsistentNaming
+// NOLINTBEGIN(readability-identifier-naming,*-use-enum-class)
 
 namespace rb::core {
 
@@ -80,4 +81,4 @@ inline namespace traits {
 
 } // namespace rb::core
 
-// NOLINTEND(readability-identifier-naming)
+// NOLINTEND(readability-identifier-naming,*-use-enum-class)

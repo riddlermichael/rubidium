@@ -8,7 +8,7 @@ namespace impl {
 	RB_STATIC_METHOD_DETECTOR(now)
 } // namespace impl
 
-enum class ClockId {
+enum class RB_OPEN_ENUM ClockId {
 	/// A system-wide clock that represents monotonic time from some unspecified point in the past.
 	/// On Linux, that point corresponds to the number of seconds that the system has been running since it was booted.
 	/// The kMonotonic clock is not affected by discontinuous jumps in the system time
