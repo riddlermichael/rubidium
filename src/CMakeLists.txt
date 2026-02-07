@@ -1,7 +1,7 @@
 set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(rb)
 
-if(IS_TOP_LEVEL_PROJECT)
+if(PROJECT_IS_TOP_LEVEL)
     # build app
     set(APP rb-main)
     add_executable(${APP} main.cpp)

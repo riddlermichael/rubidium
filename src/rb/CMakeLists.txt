@@ -126,6 +126,6 @@ endif()
 
 use_sanitizers(${LIB})
 
-if(IS_TOP_LEVEL_PROJECT AND NOT CMAKE_SKIP_INSTALL_RULES)
+if(PROJECT_IS_TOP_LEVEL AND NOT CMAKE_SKIP_INSTALL_RULES)
     include(Deploy)
 endif()

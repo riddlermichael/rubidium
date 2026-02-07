@@ -1,7 +1,5 @@
 #pragma once
 
-// ReSharper disable CppUnusedIncludeDirective
-#include <cstring>
 #include <ostream>
 
 #include <rb/core/builtins.hpp>
@@ -38,16 +36,9 @@ public:
 
 	constexpr SourceLocation() noexcept = default;
 
-	bool operator==(SourceLocation const& rhs) const noexcept {
-		return std::strcmp(file_, rhs.file_) == 0
-		    && line_ == rhs.line_
-#if RB_HAS(BUILTIN_COLUMN)
-		    && column_ == rhs.column_
-#endif
-		    ;
-	}
+	constexpr bool operator==(SourceLocation const& rhs) const noexcept;
 
-	bool operator!=(SourceLocation const& rhs) const noexcept {
+	constexpr bool operator!=(SourceLocation const& rhs) const noexcept {
 		return !(*this == rhs);
 	}
 
@@ -86,6 +77,27 @@ inline std::ostream& operator<<(std::ostream& os, SourceLocation const& loc) {
 	}
 #endif
 	return os;
+}
+
+namespace impl {
+
+	constexpr int strcmp(char const* lhs, char const* rhs) noexcept {
+		while (*lhs && (*lhs == *rhs)) {
+			++lhs;
+			++rhs;
+		}
+		return *reinterpret_cast<u8 const*>(lhs) - *reinterpret_cast<u8 const*>(rhs); // NOLINT(*-pro-type-reinterpret-cast)
+	}
+
+} // namespace impl
+
+constexpr bool SourceLocation::operator==(SourceLocation const& rhs) const noexcept {
+	return impl::strcmp(file_, rhs.file_) == 0
+	    && line_ == rhs.line_
+#if RB_HAS(BUILTIN_COLUMN)
+	    && column_ == rhs.column_
+#endif
+	    ;
 }
 
 } // namespace rb::core

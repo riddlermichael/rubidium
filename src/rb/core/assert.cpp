@@ -35,5 +35,5 @@ TerminateHandlerSetter::TerminateHandlerSetter() noexcept {
 }
 
 void rb::core::throwAssert(czstring msg, SourceLocation const& location) {
-	throw AssertError(msg, location);
+	throw AssertError{msg, location};
 }
