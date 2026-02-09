@@ -16,7 +16,7 @@ set(FEATURES
     FULL_SOURCE_LOCATION_INFO
     DURATION_NAN)
 
-foreach(FEATURE ${FEATURES})
+foreach(FEATURE IN LISTS FEATURES)
     if(${FEATURE})
         set(VALUE 1)
     else()

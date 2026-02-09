@@ -19,13 +19,13 @@ option(USE_UBSAN "Enable undefined behavior sanitizer")
 if(USE_UBSAN)
     message(STATUS ">>> Undefined behavior sanitizer enabled")
 endif()
-if(${USE_UBSAN} AND ${COMPILER_GCC}) # gcc itself doesn't define this macro yet
+if(USE_UBSAN AND COMPILER_GCC) # gcc itself doesn't define this macro yet
     add_compile_definitions(__SANITIZE_UNDEFINED__) # really should be global
 endif()
 
-if(${COMPILER_CLANG})
+if(COMPILER_CLANG)
     option(USE_MSAN "Enable memory sanitizer")
-elseif(${USE_MSAN})
+elseif(USE_MSAN)
     message(FATAL_ERROR "Memory sanitizer is supported only in clang")
 else()
     set(USE_MSAN OFF CACHE BOOL "Enable memory sanitizer")
@@ -34,35 +34,35 @@ if(USE_MSAN)
     message(STATUS ">>> Memory sanitizer enabled")
 endif()
 
-if((${USE_ASAN} AND ${USE_HWASAN})
-    OR ((${USE_ASAN} OR ${USE_HWASAN}) AND (${USE_TSAN} OR ${USE_MSAN}))
-    OR (${USE_TSAN} AND ${USE_MSAN}))
+if((USE_ASAN AND USE_HWASAN)
+    OR ((USE_ASAN OR USE_HWASAN) AND (USE_TSAN OR USE_MSAN))
+    OR (USE_TSAN AND USE_MSAN))
     message(FATAL_ERROR "These sanitizers cannot be used simultaneously")
 endif()
 # in other words, usable configurations are:
 # UB + [A | HWA | T | M]
 
-if(${COMPILER_MSVC_LIKE})
+if(COMPILER_MSVC_LIKE)
 
-    if(${USE_ASAN} AND MSVC_VERSION LESS 1928)
+    if(USE_ASAN AND MSVC_VERSION LESS 1928)
         message(FATAL_ERROR "Address sanitizer is not supported")
     endif()
 
-    if(${USE_HWASAN})
+    if(USE_HWASAN)
         message(FATAL_ERROR "Hardware-assisted address sanitizer is not supported")
     endif()
 
-    if(${USE_TSAN})
+    if(USE_TSAN)
         message(FATAL_ERROR "Thread sanitizer is not supported")
     endif()
 
-    if(${USE_UBSAN})
+    if(USE_UBSAN)
         message(FATAL_ERROR "Undefined behavior sanitizer is not supported")
     endif()
 
     function(use_sanitizers target)
-        if(${USE_ASAN})
-            if(${CMAKE_BUILD_TYPE} STREQUAL "Debug" AND ${COMPILER_CLANG_MSVC})
+        if(USE_ASAN)
+            if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND COMPILER_CLANG_MSVC)
                 message(FATAL_ERROR "AddressSanitizer doesn't support linking with debug runtime libraries yet")
             endif()
 
@@ -73,7 +73,7 @@ if(${COMPILER_MSVC_LIKE})
 
             target_link_options(${target}
                 PRIVATE /ignore:4302)
-            if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+            if(CMAKE_BUILD_TYPE STREQUAL "Release")
                 target_link_options(${target}
                     PUBLIC clang_rt.asan_dynamic-x86_64.lib
                     PUBLIC clang_rt.asan_dynamic_runtime_thunk-x86_64.lib)
@@ -88,7 +88,7 @@ if(${COMPILER_MSVC_LIKE})
 else()
 
     function(use_sanitizers target)
-        if(${USE_ASAN} OR ${USE_TSAN} OR ${USE_MSAN} OR ${USE_UBSAN})
+        if(USE_ASAN OR USE_TSAN OR USE_MSAN OR USE_UBSAN)
             target_compile_options(${target}
                 PUBLIC -g
                 PUBLIC -fno-omit-frame-pointer
@@ -96,24 +96,24 @@ else()
             target_link_options(${target} PUBLIC -g)
         endif()
 
-        if(${USE_ASAN})
+        if(USE_ASAN)
             target_compile_options(${target}
                 PUBLIC -fsanitize=address,pointer-compare,pointer-subtract
                 PUBLIC -fno-common)
             target_link_options(${target} PUBLIC -fsanitize=address,pointer-compare,pointer-subtract)
         endif()
 
-        if(${USE_TSAN})
+        if(USE_TSAN)
             target_compile_options(${target} PUBLIC -fsanitize=thread)
             target_link_options(${target} PUBLIC -fsanitize=thread)
         endif()
 
-        if(${USE_HWASAN})
+        if(USE_HWASAN)
             target_compile_options(${target} PUBLIC -fsanitize=hwaddress)
             target_link_options(${target} PUBLIC -fsanitize=hwaddress)
         endif()
 
-        if(${USE_MSAN})
+        if(USE_MSAN)
             target_compile_options(${target}
                 PUBLIC -fsanitize=memory
                 PUBLIC -fsanitize-memory-use-after-dtor
@@ -126,14 +126,14 @@ else()
                 PUBLIC -fPIE -pie)
         endif()
 
-        if(${USE_UBSAN})
+        if(USE_UBSAN)
             target_compile_options(${target} PUBLIC -fsanitize=undefined,float-cast-overflow,float-divide-by-zero)
             target_link_options(${target} PUBLIC -fsanitize=undefined,float-cast-overflow,float-divide-by-zero)
-            if(${COMPILER_CLANG})
+            if(COMPILER_CLANG)
                 target_compile_options(${target} PUBLIC -fsanitize=local-bounds,integer,nullability)
                 target_link_options(${target} PUBLIC -fsanitize=local-bounds,integer,nullability)
             endif()
-            if(${COMPILER_GCC})
+            if(COMPILER_GCC)
                 target_compile_options(${target} PUBLIC -fsanitize=bounds-strict)
                 target_link_options(${target} PUBLIC -fsanitize=bounds-strict)
             endif()

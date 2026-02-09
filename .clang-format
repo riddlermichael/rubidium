@@ -30,6 +30,7 @@ AlwaysBreakBeforeMultilineStrings: true
 AttributeMacros:
   - RB_CLOSED_ENUM
   - RB_CLOSED_FLAG_ENUM
+  - RB_FLAG_ENUM
   - RB_OPEN_ENUM
   - RB_OPEN_FLAG_ENUM
 BinPackArguments: true

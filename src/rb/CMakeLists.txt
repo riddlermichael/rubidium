@@ -47,7 +47,7 @@ set(INCLUDE_DIRS
     $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-if(${BUILD_SHARED_LIBS})
+if(BUILD_SHARED_LIBS)
     set(LIB ${PRODUCT_NAME}-shared)
 else()
     set(LIB ${PRODUCT_NAME})
@@ -113,7 +113,7 @@ elseif(COMPILER_CLANG)
     target_compile_options(${LIB} PRIVATE -Wno-logical-op-parentheses)
     target_compile_options(${LIB} PRIVATE -Wno-unknown-pragmas)
 
-    if(${COMPILER_CLANG_MSVC})
+    if(COMPILER_CLANG_MSVC)
         target_compile_options(${LIB} PRIVATE /EHsc)
     endif()
 elseif(COMPILER_MSVC)
