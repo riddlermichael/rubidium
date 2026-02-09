@@ -1,6 +1,7 @@
 #pragma once
 
 #if defined(_MSC_VER)
+    // https://learn.microsoft.com/en-us/cpp/overview/compiler-versions
 	#define RB_COMPILER_MSVC
 	#ifdef __clang__
 		#define RB_COMPILER_CLANG

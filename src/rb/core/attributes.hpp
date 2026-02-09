@@ -72,15 +72,26 @@
 #endif
 
 #if defined(RB_COMPILER_GCC_LIKE)
-	#define RB_ALWAYS_INLINE __attribute__((always_inline))
+	#define RB_ALWAYS_INLINE inline __attribute__((always_inline))
 	#if RB_HAS_ATTRIBUTE(noipa)
 		#define RB_NEVER_INLINE __attribute__((noinline, noipa))
 	#else
 		#define RB_NEVER_INLINE __attribute__((noinline))
 	#endif
 #elif defined(RB_COMPILER_MSVC)
-	#define RB_ALWAYS_INLINE __forceinline
-	#define RB_NEVER_INLINE __declspec(noinline)
+    // VS 2019 16.6
+	#if _MSC_VER >= 1926
+		#define RB_NEVER_INLINE [[msvc::noinline]]
+	#else
+		#define RB_NEVER_INLINE __declspec(noinline)
+	#endif
+
+    // VS 2019 16.7
+	#if _MSC_VER >= 1927
+		#define RB_ALWAYS_INLINE [[msvc::forceinline]]
+	#else
+		#define RB_ALWAYS_INLINE __forceinline
+	#endif
 #else
 	#define RB_ALWAYS_INLINE inline
 	#define RB_NEVER_INLINE
