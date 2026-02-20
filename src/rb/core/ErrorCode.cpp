@@ -21,9 +21,6 @@ czstring toString(ErrorCode errorCode) noexcept {
 		return "Resource unavailable, try again";
 	}
 
-	RB_WARNING_PUSH
-	RB_WARNING_SWITCH_ENUM
-
 	// ReSharper disable once CppDFAUnreachableCode
 	// NOLINTBEGIN(clang-analyzer-alpha.deadcode.UnreachableCode)
 	switch (errorCode) {
@@ -110,8 +107,6 @@ czstring toString(ErrorCode errorCode) noexcept {
 		default                                         : return "Undefined error";
 	}
 	// NOLINTEND(clang-analyzer-alpha.deadcode.UnreachableCode)
-
-	RB_WARNING_POP
 }
 
 ErrorCode fromRawError(unsigned rawCode) noexcept {
