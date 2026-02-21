@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 set(FEATURE_FILE "${GENERATED_INCLUDE_DIR}/rb/rb_features.hpp")
 
 file(WRITE ${FEATURE_FILE} "#pragma once\n\n/*

@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

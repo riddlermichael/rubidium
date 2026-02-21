@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 include(Compilers)
 
 option(USE_ASAN "Enable address sanitizer")

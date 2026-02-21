@@ -1,3 +1,5 @@
+include_guard(GLOBAL)
+
 function(dump var)
     if(DEFINED ${var})
         message(STATUS ">>> ${var}: ${${var}}")
