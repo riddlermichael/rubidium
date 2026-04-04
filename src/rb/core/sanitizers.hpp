@@ -54,9 +54,3 @@
 #else
 	#define RB_NO_SANITIZE(check)
 #endif
-
-#ifdef RB_COMPILER_CLANG
-	#define RB_NO_SANITIZE_UNSIGNED_INTEGER_OVERFLOW __attribute__((no_sanitize("unsigned-integer-overflow")))
-#else
-	#define RB_NO_SANITIZE_UNSIGNED_INTEGER_OVERFLOW
-#endif

@@ -169,7 +169,7 @@ namespace impl {
 
 		template <class... Args>
 		constexpr void construct(Args&&... args) noexcept(isNothrowConstructible<StoredType, Args...>) {
-			::new (addressOf(this->payload.value)) T{RB_FWD(args)...};
+			::new (addressOf(this->payload.value)) T(RB_FWD(args)...);
 			engaged = true;
 		}
 

@@ -9,10 +9,9 @@ function(dump var)
 endfunction()
 
 function(add_module MODULE ROOT)
-    set(OPTIONS)
     set(ONE_VALUE_ARGS HEADERS SOURCES)
     set(MULTI_VALUE_ARGS HEADER_EXTENSIONS SOURCE_EXTENSIONS)
-    cmake_parse_arguments(arg "${OPTIONS}" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+    cmake_parse_arguments(arg "" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
 
     if(DEFINED arg_KEYWORDS_MISSING_VALUES)
         message(FATAL_ERROR
@@ -26,46 +25,22 @@ function(add_module MODULE ROOT)
             "unknown argument(s) ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(DEFINED arg_HEADERS)
-        set(HEADERS "${arg_HEADERS}")
-    else()
-        set(HEADERS "HEADERS")
-    endif()
+    set(MODULE_DIR "${ROOT}/${MODULE}")
 
-    if(DEFINED arg_SOURCES)
-        set(SOURCES "${arg_SOURCES}")
-    else()
-        set(SOURCES "SOURCES")
-    endif()
-
-    string(REPLACE "-" "/" PATH ${MODULE})
-
-    set(MODULE_HEADERS)
+    set(LOCAL_HEADERS)
     foreach(EXT IN LISTS arg_HEADER_EXTENSIONS)
-        file(GLOB EXT_HEADERS "${ROOT}/${PATH}/*.${EXT}")
-        list(APPEND MODULE_HEADERS ${EXT_HEADERS})
+        file(GLOB FILES CONFIGURE_DEPENDS "${MODULE_DIR}/*.${EXT}")
+        list(APPEND LOCAL_HEADERS ${FILES})
     endforeach()
 
-    set(MODULE_SOURCES)
+    set(LOCAL_SOURCES)
     foreach(EXT IN LISTS arg_SOURCE_EXTENSIONS)
-        file(GLOB EXT_SOURCES "${ROOT}/${PATH}/*.${EXT}")
-        list(APPEND MODULE_SOURCES ${EXT_SOURCES})
+        file(GLOB FILES CONFIGURE_DEPENDS "${MODULE_DIR}/*.${EXT}")
+        list(APPEND LOCAL_SOURCES ${FILES})
     endforeach()
 
-    set(${HEADERS} ${${HEADERS}} ${MODULE_HEADERS} PARENT_SCOPE)
-    set(${SOURCES} ${${SOURCES}} ${MODULE_SOURCES} PARENT_SCOPE)
-endfunction()
-
-function(add_c_module MODULE ROOT)
-    set(C_HEADERS)
-    set(C_SOURCES)
-    add_module("${MODULE}" "${ROOT}"
-        HEADERS C_HEADERS
-        SOURCES C_SOURCES
-        HEADER_EXTENSIONS h
-        SOURCE_EXTENSIONS c)
-    set(HEADERS ${HEADERS};${C_HEADERS} PARENT_SCOPE)
-    set(SOURCES ${SOURCES};${C_SOURCES} PARENT_SCOPE)
+    set(${arg_HEADERS} ${LOCAL_HEADERS} PARENT_SCOPE)
+    set(${arg_SOURCES} ${LOCAL_SOURCES} PARENT_SCOPE)
 endfunction()
 
 function(add_cxx_module MODULE ROOT)
@@ -76,6 +51,6 @@ function(add_cxx_module MODULE ROOT)
         SOURCES CXX_SOURCES
         HEADER_EXTENSIONS hpp
         SOURCE_EXTENSIONS cpp)
-    set(HEADERS ${HEADERS};${CXX_HEADERS} PARENT_SCOPE)
-    set(SOURCES ${SOURCES};${CXX_SOURCES} PARENT_SCOPE)
+    set(HEADERS ${HEADERS} ${CXX_HEADERS} PARENT_SCOPE)
+    set(SOURCES ${SOURCES} ${CXX_SOURCES} PARENT_SCOPE)
 endfunction()

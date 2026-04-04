@@ -37,6 +37,9 @@ set(SOURCES)
 foreach(X ${MODULES})
     add_cxx_module(${X} ${RB_ROOT_DIR})
 endforeach()
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 add_subdirectory(sync)
 
 source_group(TREE "${ROOT_DIR}" FILES ${HEADERS} ${SOURCES})
@@ -62,6 +65,8 @@ target_compile_definitions(${LIB}
 target_include_directories(${LIB}
     PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIRS}>
     PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_link_libraries(${LIB} PUBLIC Threads::Threads)
+
 set(OUTPUT_DIR "${CMAKE_BINARY_DIR}")
 set_target_properties(${LIB} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .lib/.a for static, .lib for shared on Windows
@@ -72,6 +77,7 @@ set_target_properties(${LIB} PROPERTIES
     VERSION ${PROJECT_VERSION})
 set_target_properties(${LIB} PROPERTIES EXPORT_NAME Rb)
 
+# compile definitions
 if(WIN32)
     target_compile_definitions(${LIB} PRIVATE WIN32_LEAN_AND_MEAN)
     if(COMPILER_MSVC_LIKE)
@@ -81,9 +87,18 @@ elseif(UNIX)
     target_compile_definitions(${LIB} PRIVATE _GNU_SOURCE)
 endif()
 
-if(COMPILER_GCC)
-    target_compile_options(${LIB} PRIVATE -fdiagnostics-color=always)
+# compile options
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24")
+    set(CMAKE_COLOR_DIAGNOSTICS ON)
+else()
+    if(COMPILER_GCC)
+        target_compile_options(${LIB} PRIVATE -fdiagnostics-color=always)
+    elseif(COMPILER_CLANG)
+        target_compile_options(${LIB} PRIVATE -fcolor-diagnostics)
+    endif()
+endif()
 
+if(COMPILER_GCC)
     target_compile_options(${LIB} PRIVATE -pedantic)
     target_compile_options(${LIB} PRIVATE -Wall)
     target_compile_options(${LIB} PRIVATE -Wextra)
@@ -96,8 +111,6 @@ if(COMPILER_GCC)
     target_compile_options(${LIB} PRIVATE -fanalyzer -Wno-analyzer-use-of-uninitialized-value)
     target_compile_options(${LIB} PRIVATE -fstrict-enums)
 elseif(COMPILER_CLANG)
-    target_compile_options(${LIB} PRIVATE -fcolor-diagnostics)
-
     target_compile_options(${LIB} PRIVATE -pedantic)
     target_compile_options(${LIB} PRIVATE -Wall)
     target_compile_options(${LIB} PRIVATE -Wextra)

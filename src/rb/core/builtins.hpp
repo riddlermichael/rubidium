@@ -79,7 +79,7 @@ namespace rb::core {
 	#define RB_CURRENT_FUNCTION __FUNCSIG__
 #elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
 	#define RB_CURRENT_FUNCTION __func__
-#elif __cplusplus >= 201'103
+#elif __cplusplus >= 201103
 	#define RB_CURRENT_FUNCTION __func__
 #else
 	#define RB_CURRENT_FUNCTION "(unknown)"

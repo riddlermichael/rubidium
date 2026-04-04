@@ -1,9 +1,7 @@
 @PACKAGE_INIT@
 
-if(NOT TARGET Rb::Rb)
-    include(CMakeFindDependencyMacro)
-    find_dependency(Threads REQUIRED)
+include(CMakeFindDependencyMacro)
+find_dependency(Threads REQUIRED)
 
-    include(${CMAKE_CURRENT_LIST_DIR}/RbTargets.cmake)
-    check_required_components(rb)
-endif()
+include("${CMAKE_CURRENT_LIST_DIR}/RbTargets.cmake")
+check_required_components(Rb)
