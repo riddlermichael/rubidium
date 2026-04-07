@@ -48,12 +48,13 @@ public:
 	template <class T,
 	    RB_REQUIRES(isIntegral<T>)>
 	constexpr Int128(T value) noexcept
-	    : lo_(static_cast<u64>(value)) {
+	    : lo_{static_cast<u64>(value)} {
 		if constexpr (isSigned<T>) {
 			hi_ = value < 0 ? static_cast<Hi>(core::max<u64>) : 0;
 		}
 	}
 
+	// FIXME isfinite, ldexp
 	template <class T,
 	    RB_REQUIRES(isFloatingPoint<T>&& kUnsigned)>
 	constexpr Int128(T value) {
@@ -71,6 +72,7 @@ public:
 		}
 	}
 
+	// FIXME isfinite, ldexp
 	template <class T,
 	    RB_REQUIRES(isFloatingPoint<T> && !kUnsigned)>
 	constexpr Int128(T value) {
@@ -87,17 +89,17 @@ public:
 
 #ifdef __cpp_conditional_explicit
 	constexpr explicit(!kUnsigned) Int128(Twin value) noexcept
-	    : Int128(static_cast<Hi>(value.hi_), value.lo_) {
+	    : Int128{static_cast<Hi>(value.hi_), value.lo_} {
 	}
 #else
 	template <bool _ = true, RB_REQUIRES(_&& kUnsigned)>
 	constexpr Int128(Twin value) noexcept
-	    : Int128(static_cast<Hi>(value.hi_), value.lo_) {
+	    : Int128{static_cast<Hi>(value.hi_), value.lo_} {
 	}
 
 	template <bool _ = true, RB_REQUIRES(_ && !kUnsigned)>
 	constexpr explicit Int128(Twin value) noexcept
-	    : Int128(static_cast<Hi>(value.hi_), value.lo_) {
+	    : Int128{static_cast<Hi>(value.hi_), value.lo_} {
 	}
 #endif
 
@@ -124,6 +126,7 @@ public:
 		return static_cast<T>(lo_);
 	}
 
+	// FIXME ldexp
 	template <class T,
 	    RB_REQUIRES_T(IsFloatingPoint<T>)>
 	constexpr explicit operator T() const noexcept {
@@ -213,6 +216,15 @@ public:
 		if (!amount) {
 			return *this;
 		}
+
+		if (amount >= 128) {
+			if constexpr (kUnsigned) {
+				return 0;
+			} else {
+				return hi_ < 0 ? -1 : 0;
+			}
+		}
+
 		if (amount >= 64) {
 			if constexpr (kUnsigned) {
 				return {0, hi_ >> (amount - 64)};
@@ -220,6 +232,7 @@ public:
 				return {(hi_ >> 32) >> 32, static_cast<u64>(hi_ >> (amount - 64))};
 			}
 		}
+
 		return {hi_ >> amount, (lo_ >> amount) | (static_cast<u64>(hi_) << (64 - amount))};
 	}
 
@@ -340,7 +353,7 @@ public:
 		Int128 div{10'000'000'000'000'000'000ULL}; // 10^19
 		int divBaseLog{19};
 		switch (flags & std::ios::basefield) {
-			case std::ios::hex:
+			case std::ios::hex: // TODO use 16^16??
 				div = 0x1000'0000'0000'0000; // 16^15
 				divBaseLog = 15;
 				break;
@@ -356,7 +369,7 @@ public:
 
 		// now piece together the uint128 representation from three chunks of the original value,
 		// each less than "div" and therefore representable as u64
-		std::ostringstream os;
+		std::ostringstream os; // FIXME use std::to_string or std::to_chars
 		constexpr auto copyMask = std::ios::basefield | std::ios::showbase | std::ios::uppercase;
 		os.setf(flags & copyMask, copyMask);
 		Int128 high = *this;
@@ -418,6 +431,8 @@ constexpr Int128<_> operator*(T lhs, Int128<_> rhs) noexcept {
 
 inline namespace literals {
 
+	// TODO constexpr u128 operator""_u128(const char*)
+
 	constexpr i128 operator""_i128(unsigned long long value) noexcept {
 		return i128{value};
 	}
@@ -438,6 +453,10 @@ constexpr unsigned fls128(u128 value) noexcept {
 }
 
 constexpr void divMod(u128 dividend, u128 divisor, u128& quo, u128& rem) noexcept {
+	if (divisor == 0) {
+		raiseFpe();
+	}
+
 	if (divisor > dividend) {
 		quo = 0;
 		rem = dividend;
@@ -453,7 +472,7 @@ constexpr void divMod(u128 dividend, u128 divisor, u128& quo, u128& rem) noexcep
 	u128 denominator = divisor;
 	u128 quotient;
 	// left aligns the MSB of the denominator and the dividend
-	auto const shift = fls128(dividend) - fls128(denominator);
+	unsigned const shift = fls128(dividend) - fls128(denominator);
 	denominator <<= static_cast<int>(shift);
 	// Uses shift-subtract algorithm to divide dividend by denominator.
 	// The remainder will be left in dividend
@@ -531,7 +550,9 @@ inline std::ostream& operator<<(std::ostream& os, i128 const& value) {
 			case std::ios::internal:
 				if (printAsDecimal && (rep[0] == '+' || rep[0] == '-')) {
 					rep.insert(1_UZ, count, os.fill());
-				} else if ((flags & std::ios::basefield) == std::ios::hex && (flags & std::ios::showbase) && value) {
+				} else if ((flags & std::ios::basefield) == std::ios::hex
+				    && (flags & std::ios::showbase) && value) //
+				{
 					rep.insert(2_UZ, count, os.fill());
 				} else {
 					rep.insert(0_UZ, count, os.fill());
