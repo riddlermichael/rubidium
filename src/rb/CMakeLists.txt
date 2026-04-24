@@ -136,6 +136,7 @@ elseif(COMPILER_MSVC)
 
     target_compile_options(${LIB} PRIVATE /wd4068) # unknown pragma
     target_compile_options(${LIB} PRIVATE /wd4296) # expression is always false
+    target_compile_options(${LIB} PRIVATE /wd4365) # signed/unsigned mismatch
     target_compile_options(${LIB} PRIVATE /wd4514) # unreferenced inline function has been removed
     target_compile_options(${LIB} PRIVATE /wd4582) # constructor is not implicitly called
     target_compile_options(${LIB} PRIVATE /wd4623) # default constructor was implicitly defined as deleted
