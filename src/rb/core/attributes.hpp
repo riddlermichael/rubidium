@@ -79,15 +79,13 @@
 		#define RB_NEVER_INLINE __attribute__((noinline))
 	#endif
 #elif defined(RB_COMPILER_MSVC)
-    // VS 2019 16.6
-	#if _MSC_VER >= 1926
+	#if RB_HAS_CPP_ATTRIBUTE(msvc::noinline)
 		#define RB_NEVER_INLINE [[msvc::noinline]]
 	#else
 		#define RB_NEVER_INLINE __declspec(noinline)
 	#endif
 
-    // VS 2019 16.7
-	#if _MSC_VER >= 1927
+	#if RB_HAS_CPP_ATTRIBUTE(msvc::forceinline)
 		#define RB_ALWAYS_INLINE [[msvc::forceinline]]
 	#else
 		#define RB_ALWAYS_INLINE __forceinline

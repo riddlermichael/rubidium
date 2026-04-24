@@ -2,9 +2,13 @@
 
 #include <rb/core/move.hpp>
 #include <rb/core/SourceLocation.hpp>
+#include <rb/core/warnings.hpp>
 
 namespace rb::core {
 inline namespace error {
+
+	RB_WARNING_PUSH
+	RB_WARNING_PADDING
 
 	class RB_EXPORT Error {
 	public:
@@ -69,6 +73,8 @@ inline namespace error {
 		czstring msg_ = nullptr;
 		SourceLocation loc_;
 	};
+
+	RB_WARNING_POP
 
 	std::ostream& operator<<(std::ostream& os, Error const& error);
 

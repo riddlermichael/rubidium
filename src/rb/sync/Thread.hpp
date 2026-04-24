@@ -6,6 +6,9 @@
 
 namespace rb::sync {
 
+RB_WARNING_PUSH
+RB_WARNING_PADDING
+
 class RB_EXPORT Thread {
 public:
 	class RB_EXPORT Id final {
@@ -69,6 +72,8 @@ private:
 
 	core::UniquePtr<Impl> pImpl_;
 };
+
+RB_WARNING_POP
 
 inline std::ostream& operator<<(std::ostream& os, Thread::Id id) {
 	return os << "Thread::Id{" << static_cast<usize>(id) << "}";

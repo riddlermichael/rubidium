@@ -248,7 +248,7 @@ void Thread::start() {
 	if (suspendCount == 0) {
 		throw OsError(ErrorCode::kOperationInProgress);
 	}
-	if (suspendCount == -1) {
+	if (suspendCount == 0xFFFFFFFF) {
 		throw OsError::lastOsError();
 	}
 }
