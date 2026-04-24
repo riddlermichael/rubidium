@@ -35,9 +35,10 @@ jobs:
 
       - name: Setup MinGW
         if: matrix.os == 'windows-latest' && matrix.cxx-compiler == 'g++'
-        uses: egor-tensin/setup-mingw@v2
-        with:
-          platform: x64
+        run: |
+          echo "C:\ProgramData\Chocolatey\bin" >> $GITHUB_PATH
+          echo "C:\ProgramData\Chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Setup Clang
         if: matrix.os == 'windows-latest' && matrix.cxx-compiler == 'clang++'
