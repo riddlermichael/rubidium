@@ -80,7 +80,7 @@ set_target_properties(${LIB} PROPERTIES EXPORT_NAME Rb)
 # compile definitions
 if(WIN32)
     target_compile_definitions(${LIB} PRIVATE WIN32_LEAN_AND_MEAN)
-    target_compile_definitions(${LIB} PRIVATE NOMINMAX)
+    target_compile_definitions(${LIB} PUBLIC NOMINMAX)
 elseif(UNIX)
     target_compile_definitions(${LIB} PRIVATE _GNU_SOURCE)
 endif()
@@ -141,6 +141,8 @@ elseif(COMPILER_MSVC)
     target_compile_options(${LIB} PRIVATE /wd4623) # default constructor was implicitly defined as deleted
     target_compile_options(${LIB} PRIVATE /wd4625) # copy constructor was implicitly defined as deleted
     target_compile_options(${LIB} PRIVATE /wd4626) # assignment operator was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd4710) # function not inlined
+    target_compile_options(${LIB} PRIVATE /wd4711) # function selected for inline expansion
     target_compile_options(${LIB} PRIVATE /wd4800) # implicit conversion to bool
     target_compile_options(${LIB} PRIVATE /wd4866) # compiler may not enforce left-to-right evaluation order for call to operator[]
     target_compile_options(${LIB} PRIVATE /wd4868) # compiler may not enforce left-to-right evaluation order in braced initializer list
