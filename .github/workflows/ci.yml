@@ -14,8 +14,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        build-type: [ Release ]
         cxx-compiler: [ g++, clang++, cl ]
+        include:
+          - build-type: Release
+          - os: windows-latest
+            cxx-compiler: g++
+            generator: Ninja
+          - os: windows-latest
+            cxx-compiler: clang++
+            generator: Ninja
         exclude:
           - os: ubuntu-latest
             cxx-compiler: cl
@@ -23,38 +30,25 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Set environment
-        id: env-win
-        if: matrix.os == 'windows-latest'
-        run: |
-          echo "nproc=%NUMBER_OF_PROCESSORS%" >> "$GITHUB_ENV"
+      - name: Install Ninja
+        uses: lukka/get-cmake@latest
 
-      - name: Set environment
-        id: env-linux
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo "nproc=$(nproc)" >> "$GITHUB_ENV"
-          echo "CMAKE_GENERATOR=Ninja" >> "$GITHUB_ENV"
-
-      - name: Get build dir
-        id: vars
-        shell: bash
-        run: echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+      - name: Setup MinGW
+        if: matrix.os == 'windows-latest' && matrix.cxx-compiler == 'g++'
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          method: link
 
       - name: Configure
+        shell: bash
         run: >
-          cmake
-          -B ${{ steps.vars.outputs.build-output-dir }}
-          -S ${{ github.workspace }}
+          cmake -B build
+          ${{ matrix.generator && format('-G "{0}"', matrix.generator) || '' }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx-compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
 
       - name: Build
-        run: >
-          cmake --build ${{ steps.vars.outputs.build-output-dir }}
-          --config ${{ matrix.build-type }}
-          --parallel ${{ env.nproc }}
+        run: cmake --build build --config ${{ matrix.build-type }} --parallel
 
       - name: Test
-        working-directory: ${{ steps.vars.outputs.build-output-dir }}
-        run: ctest --build-config ${{ matrix.build-type }}
+        run: ctest --test-dir build --build-config ${{ matrix.build-type }}
