@@ -16,7 +16,7 @@ namespace impl {
 	struct IsFloatingPoint<double> : True {};
 
 	template <>
-	struct IsFloatingPoint<long double> : True {}; // NOLINT(*-runtime-float)
+	struct IsFloatingPoint<long double> : True {};
 
 } // namespace impl
 

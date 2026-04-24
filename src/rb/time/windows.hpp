@@ -4,8 +4,7 @@
 
 #ifdef RB_OS_WIN
 
-	#include <Windows.h>
-
+	#include <rb/core/windows.hpp>
 	#include <rb/time/Duration.hpp>
 
 namespace rb::time {

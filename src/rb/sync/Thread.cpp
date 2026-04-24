@@ -3,6 +3,7 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <cstring>
 
+#include <rb/core/warnings.hpp>
 #include <rb/sync/impl.hpp>
 
 using namespace rb::core;
@@ -152,10 +153,15 @@ void Thread::start() {
 
 	#include <process.h>
 
+RB_WARNING_PUSH
+RB_WARNING_PADDING
+
 struct Thread::Impl {
 	HANDLE hThread = nullptr;
 	unsigned id = 0;
 };
+
+RB_WARNING_POP
 
 namespace {
 

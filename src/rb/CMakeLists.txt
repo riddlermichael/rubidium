@@ -102,6 +102,7 @@ if(COMPILER_GCC)
     target_compile_options(${LIB} PRIVATE -pedantic)
     target_compile_options(${LIB} PRIVATE -Wall)
     target_compile_options(${LIB} PRIVATE -Wextra)
+    target_compile_options(${LIB} PRIVATE -Wpadded)
     target_compile_options(${LIB} PRIVATE -Wshadow=local)
 
     target_compile_options(${LIB} PRIVATE -Wno-nonnull-compare)
@@ -114,6 +115,7 @@ elseif(COMPILER_CLANG)
     target_compile_options(${LIB} PRIVATE -pedantic)
     target_compile_options(${LIB} PRIVATE -Wall)
     target_compile_options(${LIB} PRIVATE -Wextra)
+    target_compile_options(${LIB} PRIVATE -Wpadded)
     target_compile_options(${LIB} PRIVATE -Wshadow -Wshadow-uncaptured-local)
     target_compile_options(${LIB} PRIVATE -Wshadow-field -Wshadow-field-in-constructor-modified)
     target_compile_options(${LIB} PRIVATE -Wthread-safety)
@@ -133,10 +135,21 @@ elseif(COMPILER_MSVC)
     target_compile_options(${LIB} PRIVATE /analyze)
     target_compile_options(${LIB} PRIVATE /EHsc)
     target_compile_options(${LIB} PRIVATE /Wall)
-    # disable "unknown pragma" warnings
-    target_compile_options(${LIB} PRIVATE /wd4068)
-    # disable "exception-filter expression is the constant EXCEPTION_EXECUTE_HANDLER" warnings
-    target_compile_options(${LIB} PRIVATE /wd6320)
+
+    target_compile_options(${LIB} PRIVATE /wd4068) # unknown pragma
+    target_compile_options(${LIB} PRIVATE /wd4296) # expression is always false
+    target_compile_options(${LIB} PRIVATE /wd4514) # unreferenced inline function has been removed
+    target_compile_options(${LIB} PRIVATE /wd4582) # constructor is not implicitly called
+    target_compile_options(${LIB} PRIVATE /wd4623) # default constructor was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd4625) # copy constructor was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd4626) # assignment operator was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd4800) # implicit conversion to bool
+    target_compile_options(${LIB} PRIVATE /wd4866) # compiler may not enforce left-to-right evaluation order for call to operator[]
+    target_compile_options(${LIB} PRIVATE /wd4868) # compiler may not enforce left-to-right evaluation order in braced initializer list
+    target_compile_options(${LIB} PRIVATE /wd5026) # move constructor was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd5027) # move assignment operator was implicitly defined as deleted
+    target_compile_options(${LIB} PRIVATE /wd5045) # compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+    target_compile_options(${LIB} PRIVATE /wd6320) # exception-filter expression is the constant EXCEPTION_EXECUTE_HANDLER
 else()
     message(FATAL_ERROR "Unsupported compiler")
 endif()

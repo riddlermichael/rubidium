@@ -1,10 +1,6 @@
 #include "OsError.hpp"
 
-// ReSharper disable once CppUnusedIncludeDirective
-#include <rb/core/os.hpp>
-#ifdef RB_OS_WIN
-	#include <Windows.h>
-#endif
+#include <rb/core/windows.hpp>
 
 using namespace rb::core;
 using namespace rb::core::error;

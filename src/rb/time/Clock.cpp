@@ -10,7 +10,7 @@ Duration Clock<ClockId::kMonotonic>::now() noexcept {
 	static u64 const kQpcFrequency = [] {
 		LARGE_INTEGER frequency;
 		QueryPerformanceFrequency(&frequency);
-		return frequency.QuadPart;
+		return static_cast<u64>(frequency.QuadPart);
 	}();
 
 	LARGE_INTEGER count;

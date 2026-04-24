@@ -2,6 +2,11 @@
 
 #include <cstring>
 
+#include <rb/core/warnings.hpp>
+
+RB_WARNING_PUSH
+RB_WARNING_POSSIBLE_NULL_ARGUMENT
+
 RB_RETURNS_NONNULL void* operator new(std::size_t size, rb::ext::ZeroMemory /*kZeroMemory*/) {
 	void* ptr = operator new(size);
 	std::memset(ptr, 0, size);
@@ -117,3 +122,5 @@ void operator delete[](
 }
 
 #endif
+
+RB_WARNING_POP

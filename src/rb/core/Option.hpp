@@ -10,6 +10,7 @@
 #include <rb/core/memory/addressOf.hpp>
 #include <rb/core/traits/IsScalar.hpp>
 #include <rb/core/traits/requirements.hpp>
+#include <rb/core/warnings.hpp>
 
 namespace rb::core {
 
@@ -94,6 +95,9 @@ namespace impl {
 		Empty empty;
 		T value;
 	};
+
+	RB_WARNING_PUSH
+	RB_WARNING_PADDING
 
 	template <class T>
 	struct OptionPayloadBase {
@@ -203,6 +207,7 @@ namespace impl {
 			}
 		}
 	};
+
 	// This class template manages construction/destruction of the contained value for an Option
 
 	// Class template that manages the payload for Options
@@ -306,6 +311,8 @@ namespace impl {
 			this->resetImpl();
 		}
 	};
+
+	RB_WARNING_POP
 
 	// Common base class for OptionBase<T> to avoid repeating these member functions in each specialization
 	template <class T, class U>

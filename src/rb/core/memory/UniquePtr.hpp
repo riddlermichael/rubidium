@@ -10,6 +10,7 @@
 #include <rb/core/traits/arrays.hpp>
 #include <rb/core/traits/IsRef.hpp>
 #include <rb/core/traits/requirements.hpp>
+#include <rb/core/warnings.hpp>
 
 namespace rb::core {
 
@@ -139,7 +140,7 @@ inline namespace memory {
 			reset();
 		}
 
-		RB_DISABLE_COPY(UniquePtr);
+		RB_DISABLE_COPY(UniquePtr)
 
 		// NOLINTBEGIN(*-c-copy-assignment-signature,*-unconventional-assign-operator)
 
@@ -240,11 +241,16 @@ inline namespace memory {
 			p = nullptr;
 		}
 
+		RB_WARNING_PUSH
+		RB_WARNING_POSSIBLE_NULL_DEREFERENCE
+
 		template <class... Args,
 		    class DD = D, RB_REQUIRES_T(impl::DeleterEnableDefault<DD>)>
 		constexpr explicit UniquePtr(InPlace /*kInPlace*/, Args&&... args) RB_NOEXCEPT_LIKE(new T(RB_FWD(args)...))
 		    : storage_(kInPlaceIndex<0>, new T(RB_FWD(args)...)) {
 		}
+
+		RB_WARNING_POP
 
 		constexpr Pointer const& ptr() const noexcept {
 			return storage_.first();

@@ -258,7 +258,7 @@ inline namespace literals {
 #ifndef RB_COMPILER_MSVC
 
 	RB_WARNING_PUSH
-	RB_STRING_LITERAL_OPERATOR_TEMPLATE
+	RB_WARNING_STRING_LITERAL_OPERATOR_TEMPLATE
 
 	template <class Char, Char... chars>
 	constexpr auto operator""_ss() noexcept {

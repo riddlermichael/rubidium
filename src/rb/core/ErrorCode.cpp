@@ -1,12 +1,7 @@
 #include "ErrorCode.hpp"
 
-// ReSharper disable CppUnusedIncludeDirective
-#include <rb/core/os.hpp>
 #include <rb/core/warnings.hpp>
-
-#ifdef RB_OS_WIN
-	#include <Windows.h>
-#endif
+#include <rb/core/windows.hpp>
 
 namespace rb::core {
 
@@ -21,6 +16,8 @@ czstring toString(ErrorCode errorCode) noexcept {
 		return "Resource unavailable, try again";
 	}
 
+	RB_WARNING_PUSH
+	RB_WARNING_ENUM_SWITCH
 	// ReSharper disable once CppDFAUnreachableCode
 	// NOLINTBEGIN(clang-analyzer-alpha.deadcode.UnreachableCode)
 	switch (errorCode) {
@@ -107,6 +104,7 @@ czstring toString(ErrorCode errorCode) noexcept {
 		default                                         : return "Undefined error";
 	}
 	// NOLINTEND(clang-analyzer-alpha.deadcode.UnreachableCode)
+	RB_WARNING_POP
 }
 
 ErrorCode fromRawError(unsigned rawCode) noexcept {

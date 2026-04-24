@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <rb/core/error/Error.hpp>
+#include <rb/core/warnings.hpp>
 
 using namespace rb::core;
 
@@ -31,7 +32,10 @@ RB_HIDDEN void terminateHandler() {
 } // namespace
 
 TerminateHandlerSetter::TerminateHandlerSetter() noexcept {
+	RB_WARNING_PUSH
+	RB_WARNING_POTENTIALLY_THROWING_FUNCTION
 	std::set_terminate(terminateHandler);
+	RB_WARNING_POP
 }
 
 void rb::core::throwAssert(czstring msg, SourceLocation const& location) {

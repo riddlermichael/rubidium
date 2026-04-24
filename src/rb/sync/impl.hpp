@@ -8,7 +8,7 @@
 #if RB_USE(PTHREADS)
 	#include <pthread.h>
 #elif RB_USE(WIN32_THREADS)
-	#include <Windows.h>
+	#include <rb/core/windows.hpp>
 #endif
 
 /// Check expression as an errno value.
@@ -27,7 +27,7 @@
 #ifdef RB_OS_WIN
 	#define RB_SYNC_CHECK_LAST_ERROR(expr)                                \
 		do {                                                              \
-			DWORD const _err = expr;                                      \
+			DWORD const _err = static_cast<DWORD>(expr);                  \
 			if (!_err) {                                                  \
 				throw rb::core::OsError::lastOsError(RB_SOURCE_LOCATION); \
 			}                                                             \

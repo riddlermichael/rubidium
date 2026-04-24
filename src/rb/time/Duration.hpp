@@ -911,7 +911,7 @@ constexpr std::timespec Duration::toTimespec() const noexcept {
 		// ReSharper disable once CppRedundantCastExpression
 		ts.tv_sec = static_cast<std::time_t>(seconds);
 		if (ts.tv_sec == seconds) { // no time_t narrowing
-			ts.tv_nsec = ticks / kTicksPerNanosecond; // NOLINT(*-narrowing-conversions)
+			ts.tv_nsec = static_cast<long>(ticks / kTicksPerNanosecond); // NOLINT(*-narrowing-conversions)
 			return ts;
 		}
 	}

@@ -573,6 +573,9 @@ Quantity(T, Unit) -> Quantity<core::RemoveCvRef<T>>;
 template <class T>
 using QuantityList = std::vector<Quantity<T>>; // TODO use containers::Vector
 
+RB_WARNING_PUSH
+RB_WARNING_PADDING
+
 template <class T>
 struct SplitResult {
 	QuantityList<T> quantities;
@@ -580,6 +583,8 @@ struct SplitResult {
 	bool isPositive = true;
 	bool isInf = false;
 };
+
+RB_WARNING_POP
 
 enum class SplitError {
 	kOk [[maybe_unused]], ///< Ok

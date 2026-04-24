@@ -1,15 +1,20 @@
 #pragma once
 
-#include <rb/core/helpers.hpp>
 #include <rb/core/traits/remove.hpp>
+#include <rb/core/warnings.hpp>
 
 namespace rb::core {
+
+RB_WARNING_PUSH
+RB_WARNING_PADDING
 
 template <class Q, class R = Q>
 struct QuoRem {
 	Q quo;
 	R rem;
 };
+
+RB_WARNING_POP
 
 template <class Q, class R>
 QuoRem(Q, R) -> QuoRem<RemoveRef<Q>, RemoveRef<R>>;
