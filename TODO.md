@@ -96,6 +96,7 @@
 - [ ] `core::str`: ascii functions (see `absl/strings/ascii.h`)
 - [ ] look at Chromium's `base::Location`
 - [ ] compare `Array` and `absl::FixedArray`
+  - [ ] ctor from `Span`
 - [ ] see `absl::Nullable` etc.
   - [ ] Rust: `ptr::NonNull`, `num::NonZero`
   - [ ] should work in case of `struct { NonZero field; }`
@@ -108,6 +109,11 @@
 - [ ] Iterators like in Rust
 - [ ] [Dreams](https://habr.com/ru/articles/330402) about `std::of`
 - [ ] [SharedPtr](https://t.ly/Un-7M)
+- [ ] check support of `operator==` for library types (`Span`, `Flags`)
+- [ ] `operator|` and `operator&` for `Flags`
+- [ ] `__is_trivially_relocatable`
+- [ ] `__int128`
+- [ ] fold expressions for `TypeSeq`/`ValueSeq`
 
 ### Data structures
 

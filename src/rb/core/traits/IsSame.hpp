@@ -6,7 +6,7 @@ namespace rb::core {
 inline namespace traits {
 
 	template <class T, class U>
-	inline constexpr bool isSame = impl::IsSameImpl<T, U>::kValue;
+	inline constexpr bool isSame = impl::IsSameImpl<T, U>::value;
 
 	template <class T, class U>
 	using IsSame = Bool<isSame<T, U>>;

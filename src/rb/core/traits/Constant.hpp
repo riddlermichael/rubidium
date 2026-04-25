@@ -21,22 +21,31 @@ namespace impl {
 		};
 	};
 
+#if RB_HAS_BUILTIN(__is_same)
 	template <class T, class U>
 	struct IsSameImpl {
 		enum : bool {
-			kValue = false
+			value = __is_same(T, U)
+		};
+	};
+#else
+	template <class T, class U>
+	struct IsSameImpl {
+		enum : bool {
+			value = false
 		};
 	};
 
 	template <class T>
 	struct IsSameImpl<T, T> {
 		enum : bool {
-			kValue = true
+			value = true
 		};
 	};
+#endif
 
 	template <class T, class... Ts>
-	inline constexpr bool isAnyOf = (... || IsSameImpl<T, Ts>::kValue);
+	inline constexpr bool isAnyOf = (... || IsSameImpl<T, Ts>::value);
 
 	template <class T>
 	inline constexpr bool isIntegralImpl = isAnyOf<RemoveCv<T>,

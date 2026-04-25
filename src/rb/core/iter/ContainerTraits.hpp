@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rb/core/traits/Void.hpp>
+
 namespace rb::core {
 
 namespace impl {

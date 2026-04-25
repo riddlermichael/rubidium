@@ -2,14 +2,12 @@
 
 #include <rb/core/traits/IsConvertible.hpp>
 
-// TODO use `decay`-ed T
-
 namespace rb::core {
 
 inline namespace traits {
 
 	template <class T>
-	using IsEnum = Bool<__is_enum(T)>;
+	using IsEnum = Bool<__is_enum(RemoveCvRef<T>)>;
 
 	template <class T>
 	inline constexpr bool isEnum = IsEnum<T>::value;

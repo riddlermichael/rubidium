@@ -5,6 +5,7 @@
 #include <rb/core/traits/alwaysFalse.hpp>
 #include <rb/core/traits/IsFunction.hpp>
 #include <rb/core/traits/IsPointer.hpp>
+#include <rb/core/traits/IsVoid.hpp>
 
 namespace rb::core {
 inline namespace memory {

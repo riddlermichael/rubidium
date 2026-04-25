@@ -59,7 +59,7 @@ inline namespace traits {
 	using IsTriviallyCopyable = Bool<__is_trivially_copyable(T)>;
 
 	template <class T>
-	inline constexpr bool isTriviallyCopyable = __is_trivially_copyable(T);
+	inline constexpr bool isTriviallyCopyable = IsTriviallyCopyable<T>::value;
 
 } // namespace traits
 

@@ -1,11 +1,9 @@
 #pragma once
 
 #include <rb/core/attributes.hpp>
-#include <rb/core/builtins.hpp>
 #include <rb/core/endian.hpp>
 #include <rb/core/requires.hpp>
 #include <rb/core/traits/builtins.hpp>
-#include <rb/core/traits/constructible.hpp>
 #include <rb/core/traits/TypeIdentity.hpp>
 #include <rb/core/traits/Unsigned.hpp>
 

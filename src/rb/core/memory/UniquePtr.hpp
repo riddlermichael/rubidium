@@ -125,13 +125,13 @@ inline namespace memory {
 
 		template <class DD = D, RB_REQUIRES(isMoveConstructible<DD>)>
 		UniquePtr(UniquePtr&& rhs) noexcept
-		    : storage_(kInPlaceIndex<1>, RB_MOVE(rhs.deleter()), rhs.release()) { // FIXME RB_MOVE?
+		    : storage_(kInPlaceIndex<1>, RB_MOVE(rhs.deleter()), rhs.release()) {
 		}
 
 		template <class U,
 		    class DD = D, RB_REQUIRES_T(And<IsMoveConstructible<DD>, SafeConvertible<U>>)>
 		UniquePtr(UniquePtr<U, D>&& rhs) noexcept
-		    : storage_(kInPlaceIndex<1>, RB_MOVE(rhs.deleter()), rhs.release()) { // FIXME RB_MOVE?
+		    : storage_(kInPlaceIndex<1>, RB_MOVE(rhs.deleter()), rhs.release()) {
 		}
 
 		// NOLINTEND(google-explicit-constructor)

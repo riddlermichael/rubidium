@@ -1,9 +1,17 @@
 #pragma once
 
+#include <rb/core/has.hpp>
+
 namespace rb::core {
 
 namespace impl {
 
+#if RB_HAS_BUILTIN(__remove_cv)
+	template <class T>
+	struct RemoveCvImpl {
+		using Type = __remove_cv(T);
+	};
+#else
 	template <class T>
 	struct RemoveCvImpl {
 		using Type = T;
@@ -23,7 +31,14 @@ namespace impl {
 	struct RemoveCvImpl<T const volatile> {
 		using Type = T;
 	};
+#endif
 
+#if RB_HAS_BUILTIN(__remove_const)
+	template <class T>
+	struct RemoveConstImpl {
+		using Type = __remove_const(T);
+	};
+#else
 	template <class T>
 	struct RemoveConstImpl {
 		using Type = T;
@@ -33,32 +48,53 @@ namespace impl {
 	struct RemoveConstImpl<T const> {
 		using Type = T;
 	};
+#endif
 
+#if RB_HAS_BUILTIN(__remove_volatile)
 	template <class T>
-	struct RemoveVolatile {
+	struct RemoveVolatileImpl {
+		using Type = __remove_volatile(T);
+	};
+#else
+	template <class T>
+	struct RemoveVolatileImpl {
 		using Type = T;
 	};
 
 	template <class T>
-	struct RemoveVolatile<T volatile> {
+	struct RemoveVolatileImpl<T volatile> {
+		using Type = T;
+	};
+#endif
+
+#if RB_HAS_BUILTIN(__remove_reference)
+	template <class T>
+	struct RemoveRefImpl {
+		using Type = __remove_reference(T);
+	};
+#else
+	template <class T>
+	struct RemoveRefImpl {
 		using Type = T;
 	};
 
 	template <class T>
-	struct RemoveReference {
+	struct RemoveRefImpl<T&> {
 		using Type = T;
 	};
 
 	template <class T>
-	struct RemoveReference<T&> {
+	struct RemoveRefImpl<T&&> {
 		using Type = T;
 	};
+#endif
 
+#if RB_HAS_BUILTIN(__remove_pointer)
 	template <class T>
-	struct RemoveReference<T&&> {
-		using Type = T;
+	struct RemovePointerImpl {
+		using Type = __remove_pointer(T);
 	};
-
+#else
 	template <class T>
 	struct RemovePointerImpl {
 		using Type = T;
@@ -68,6 +104,7 @@ namespace impl {
 	struct RemovePointerImpl<T*> {
 		using Type = T;
 	};
+#endif
 
 } // namespace impl
 
@@ -77,7 +114,7 @@ inline namespace traits {
 	using RemoveConst = typename impl::RemoveConstImpl<T>::Type;
 
 	template <class T>
-	using RemoveVolatile = typename impl::RemoveVolatile<T>::Type;
+	using RemoveVolatile = typename impl::RemoveVolatileImpl<T>::Type;
 
 	template <class T>
 	using RemoveCv = typename impl::RemoveCvImpl<T>::Type;
@@ -86,10 +123,7 @@ inline namespace traits {
 	using RemoveConstVolatile = typename impl::RemoveCvImpl<T>::Type;
 
 	template <class T>
-	using RemoveReference = typename impl::RemoveReference<T>::Type;
-
-	template <class T>
-	using RemoveRef = RemoveReference<T>;
+	using RemoveRef = typename impl::RemoveRefImpl<T>::Type;
 
 	template <class T>
 	using RemoveCvRef = RemoveCv<RemoveRef<T>>;

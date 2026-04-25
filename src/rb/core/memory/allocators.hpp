@@ -156,7 +156,7 @@ struct ArrayAllocator final {
 			}
 		}
 	}
-}; // namespace rb::core
+};
 
 template <class T, bool _1, class U, bool _2> // NOLINT(readability-identifier-naming)
 constexpr bool operator==(ArrayAllocator<T, _1> const& /*lhs*/, ArrayAllocator<U, _2> const& /*rhs*/) noexcept {

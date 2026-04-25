@@ -3,10 +3,13 @@
 .idea
 .vs
 .vscode
+
 build*
 cmake-build*
 doc/html
 install*
+
+.DS_Store
 
 CMakeLists.txt.user
 

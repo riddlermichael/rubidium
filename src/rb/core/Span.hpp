@@ -259,7 +259,7 @@ public:
 };
 
 template <class It, class EndOrSize>
-Span(It, EndOrSize) -> Span<RemoveReference<decltype(*RB_DECLVAL(It&))>>;
+Span(It, EndOrSize) -> Span<RemoveRef<decltype(*RB_DECLVAL(It&))>>;
 
 template <class T, usize n>
 Span(T (&)[n]) -> Span<T, n>;

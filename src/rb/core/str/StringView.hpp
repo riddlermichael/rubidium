@@ -212,7 +212,7 @@ inline namespace str {
 			if (lhs.size() != rhs.size()) {
 				return false;
 			}
-			return CharTraits<Char>::compare(lhs.data(), rhs.data(), lhs.size());
+			return CharTraits<Char>::compare(lhs.data(), rhs.data(), lhs.size()) == 0;
 		}
 	}
 

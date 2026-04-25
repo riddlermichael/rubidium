@@ -1,33 +1,10 @@
 #pragma once
 
 #include <rb/core/compiler.hpp>
+#include <rb/core/has.hpp>
 
 #ifdef RB_COMPILER_MSVC
 	#include <sal.h>
-#endif
-
-#ifdef __has_attribute
-	#define RB_HAS_ATTRIBUTE(...) __has_attribute(__VA_ARGS__)
-#else
-	#define RB_HAS_ATTRIBUTE(...) 0
-#endif
-
-#ifdef __has_c_attribute
-	#define RB_HAS_C_ATTRIBUTE(...) __has_c_attribute(__VA_ARGS__)
-#else
-	#define RB_HAS_C_ATTRIBUTE(...) 0
-#endif
-
-#ifdef __has_cpp_attribute
-	#define RB_HAS_CPP_ATTRIBUTE(...) __has_cpp_attribute(__VA_ARGS__)
-#else
-	#define RB_HAS_CPP_ATTRIBUTE(...) 0
-#endif
-
-#ifdef __has_declspec_attribute
-	#define RB_HAS_DECLSPEC_ATTRIBUTE(...) __has_declspec_attribute(__VA_ARGS__)
-#else
-	#define RB_HAS_DECLSPEC_ATTRIBUTE(...) 0
 #endif
 
 #if defined(RB_COMPILER_GCC_LIKE)

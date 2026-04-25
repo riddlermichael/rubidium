@@ -2,12 +2,6 @@
 
 #include <rb/core/compiler.hpp>
 
-#ifdef __has_builtin
-	#define RB_HAS_BUILTIN(x) __has_builtin(x)
-#else
-	#define RB_HAS_BUILTIN(x) 0
-#endif
-
 #if defined(RB_COMPILER_GCC_LIKE) || defined(RB_COMPILER_CLANG)
 	#define RB_BUILTIN_FILE __builtin_FILE()
 	#define RB_BUILTIN_LINE __builtin_LINE()
