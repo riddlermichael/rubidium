@@ -116,6 +116,7 @@
 - [ ] fold expressions for `TypeSeq`/`ValueSeq`
 - [ ] `[[likely]]`/`[[unlikely]]` in MSVC
 - [ ] `cold` attribute
+- [ ] use `std::endian` in C++20 and pickup detection from RbC
 
 ### Data structures
 

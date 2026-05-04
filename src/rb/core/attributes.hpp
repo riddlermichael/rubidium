@@ -3,10 +3,6 @@
 #include <rb/core/compiler.hpp>
 #include <rb/core/has.hpp>
 
-#ifdef RB_COMPILER_MSVC
-	#include <sal.h>
-#endif
-
 #if defined(RB_COMPILER_GCC_LIKE)
 // Clang also allows the nonnull attribute to be placed directly on a function parameter;
 // use `RB_ARG_NONNULL` in a such case

@@ -20,14 +20,18 @@ public:
 
 } // namespace rb::core
 
-#define RB_ASSERT(...) \
-	(__VA_ARGS__) ? static_cast<void>(0) : rb::core::throwAssert(#__VA_ARGS__, RB_SOURCE_LOCATION)
+#define RB_ASSERT_CUSTOM_MSG(msg, ...)     \
+	do {                                   \
+		if (RB_UNLIKELY(!(__VA_ARGS__))) { \
+			rb::core::throwAssert(         \
+			    msg,                       \
+			    RB_SOURCE_LOCATION);       \
+		}                                  \
+	} while (0)
 
-#define RB_ASSERT_MSG(msg, ...) \
-	(__VA_ARGS__) ? static_cast<void>(0) : rb::core::throwAssert(#__VA_ARGS__ " (" msg ")", RB_SOURCE_LOCATION)
+#define RB_ASSERT_MSG(msg, ...) RB_ASSERT_CUSTOM_MSG(#__VA_ARGS__ " (" msg ")", __VA_ARGS__)
 
-#define RB_ASSERT_CUSTOM_MSG(msg, ...) \
-	(__VA_ARGS__) ? static_cast<void>(0) : rb::core::throwAssert(msg, RB_SOURCE_LOCATION)
+#define RB_ASSERT(...) RB_ASSERT_CUSTOM_MSG(#__VA_ARGS__, __VA_ARGS__)
 
 #ifdef NDEBUG
 	#define RB_DEBUG_ASSERT(...)

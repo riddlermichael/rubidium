@@ -22,6 +22,7 @@
 
 #ifdef RB_COMPILER_MSVC
 	#include <intrin.h>
+	#include <stdlib.h>
 #endif
 
 namespace rb::core {
@@ -91,6 +92,20 @@ constexpr u32 bswap(u32 value) noexcept {
 
 constexpr u16 bswap(u16 value) noexcept {
 	return __builtin_bswap16(value);
+}
+
+#elif defined(RB_COMPILER_MSVC)
+
+constexpr u64 bswap(u64 value) noexcept {
+	return _byteswap_uint64(value);
+}
+
+constexpr u32 bswap(u32 value) noexcept {
+	return _byteswap_ulong(value);
+}
+
+constexpr u16 bswap(u16 value) noexcept {
+	return _byteswap_ushort(value);
 }
 
 #else
