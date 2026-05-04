@@ -114,6 +114,8 @@
 - [ ] `__is_trivially_relocatable`
 - [ ] `__int128`
 - [ ] fold expressions for `TypeSeq`/`ValueSeq`
+- [ ] `[[likely]]`/`[[unlikely]]` in MSVC
+- [ ] `cold` attribute
 
 ### Data structures
 

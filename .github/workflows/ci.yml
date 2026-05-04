@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
         cxx-compiler: [ g++, clang++, cl ]
         include:
           - build-type: Release
@@ -24,6 +24,10 @@ jobs:
             cxx-compiler: clang++
             generator: Ninja
         exclude:
+          - os: macos-latest
+            cxx-compiler: cl
+          - os: macos-latest
+            cxx-compiler: g++
           - os: ubuntu-latest
             cxx-compiler: cl
 
