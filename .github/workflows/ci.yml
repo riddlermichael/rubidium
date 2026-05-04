@@ -46,7 +46,8 @@ jobs:
 
       - name: Setup Clang
         if: matrix.os == 'windows-latest' && matrix.cxx-compiler == 'clang++'
-        uses: egor-tensin/setup-clang@v1
+        run: echo "C:\Program Files\LLVM\bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Configure
         shell: bash
