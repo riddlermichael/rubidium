@@ -94,20 +94,6 @@ constexpr u16 bswap(u16 value) noexcept {
 	return __builtin_bswap16(value);
 }
 
-#elif defined(RB_COMPILER_MSVC)
-
-constexpr u64 bswap(u64 value) noexcept {
-	return _byteswap_uint64(value);
-}
-
-constexpr u32 bswap(u32 value) noexcept {
-	return _byteswap_ulong(value);
-}
-
-constexpr u16 bswap(u16 value) noexcept {
-	return _byteswap_ushort(value);
-}
-
 #else
 
 // These definitions are written so that they are recognized by most compilers as `bswap`
@@ -115,28 +101,28 @@ constexpr u16 bswap(u16 value) noexcept {
 
 constexpr u64 bswap(u64 value) noexcept {
 	return 0
-	    | ((value & 0x0000'0000'0000'00ffULL) << 56)
-	    | ((value & 0x0000'0000'0000'ff00ULL) << 40)
-	    | ((value & 0x0000'0000'00ff'0000ULL) << 24)
-	    | ((value & 0x0000'0000'ff00'0000ULL) << 8)
-	    | ((value & 0x0000'00ff'0000'0000ULL) >> 8)
-	    | ((value & 0x0000'ff00'0000'0000ULL) >> 24)
-	    | ((value & 0x00ff'0000'0000'0000ULL) >> 40)
-	    | ((value & 0xff00'0000'0000'0000ULL) >> 56);
+	    | (value & 0x0000'0000'0000'00ffULL) << 56
+	    | (value & 0x0000'0000'0000'ff00ULL) << 40
+	    | (value & 0x0000'0000'00ff'0000ULL) << 24
+	    | (value & 0x0000'0000'ff00'0000ULL) << 8
+	    | (value & 0x0000'00ff'0000'0000ULL) >> 8
+	    | (value & 0x0000'ff00'0000'0000ULL) >> 24
+	    | (value & 0x00ff'0000'0000'0000ULL) >> 40
+	    | (value & 0xff00'0000'0000'0000ULL) >> 56;
 }
 
 constexpr u32 bswap(u32 value) noexcept {
 	return 0
-	    | ((value & 0x0000'00ffU) << 24)
-	    | ((value & 0x0000'ff00U) << 8)
-	    | ((value & 0x00ff'0000U) >> 8)
-	    | ((value & 0xff00'0000U) >> 24);
+	    | (value & 0x0000'00ffU) << 24
+	    | (value & 0x0000'ff00U) << 8
+	    | (value & 0x00ff'0000U) >> 8
+	    | (value & 0xff00'0000U) >> 24;
 }
 
 constexpr u16 bswap(u16 value) noexcept {
 	return 0
-	    | ((value & 0x00ffU) << 8)
-	    | ((value & 0xff00U) >> 8);
+	    | (value & 0x00ffU) << 8
+	    | (value & 0xff00U) >> 8;
 }
 
 #endif
