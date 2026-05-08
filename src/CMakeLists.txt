@@ -5,6 +5,6 @@ if(PROJECT_IS_TOP_LEVEL)
     # build app
     set(APP rb-main)
     add_executable(${APP} main.cpp)
-    target_link_libraries(${APP} PUBLIC Rb::Rb)
+    target_link_libraries(${APP} PUBLIC Rb::Rb Rb::Interval)
     use_sanitizers(${APP})
 endif()

@@ -30,13 +30,16 @@ set(MODULES
     core/traits
     ext
     fmt
+    math
     ranges
-    time)
+    time
+)
 set(HEADERS)
 set(SOURCES)
 foreach(X ${MODULES})
     add_cxx_module(${X} ${RB_ROOT_DIR})
 endforeach()
+add_subdirectory(interval)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

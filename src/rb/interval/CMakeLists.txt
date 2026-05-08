@@ -1,0 +1,15 @@
+include(Compilers)
+
+file(GLOB HEADERS *.hpp)
+file(GLOB SOURCES *.cpp)
+
+set(LIB rb-interval)
+add_library(${LIB} ${HEADERS} ${SOURCES})
+add_library(Rb::Interval ALIAS ${LIB})
+if(COMPILER_CLANG OR COMPILER_GCC)
+    target_compile_options(${LIB} PUBLIC -frounding-math)
+    target_link_options(${LIB} PUBLIC -frounding-math)
+elseif(COMPILER_MSVC)
+    target_compile_options(${LIB} PUBLIC /fp:strict)
+endif()
+target_link_libraries(${LIB} PUBLIC Rb::Rb)

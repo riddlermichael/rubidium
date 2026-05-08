@@ -9,12 +9,17 @@
 #include <rb/sync/package.hpp>
 #include <rb/time/package.hpp>
 
+#include <rb/interval/Interval64.hpp>
+#include <rb/math/float.hpp>
+
 using std::cout;
 using std::endl;
 
 using namespace rb;
 using namespace rb::core;
+using namespace rb::interval;
 
 int main() {
-	cout << CompilerInfo::kThis << endl;
+	auto const x = Interval64::fromCenter(4. / 3, core::inf<f64>);
+	cout << x << endl;
 }
