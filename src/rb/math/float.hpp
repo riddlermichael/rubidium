@@ -1,8 +1,7 @@
 #pragma once
 
-// ReSharper disable once CppUnusedIncludeDirective
 #include <rb/core/attributes.hpp>
-#include <rb/core/compiler.hpp>
+#include <rb/core/limits.hpp>
 #include <rb/core/types.hpp>
 
 #ifdef RB_COMPILER_MSVC
@@ -61,6 +60,14 @@ constexpr FloatingPointCategory classify(f64 value) noexcept {
 	}
 }
 
+constexpr bool isInf(f32 value) noexcept {
+	return value == RB_F32_INF || value == -RB_F32_INF;
+}
+
+constexpr bool isInf(f64 value) noexcept {
+	return value == RB_F64_INF || value == -RB_F64_INF;
+}
+
 constexpr bool isNaN(f32 value) noexcept {
 	return classify(value) == FloatingPointCategory::kNaN;
 }
@@ -81,7 +88,7 @@ constexpr bool isNegative(f64 value) noexcept {
 
 #else
 
-constexpr FloatingPointCategory classify(f32 value) noexcept {
+RB_ALWAYS_INLINE constexpr FloatingPointCategory classify(f32 value) noexcept {
 	return static_cast<FloatingPointCategory>(__builtin_fpclassify(
 	    static_cast<int>(FloatingPointCategory::kNaN),
 	    static_cast<int>(FloatingPointCategory::kInfinity),
@@ -91,7 +98,7 @@ constexpr FloatingPointCategory classify(f32 value) noexcept {
 	    value));
 }
 
-constexpr FloatingPointCategory classify(f64 value) noexcept {
+RB_ALWAYS_INLINE constexpr FloatingPointCategory classify(f64 value) noexcept {
 	return static_cast<FloatingPointCategory>(__builtin_fpclassify(
 	    static_cast<int>(FloatingPointCategory::kNaN),
 	    static_cast<int>(FloatingPointCategory::kInfinity),
@@ -101,19 +108,27 @@ constexpr FloatingPointCategory classify(f64 value) noexcept {
 	    value));
 }
 
-constexpr bool isNaN(f32 value) noexcept {
+RB_ALWAYS_INLINE constexpr bool isInf(f32 value) noexcept {
+	return __builtin_isinf(value);
+}
+
+RB_ALWAYS_INLINE constexpr bool isInf(f64 value) noexcept {
+	return __builtin_isinf(value);
+}
+
+RB_ALWAYS_INLINE constexpr bool isNaN(f32 value) noexcept {
 	return __builtin_isnan(value);
 }
 
-constexpr bool isNaN(f64 value) noexcept {
+RB_ALWAYS_INLINE constexpr bool isNaN(f64 value) noexcept {
 	return __builtin_isnan(value);
 }
 
-constexpr bool isNegative(f32 value) noexcept {
+RB_ALWAYS_INLINE constexpr bool isNegative(f32 value) noexcept {
 	return __builtin_signbit(value);
 }
 
-constexpr bool isNegative(f64 value) noexcept {
+RB_ALWAYS_INLINE constexpr bool isNegative(f64 value) noexcept {
 	return __builtin_signbit(value);
 }
 

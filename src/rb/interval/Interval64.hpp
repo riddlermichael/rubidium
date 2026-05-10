@@ -24,6 +24,11 @@ class RB_EXPORT [[nodiscard]] Interval64 {
 public:
 	using Self = Interval64;
 
+	static Self const kEmpty;
+	static Self const kNaN;
+	static Self const kWhole;
+	static Self const kZero;
+
 	static constexpr Self empty() noexcept {
 		return {};
 	}
@@ -36,6 +41,10 @@ public:
 
 	static constexpr Self whole() noexcept {
 		return Self{Tag{}, -core::inf<f64>, core::inf<f64>};
+	}
+
+	static constexpr Self zero() noexcept {
+		return Self{Tag{}, 0, 0};
 	}
 
 	constexpr Interval64() noexcept
@@ -51,12 +60,10 @@ public:
 	constexpr Interval64(f64 lo, f64 hi) noexcept
 	    : lo_{lo}
 	    , hi_{hi} {
-		if (RB_UNLIKELY(lo_ > hi_)) {
-			*this = empty();
-		}
-
-		if (RB_UNLIKELY(isNaN())) {
+		if (RB_UNLIKELY(math::isNaN(lo_) || math::isNaN(hi_))) {
 			*this = nan();
+		} else if (RB_UNLIKELY(lo_ > hi_)) {
+			*this = empty();
 		}
 	}
 
@@ -65,9 +72,7 @@ public:
 	}
 
 	constexpr bool operator==(Self const& rhs) const noexcept {
-		// TODO -0.0
-		return lo_ == rhs.lo_
-		    && hi_ == rhs.hi_;
+		return lo_ == rhs.lo_ && hi_ == rhs.hi_;
 	}
 
 	constexpr bool operator!=(Self const& rhs) const noexcept {
@@ -84,8 +89,46 @@ public:
 		return *this + -rhs;
 	}
 
+	Self operator-(f64 value) const noexcept {
+		return *this + Self{-value};
+	}
+
+	Self operator*(Self const& rhs) const noexcept;
+
+	Self operator*(f64 value) const noexcept;
+
+	constexpr f64 hi() const noexcept {
+		return hi_;
+	}
+
+	constexpr f64 lo() const noexcept {
+		return lo_;
+	}
+
+	f64 center() const noexcept;
+	f64 radius() const noexcept;
+	f64 width() const noexcept;
+
+	constexpr bool containsZero() const noexcept {
+		if (RB_UNLIKELY(isEmptyOrNaN())) {
+			return false;
+		}
+		return lo_ <= 0.0 && 0.0 <= hi_;
+	}
+
 	constexpr bool isEmpty() const noexcept {
 		return *this == empty();
+	}
+
+	constexpr bool isEmptyOrNaN() const noexcept {
+		return isEmpty() || isNaN();
+	}
+
+	constexpr bool isInf() const noexcept {
+		if (RB_UNLIKELY(isEmpty())) {
+			return false;
+		}
+		return math::isInf(lo_) || math::isInf(hi_);
 	}
 
 	constexpr bool isNaN() const noexcept {
@@ -95,20 +138,75 @@ public:
 	constexpr bool isWhole() const noexcept {
 		return *this == whole();
 	}
-
-	constexpr f64 hi() const noexcept {
-		return hi_;
-	}
-
-	constexpr f64 lo() const noexcept {
-		return lo_;
-	}
 };
+
+constexpr Interval64 Interval64::kEmpty = empty();
+constexpr Interval64 Interval64::kNaN = nan();
+constexpr Interval64 Interval64::kWhole = whole();
+constexpr Interval64 Interval64::kZero = zero();
+
+constexpr bool operator<(Interval64 interval, f64 value) noexcept {
+	if (RB_UNLIKELY(interval.isEmptyOrNaN())) {
+		return false;
+	}
+	return interval.hi() < value;
+}
+
+constexpr bool operator<=(Interval64 interval, f64 value) noexcept {
+	if (RB_UNLIKELY(interval.isEmptyOrNaN())) {
+		return false;
+	}
+	return interval.hi() <= value;
+}
+
+constexpr bool operator>(Interval64 interval, f64 value) noexcept {
+	if (RB_UNLIKELY(interval.isEmptyOrNaN())) {
+		return false;
+	}
+	return interval.lo() > value;
+}
+
+constexpr bool operator>=(Interval64 interval, f64 value) noexcept {
+	if (RB_UNLIKELY(interval.isEmptyOrNaN())) {
+		return false;
+	}
+	return interval.lo() >= value;
+}
+
+constexpr bool operator<(f64 value, Interval64 interval) noexcept {
+	return interval > value;
+}
+
+constexpr bool operator<=(f64 value, Interval64 interval) noexcept {
+	return interval >= value;
+}
+
+constexpr bool operator>(f64 value, Interval64 interval) noexcept {
+	return interval < value;
+}
+
+constexpr bool operator>=(f64 value, Interval64 interval) noexcept {
+	return interval <= value;
+}
 
 inline Interval64 operator+(f64 value, Interval64 interval) noexcept {
 	return Interval64{value} + interval;
 }
 
-std::ostream& operator<<(std::ostream& os, Interval64 const& value);
+inline Interval64 operator-(f64 value, Interval64 interval) noexcept {
+	return Interval64{value} - interval;
+}
+
+std::ostream& operator<<(std::ostream& os, Interval64 interval);
 
 } // namespace rb::interval
+
+// NaN, empty [+inf, -inf], whole
+// NaN, ±inf, ±0
+
+// TODO std::get
+// TODO std::hash
+// |a| = max{−lo, hi}
+// ⟨a⟩ = max{0, lo, −hi}
+// TODO PartialEq, PartialOrd
+// Q max(T const&)

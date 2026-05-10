@@ -2,6 +2,7 @@
 
 #include <cfenv>
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <rb/core/compiler.hpp>
 
 #ifndef RB_COMPILER_MSVC
