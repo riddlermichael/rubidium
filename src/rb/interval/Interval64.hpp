@@ -7,6 +7,7 @@
 #include <rb/core/export.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/math/float.hpp>
+#include <rb/math/max.hpp>
 
 namespace rb::interval {
 
@@ -67,6 +68,10 @@ public:
 		}
 	}
 
+	constexpr Self operator+() const noexcept {
+		return *this;
+	}
+
 	constexpr Self operator-() const noexcept {
 		return Self{Tag{}, -hi_, -lo_};
 	}
@@ -103,6 +108,20 @@ public:
 
 	constexpr f64 lo() const noexcept {
 		return lo_;
+	}
+
+	constexpr f64 magnitude() const noexcept {
+		if (RB_UNLIKELY(isEmptyOrNaN())) {
+			return core::nan<f64>;
+		}
+		return math::max(-lo_, hi_);
+	}
+
+	constexpr f64 mignitude() const noexcept {
+		if (RB_UNLIKELY(isEmptyOrNaN())) {
+			return core::nan<f64>;
+		}
+		return math::max(0.0, lo_, -hi_);
 	}
 
 	f64 center() const noexcept;
@@ -206,7 +225,4 @@ std::ostream& operator<<(std::ostream& os, Interval64 interval);
 
 // TODO std::get
 // TODO std::hash
-// |a| = max{−lo, hi}
-// ⟨a⟩ = max{0, lo, −hi}
 // TODO PartialEq, PartialOrd
-// Q max(T const&)

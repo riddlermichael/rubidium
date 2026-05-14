@@ -20,10 +20,14 @@ max(T value) noexcept {
 }
 
 template <class T>
-[[nodiscard]] constexpr RB_REQUIRES_RETURN(T&, !isScalarLike<T>)
-max(T& value) noexcept {
+[[nodiscard]] constexpr RB_REQUIRES_RETURN(T const&, !isScalarLike<T>)
+max(T const& value) noexcept {
 	return value;
 }
+
+template <class T>
+RB_REQUIRES_RETURN(void, !isScalarLike<T>)
+max(T const&& value) = delete;
 
 // 2 arg
 
