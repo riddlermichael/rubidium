@@ -5,11 +5,11 @@
 namespace rb::core {
 inline namespace traits {
 
-	template <class T, class U>
-	inline constexpr bool isSame = impl::IsSameImpl<T, U>::value;
+	template <class T, class... Ts>
+	inline constexpr bool isSame = (... && impl::IsSameImpl<T, Ts>::value);
 
-	template <class T, class U>
-	using IsSame = Bool<isSame<T, U>>;
+	template <class T, class... Ts>
+	using IsSame = Bool<isSame<T, Ts...>>;
 
 } // namespace traits
 } // namespace rb::core

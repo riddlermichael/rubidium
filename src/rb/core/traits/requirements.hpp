@@ -1,7 +1,6 @@
 #pragma once
 
 #include <rb/core/swap.hpp>
-#include <rb/core/traits/assignable.hpp>
 #include <rb/core/traits/destructible.hpp>
 #include <rb/core/traits/detection.hpp>
 #include <rb/core/traits/detectors.hpp>
@@ -30,8 +29,11 @@ inline namespace traits {
 	template <class T, class U = T>
 	using IsEqualityComparableStrict = And<IsEqualityComparable<T, U>, IsInequalityComparable<T, U>>;
 
-	template <class T, class U>
+	template <class T, class U = T>
 	using IsLessThanComparable = IsDetectedConvertible<bool, OpLessThanDetector, T, U>;
+
+	template <class T, class U = T>
+	inline constexpr bool isLessThanComparable = IsLessThanComparable<T, U>::value;
 
 	template <class T, class U>
 	using IsWritableTo = IsDetectedExact<AddLValueRef<U>, OpLeftShiftDetector, AddLValueRef<U>, T>;
@@ -55,9 +57,9 @@ inline namespace traits {
 	    IsEqualityComparableStrict<T>,
 	    IsSwappable<T>,
 	    // expressions
-	    IsConstructible<T, std::nullptr_t>,
-	    IsDetectedExact<T&, OpAssignDetector, T&, std::nullptr_t>,
-	    IsEqualityComparableStrict<T, std::nullptr_t>>;
+	    IsConstructible<T, decltype(nullptr)>,
+	    IsDetectedExact<T&, OpAssignDetector, T&, decltype(nullptr)>,
+	    IsEqualityComparableStrict<T, decltype(nullptr)>>;
 
 	template <class T, class F, class... Args>
 	using MethodDetector = decltype((RB_DECLVAL(T).*RB_DECLVAL(F))(RB_DECLVAL(Args)...));
