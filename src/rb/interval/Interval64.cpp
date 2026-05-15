@@ -89,28 +89,16 @@ Interval64 Interval64::operator*(f64 value) const noexcept {
 	}
 
 	if (math::isInf(value)) {
-		if (lo_ > 0) {
-			return value;
+		if (lo_ == 0.0 && hi_ == 0) {
+			return kNaN;
 		}
 
-		if (hi_ < 0) {
-			return -value;
+		if (lo_ < 0.0 && hi_ > 0.0) {
+			return kWhole;
 		}
 
-		// lo <= 0 <= hi
-		if (lo_ == 0.0) {
-			if (hi_ == 0.0) {
-				return kNaN;
-			}
-			// hi > 0
-			return isNegative(lo_) ? kWhole : value;
-		}
-
-		// lo < 0
-		if (hi_ == 0.0 && isNegative(hi_)) {
-			return -value;
-		}
-		return kWhole;
+		bool const isPositive = lo_ >= 0 && value > 0.0 || hi_ <= 0 && value < 0.0;
+		return isPositive ? kPositiveRay : kNegativeRay;
 	}
 
 	RoundSaver const _;

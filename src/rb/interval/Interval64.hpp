@@ -27,6 +27,8 @@ public:
 
 	static Self const kEmpty;
 	static Self const kNaN;
+	static Self const kNegativeRay;
+	static Self const kPositiveRay;
 	static Self const kWhole;
 	static Self const kZero;
 
@@ -161,6 +163,8 @@ public:
 
 constexpr Interval64 Interval64::kEmpty = empty();
 constexpr Interval64 Interval64::kNaN = nan();
+constexpr Interval64 Interval64::kNegativeRay{Tag{}, -core::inf<f64>, 0.0};
+constexpr Interval64 Interval64::kPositiveRay{Tag{}, 0.0, core::inf<f64>};
 constexpr Interval64 Interval64::kWhole = whole();
 constexpr Interval64 Interval64::kZero = zero();
 
