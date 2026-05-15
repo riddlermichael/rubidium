@@ -49,12 +49,6 @@ Interval64 Interval64::operator*(Self const& rhs) const noexcept {
 		return kEmpty;
 	}
 
-	if (containsZero() && rhs.isInf()
-	    || rhs.containsZero() && isInf()) {
-		return kNaN; // TODO
-	}
-
-	// TODO use manual min/max
 	RoundSaver const _;
 
 	std::fesetround(FE_DOWNWARD);
@@ -62,14 +56,14 @@ Interval64 Interval64::operator*(Self const& rhs) const noexcept {
 	f64 p2 = lo_ * rhs.hi_;
 	f64 p3 = hi_ * rhs.lo_;
 	f64 p4 = hi_ * rhs.hi_;
-	f64 const lo = std::min({p1, p2, p3, p4});
+	f64 const lo = min(p1, p2, p3, p4);
 
 	std::fesetround(FE_UPWARD);
 	p1 = lo_ * rhs.lo_;
 	p2 = lo_ * rhs.hi_;
 	p3 = hi_ * rhs.lo_;
 	p4 = hi_ * rhs.hi_;
-	f64 const hi = std::max({p1, p2, p3, p4});
+	f64 const hi = max(p1, p2, p3, p4);
 
 	return {lo, hi};
 }

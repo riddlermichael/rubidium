@@ -7,7 +7,7 @@
 #include <rb/core/export.hpp>
 #include <rb/core/limits.hpp>
 #include <rb/math/float.hpp>
-#include <rb/math/max.hpp>
+#include <rb/math/minmax.hpp>
 
 namespace rb::interval {
 
@@ -161,12 +161,13 @@ public:
 	}
 };
 
-constexpr Interval64 Interval64::kEmpty = empty();
-constexpr Interval64 Interval64::kNaN = nan();
-constexpr Interval64 Interval64::kNegativeRay{Tag{}, -core::inf<f64>, 0.0};
-constexpr Interval64 Interval64::kPositiveRay{Tag{}, 0.0, core::inf<f64>};
-constexpr Interval64 Interval64::kWhole = whole();
-constexpr Interval64 Interval64::kZero = zero();
+// MSVC demands `inline`
+inline constexpr Interval64 Interval64::kEmpty = empty();
+inline constexpr Interval64 Interval64::kNaN = nan();
+inline constexpr Interval64 Interval64::kNegativeRay{Tag{}, -core::inf<f64>, 0.0};
+inline constexpr Interval64 Interval64::kPositiveRay{Tag{}, 0.0, core::inf<f64>};
+inline constexpr Interval64 Interval64::kWhole = whole();
+inline constexpr Interval64 Interval64::kZero = zero();
 
 constexpr bool operator<(Interval64 interval, f64 value) noexcept {
 	if (RB_UNLIKELY(interval.isEmptyOrNaN())) {
