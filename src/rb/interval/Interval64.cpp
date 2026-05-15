@@ -85,11 +85,19 @@ Interval64 Interval64::operator*(f64 value) const noexcept {
 	}
 
 	if (value == 0.0) {
-		return isInf() ? kNaN : kZero; // TODO
+		return kZero;
 	}
 
-	if (math::isInf(value) && containsZero()) {
-		return kNaN; // TODO
+	if (math::isInf(value)) {
+		if (lo_ > 0) {
+			return value;
+		}
+
+		if (hi_ < 0) {
+			return -value;
+		}
+		// TODO lo_ <= 0 <= hi_
+		return kWhole;
 	}
 
 	RoundSaver const _;
