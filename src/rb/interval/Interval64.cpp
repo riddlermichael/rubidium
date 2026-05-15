@@ -96,7 +96,20 @@ Interval64 Interval64::operator*(f64 value) const noexcept {
 		if (hi_ < 0) {
 			return -value;
 		}
-		// TODO lo_ <= 0 <= hi_
+
+		// lo <= 0 <= hi
+		if (lo_ == 0.0) {
+			if (hi_ == 0.0) {
+				return kNaN;
+			}
+			// hi > 0
+			return isNegative(lo_) ? kWhole : value;
+		}
+
+		// lo < 0
+		if (hi_ == 0.0 && isNegative(hi_)) {
+			return -value;
+		}
 		return kWhole;
 	}
 
