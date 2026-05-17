@@ -14,6 +14,40 @@
 using namespace rb::interval;
 using namespace rb::math;
 
+namespace {
+
+[[nodiscard]] constexpr f64 fmin(f64 lhs, f64 rhs) noexcept {
+	if (isNaN(lhs)) {
+		return rhs;
+	}
+	if (isNaN(rhs)) {
+		return lhs;
+	}
+	return min(lhs, rhs);
+}
+
+template <class... Args>
+[[nodiscard]] constexpr f64 fmin(f64 first, f64 second, Args... args) noexcept {
+	return fmin(fmin(first, second), args...);
+}
+
+[[nodiscard]] constexpr f64 fmax(f64 lhs, f64 rhs) noexcept {
+	if (isNaN(lhs)) {
+		return rhs;
+	}
+	if (isNaN(rhs)) {
+		return lhs;
+	}
+	return max(lhs, rhs);
+}
+
+template <class... Args>
+[[nodiscard]] constexpr f64 fmax(f64 first, f64 second, Args... args) noexcept {
+	return fmax(fmax(first, second), args...);
+}
+
+} // namespace
+
 Interval64 Interval64::fromCenter(f64 center, f64 radius) noexcept {
 	if (RB_UNLIKELY(math::isNaN(center) || math::isNaN(radius))) {
 		return kNaN;
@@ -51,19 +85,24 @@ Interval64 Interval64::operator*(Self const& rhs) const noexcept {
 
 	RoundSaver const _;
 
+	if (isWhole() && rhs == 0.0
+	    || rhs.isWhole() && *this == 0.0) {
+		return kZero;
+	}
+
 	std::fesetround(FE_DOWNWARD);
 	f64 p1 = lo_ * rhs.lo_;
 	f64 p2 = lo_ * rhs.hi_;
 	f64 p3 = hi_ * rhs.lo_;
 	f64 p4 = hi_ * rhs.hi_;
-	f64 const lo = min(p1, p2, p3, p4);
+	f64 const lo = fmin(p1, p2, p3, p4);
 
 	std::fesetround(FE_UPWARD);
 	p1 = lo_ * rhs.lo_;
 	p2 = lo_ * rhs.hi_;
 	p3 = hi_ * rhs.lo_;
 	p4 = hi_ * rhs.hi_;
-	f64 const hi = max(p1, p2, p3, p4);
+	f64 const hi = fmax(p1, p2, p3, p4);
 
 	return {lo, hi};
 }
@@ -148,9 +187,9 @@ std::ostream& rb::interval::operator<<(std::ostream& os, Interval64 interval) {
 		return os << "[]";
 	}
 
-	if (RB_UNLIKELY(interval.isNaN())) {
-		return os << "nan";
-	}
+	// if (RB_UNLIKELY(interval.isNaN())) {
+	// 	return os << "nan";
+	// }
 
 	fmt::StreamStateSaver const _{os};
 	os.precision(18);
