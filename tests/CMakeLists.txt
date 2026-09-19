@@ -16,9 +16,7 @@ use_sanitizers(Catch2)
 project(rb-tests LANGUAGES CXX)
 
 # collect tests
-set(MODULES_WITH_TESTS
-    containers
-    core)
+set(MODULES_WITH_TESTS containers core)
 set(SOURCES)
 foreach(X ${MODULES_WITH_TESTS})
     add_cxx_module(${X}/test ${RB_ROOT_DIR})

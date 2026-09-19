@@ -38,7 +38,8 @@ if(USE_TIDY)
             ERROR_STRIP_TRAILING_WHITESPACE
             ERROR_VARIABLE RUN_TIDY_ERROR
             OUTPUT_QUIET
-            RESULT_VARIABLE RUN_TIDY_RESULT)
+            RESULT_VARIABLE RUN_TIDY_RESULT
+        )
         if(NOT RUN_TIDY_RESULT EQUAL 0)
             message(FATAL_ERROR "Error while running clang-tidy")
         endif()

@@ -1,0 +1,3 @@
+line_length: 120
+sort_order: case-insensitive
+warn_about_unknown_commands: false

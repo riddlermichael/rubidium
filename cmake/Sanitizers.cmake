@@ -36,16 +36,13 @@ if(USE_MSAN)
     message(STATUS ">>> Memory sanitizer enabled")
 endif()
 
-if((USE_ASAN AND USE_HWASAN)
-    OR ((USE_ASAN OR USE_HWASAN) AND (USE_TSAN OR USE_MSAN))
-    OR (USE_TSAN AND USE_MSAN))
+if((USE_ASAN AND USE_HWASAN) OR ((USE_ASAN OR USE_HWASAN) AND (USE_TSAN OR USE_MSAN)) OR (USE_TSAN AND USE_MSAN))
     message(FATAL_ERROR "These sanitizers cannot be used simultaneously")
 endif()
 # in other words, usable configurations are:
 # UB + [A | HWA | T | M]
 
 if(COMPILER_MSVC_LIKE)
-
     if(USE_ASAN AND MSVC_VERSION LESS 1928)
         message(FATAL_ERROR "Address sanitizer is not supported")
     endif()
@@ -68,21 +65,22 @@ if(COMPILER_MSVC_LIKE)
                 message(FATAL_ERROR "AddressSanitizer doesn't support linking with debug runtime libraries yet")
             endif()
 
-            target_compile_options(${target}
-                PUBLIC /fsanitize=address
-                PUBLIC /Zi)
+            target_compile_options(${target} PUBLIC /fsanitize=address PUBLIC /Zi)
             target_compile_options(${target} PRIVATE /wd5072) # disable "ASAN enabled without debug information emission"
 
-            target_link_options(${target}
-                PRIVATE /ignore:4302)
+            target_link_options(${target} PRIVATE /ignore:4302)
             if(CMAKE_BUILD_TYPE STREQUAL "Release")
-                target_link_options(${target}
+                target_link_options(
+                    ${target}
                     PUBLIC clang_rt.asan_dynamic-x86_64.lib
-                    PUBLIC clang_rt.asan_dynamic_runtime_thunk-x86_64.lib)
+                    PUBLIC clang_rt.asan_dynamic_runtime_thunk-x86_64.lib
+                )
             else()
-                target_link_options(${target}
+                target_link_options(
+                    ${target}
                     PUBLIC clang_rt.asan_dbg_dynamic-x86_64.lib
-                    PUBLIC clang_rt.asan_dbg_dynamic_runtime_thunk-x86_64.lib)
+                    PUBLIC clang_rt.asan_dbg_dynamic_runtime_thunk-x86_64.lib
+                )
             endif()
         endif()
     endfunction()
@@ -91,17 +89,21 @@ else()
 
     function(use_sanitizers target)
         if(USE_ASAN OR USE_TSAN OR USE_MSAN OR USE_UBSAN)
-            target_compile_options(${target}
+            target_compile_options(
+                ${target}
                 PUBLIC -g
                 PUBLIC -fno-omit-frame-pointer
-                PUBLIC -fno-optimize-sibling-calls)
+                PUBLIC -fno-optimize-sibling-calls
+            )
             target_link_options(${target} PUBLIC -g)
         endif()
 
         if(USE_ASAN)
-            target_compile_options(${target}
+            target_compile_options(
+                ${target}
                 PUBLIC -fsanitize=address,pointer-compare,pointer-subtract
-                PUBLIC -fno-common)
+                PUBLIC -fno-common
+            )
             target_link_options(${target} PUBLIC -fsanitize=address,pointer-compare,pointer-subtract)
         endif()
 
@@ -116,16 +118,20 @@ else()
         endif()
 
         if(USE_MSAN)
-            target_compile_options(${target}
+            target_compile_options(
+                ${target}
                 PUBLIC -fsanitize=memory
                 PUBLIC -fsanitize-memory-use-after-dtor
                 # 1 is slightly faster, 2 collects both allocation points and all intermediate stores
                 PUBLIC -fsanitize-memory-track-origins=1
-                PUBLIC -fPIE)
-            target_link_options(${target}
+                PUBLIC -fPIE
+            )
+            target_link_options(
+                ${target}
                 PUBLIC -fsanitize=memory
                 PUBLIC -fsanitize-memory-track-origins=1
-                PUBLIC -fPIE -pie)
+                PUBLIC -fPIE -pie
+            )
         endif()
 
         if(USE_UBSAN)
@@ -141,7 +147,6 @@ else()
             endif()
         endif()
     endfunction()
-
 endif()
 
 # Common option:

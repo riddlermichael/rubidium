@@ -31,7 +31,8 @@ set(MODULES
     ext
     fmt
     ranges
-    time)
+    time
+)
 set(HEADERS)
 set(SOURCES)
 foreach(X ${MODULES})
@@ -48,7 +49,8 @@ source_group(TREE "${ROOT_DIR}" FILES ${HEADERS} ${SOURCES})
 set(INCLUDE_DIRS
     $<BUILD_INTERFACE:${RB_HOME}>
     $<BUILD_INTERFACE:${GENERATED_INCLUDE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 if(BUILD_SHARED_LIBS)
     set(LIB ${PRODUCT_NAME}-shared)
@@ -59,22 +61,25 @@ endif()
 add_library(${LIB} ${HEADERS} ${SOURCES})
 add_library(Rb::Rb ALIAS ${LIB})
 target_compile_features(${LIB} PUBLIC cxx_std_17)
-target_compile_definitions(${LIB}
-    PUBLIC $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:RB_STATIC>
-    PRIVATE RB_EXPORTS)
-target_include_directories(${LIB}
+target_compile_definitions(${LIB} PUBLIC $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:RB_STATIC> PRIVATE RB_EXPORTS)
+target_include_directories(
+    ${LIB}
     PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIRS}>
-    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 target_link_libraries(${LIB} PUBLIC Threads::Threads)
 
 set(OUTPUT_DIR "${CMAKE_BINARY_DIR}")
-set_target_properties(${LIB} PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .lib/.a for static, .lib for shared on Windows
-    DEBUG_POSTFIX d
-    LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .so
-    RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .dll
-    SOVERSION ${PROJECT_VERSION_MAJOR}
-    VERSION ${PROJECT_VERSION})
+set_target_properties(
+    ${LIB}
+    PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .lib/.a for static, .lib for shared on Windows
+        DEBUG_POSTFIX d
+        LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .so
+        RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR} # .dll
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        VERSION ${PROJECT_VERSION}
+)
 set_target_properties(${LIB} PROPERTIES EXPORT_NAME Rb)
 
 # compile definitions

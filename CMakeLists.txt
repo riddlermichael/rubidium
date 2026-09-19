@@ -3,10 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 set(VERSION)
 file(STRINGS VERSION VERSION)
 
-project(rubidium
-    DESCRIPTION "Rubidium C++ library"
-    LANGUAGES CXX
-    VERSION ${VERSION})
+project(rubidium DESCRIPTION "Rubidium C++ library" LANGUAGES CXX VERSION ${VERSION})
 
 set(MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${MODULE_PATH}")

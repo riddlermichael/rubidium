@@ -14,15 +14,15 @@ function(add_module MODULE ROOT)
     cmake_parse_arguments(arg "" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
 
     if(DEFINED arg_KEYWORDS_MISSING_VALUES)
-        message(FATAL_ERROR
+        message(
+            FATAL_ERROR
             "Invalid invocation of add_module: "
-            "missing value for ${arg_KEYWORDS_MISSING_VALUES} keyword(s)")
+            "missing value for ${arg_KEYWORDS_MISSING_VALUES} keyword(s)"
+        )
     endif()
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR
-            "Invalid invocation of add_module: "
-            "unknown argument(s) ${arg_UNPARSED_ARGUMENTS}")
+        message(FATAL_ERROR "Invalid invocation of add_module: " "unknown argument(s) ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
     set(MODULE_DIR "${ROOT}/${MODULE}")
@@ -50,7 +50,8 @@ function(add_cxx_module MODULE ROOT)
         HEADERS CXX_HEADERS
         SOURCES CXX_SOURCES
         HEADER_EXTENSIONS hpp
-        SOURCE_EXTENSIONS cpp)
+        SOURCE_EXTENSIONS cpp
+    )
     set(HEADERS ${HEADERS} ${CXX_HEADERS} PARENT_SCOPE)
     set(SOURCES ${SOURCES} ${CXX_SOURCES} PARENT_SCOPE)
 endfunction()
