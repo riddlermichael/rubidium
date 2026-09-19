@@ -1,14 +1,10 @@
 Checks: >
   bugprone-*,
-  cert-*,
   clang-analyzer-*,
   clazy-*,
   concurrency-*,
   cppcoreguidelines-*,
   google-*,
-  hicpp-ignored-remove-result,
-  hicpp-multiway-paths-covered,
-  hicpp-no-assembler,
   misc-*,
   modernize-*,
   performance-*,
@@ -16,7 +12,6 @@ Checks: >
   readability-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-std-exception-baseclass,
-  -cert-err33-c,
   -clazy-rule-of-three,
   -cppcoreguidelines-avoid-c-arrays,
   -cppcoreguidelines-avoid-const-or-ref-data-members,
@@ -46,6 +41,7 @@ Checks: >
   -readability-implicit-bool-conversion,
   -readability-magic-numbers,
   -readability-math-missing-parentheses,
+  -readability-redundant-parentheses,
   -readability-use-concise-preprocessor-directives,
 
 FormatStyle: file
@@ -78,4 +74,5 @@ CheckOptions:
   - { key: readability-identifier-naming.UnionCase, value: CamelCase }
   - { key: readability-identifier-naming.VariableCase, value: camelBack }
   - { key: cppcoreguidelines-avoid-do-while.IgnoreMacros, value: 1 }
+  - { key: bugprone-signed-bitwise.IgnorePositiveIntegerLiterals, value: 1 }
   - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: 1 }

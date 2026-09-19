@@ -137,8 +137,8 @@ constexpr core::Option<int> isDigit(Char ch) noexcept {
 	auto const c = static_cast<unsigned>(ch);
 	if constexpr (base <= 10) {
 		return '0' <= ch && c <= '0' + base - 1
-		         ? core::Option(ch - '0')
-		         : core::kNone;
+		    ? core::Option(ch - '0')
+		    : core::kNone;
 	} else {
 		if ('0' <= ch && ch <= '9') {
 			return core::Option(ch - '0');

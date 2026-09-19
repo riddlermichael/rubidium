@@ -181,9 +181,11 @@ private:
 				if constexpr (op == Op::kDefault) {
 					AllocTraits::construct(alloc, data_ + idx);
 				} else if constexpr (op == Op::kCopy) {
-					AllocTraits::construct(alloc, data_ + idx, *first++);
+					AllocTraits::construct(alloc, data_ + idx, *first);
+					++first;
 				} else {
-					AllocTraits::construct(alloc, data_ + idx, RB_MOVE(*first++));
+					AllocTraits::construct(alloc, data_ + idx, RB_MOVE(*first));
+					++first;
 				}
 			}
 		} catch (...) {

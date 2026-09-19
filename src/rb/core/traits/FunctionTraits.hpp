@@ -16,7 +16,7 @@ inline namespace traits {
 		kVolatile = 0x08,
 		kLvalueRef = 0x10,
 		kRvalueRef = 0x20,
-		kVariadic = 0x40
+		kVariadic = 0x40,
 	};
 
 	using FunctionAttributes = Flags<FunctionAttribute>;
@@ -146,7 +146,7 @@ inline namespace traits {
 	};
 
 	template <class R, class T, class... Args>
-	struct FunctionTraits<R (T::*)(Args...)&> {
+	struct FunctionTraits<R (T::*)(Args...) &> {
 		using IsCallable = True;
 		using Class = T;
 		using Type = R (T::*)(Args...) &;
@@ -540,7 +540,7 @@ inline namespace traits {
 	};
 
 	template <class R, class T, class... Args>
-	struct FunctionTraits<R (T::*)(Args..., ...)&> {
+	struct FunctionTraits<R (T::*)(Args..., ...) &> {
 		using IsCallable = True;
 		using Class = T;
 		using Type = R (T::*)(Args..., ...) &;

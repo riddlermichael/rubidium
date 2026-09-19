@@ -9,7 +9,7 @@
 namespace rb::core {
 
 enum : usize { // NOLINT(*-use-enum-class)
-	kDynExtent = static_cast<usize>(-1)
+	kDynExtent = static_cast<usize>(-1),
 };
 
 namespace impl {
@@ -94,7 +94,7 @@ public:
 	RB_USE_BASE_CONTAINER_TYPES(Base)
 
 	enum : usize { // NOLINT(*-use-enum-class)
-		kExtent = n
+		kExtent = n,
 	};
 
 	// ctor.1
@@ -235,6 +235,7 @@ public:
 };
 
 namespace impl {
+
 	template <class T, class = void, class = void>
 	struct IsViewImpl {
 		using Type = False;
@@ -252,6 +253,7 @@ namespace impl {
 	public:
 		using Type = IsSame<ConstData, MutableData>;
 	};
+
 } // namespace impl
 
 // IsView is true for types where the return type of .data() is the same for mutable and const instances.

@@ -55,7 +55,7 @@ namespace rb::core {
 enum class Endian {
 	kLittle = RB_LITTLE_ENDIAN,
 	kBig = RB_BIG_ENDIAN,
-	kNative = RB_BYTE_ORDER
+	kNative = RB_BYTE_ORDER,
 };
 
 enum : bool { // NOLINT(*-use-enum-class)

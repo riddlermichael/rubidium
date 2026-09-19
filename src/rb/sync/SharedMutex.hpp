@@ -13,7 +13,7 @@ public:
 	enum RB_OPEN_ENUM Policy { // NOLINT(*-use-enum-class)
 		kPreferReaders,
 		kPreferWriters,
-		kPreferWritersNonrecursive
+		kPreferWritersNonrecursive,
 	};
 
 	/**

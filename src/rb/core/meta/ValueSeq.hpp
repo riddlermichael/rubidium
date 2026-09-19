@@ -8,8 +8,10 @@
 namespace rb::core {
 
 inline namespace meta {
+
 	template <auto...>
 	struct ValueSeq;
+
 } // namespace meta
 
 namespace impl::vs {
@@ -77,14 +79,14 @@ namespace impl::vs {
 	template <auto v>
 	struct IndexOf<ValueSeq<>, v> {
 		enum : isize {
-			kValue = -1
+			kValue = -1,
 		};
 	};
 
 	template <auto v, auto... vs>
 	struct IndexOf<ValueSeq<v, vs...>, v> {
 		enum : isize {
-			kValue = 0
+			kValue = 0,
 		};
 	};
 
@@ -99,7 +101,7 @@ namespace impl::vs {
 
 	public:
 		enum : isize {
-			kValue = kTemp == -1 ? -1 : 1 + kTemp
+			kValue = kTemp == -1 ? -1 : 1 + kTemp,
 		};
 	};
 
@@ -169,7 +171,7 @@ inline namespace meta {
 		using This = ValueSeq;
 
 		enum : usize {
-			kSize = sizeof...(vs)
+			kSize = sizeof...(vs),
 		};
 
 		template <usize pos>

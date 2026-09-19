@@ -35,7 +35,7 @@ class Duration final {
 public:
 	enum class QuoRemError {
 		kNaN,
-		kInf
+		kInf,
 	};
 
 	using QuoRem = core::QuoRem<core::i128, Duration>;
@@ -925,7 +925,7 @@ constexpr std::timespec Duration::toTimespec() const noexcept {
 	return ts;
 }
 
-constexpr core::Option<TimeSpec> Duration::toTimeSpec() const noexcept {
+constexpr core::Option<TimeSpec> Duration::toTimeSpec() const noexcept { // NOLINT(*-exception-escape)
 	if (isInf() || isNaN()) {
 		return {};
 	}

@@ -17,7 +17,7 @@ namespace impl {
 	template <auto v>
 	struct ConstantHolder<v, true> {
 		enum : decltype(v) {
-			value = v
+			value = v,
 		};
 	};
 
@@ -25,21 +25,21 @@ namespace impl {
 	template <class T, class U>
 	struct IsSameImpl {
 		enum : bool {
-			value = __is_same(T, U)
+			value = __is_same(T, U),
 		};
 	};
 #else
 	template <class T, class U>
 	struct IsSameImpl {
 		enum : bool {
-			value = false
+			value = false,
 		};
 	};
 
 	template <class T>
 	struct IsSameImpl<T, T> {
 		enum : bool {
-			value = true
+			value = true,
 		};
 	};
 #endif

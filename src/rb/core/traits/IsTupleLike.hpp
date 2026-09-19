@@ -13,7 +13,7 @@ namespace impl {
 
 	// ReSharper disable once CppUseTypeTraitAlias
 	template <class T>
-	using TupleSizeDetector = decltype(std::tuple_size<T>::value);
+	using TupleSizeDetector = decltype(std::tuple_size<T>::value); // NOLINT(*-type-traits)
 
 	template <class T>
 	using ClassSpecificGetDetector = decltype(RB_DECLVAL(T).template get<usize{0}>());

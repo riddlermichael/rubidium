@@ -11,11 +11,14 @@
 namespace rb::core {
 
 inline namespace meta {
+
 	template <class... Ts>
 	struct TypeSeq;
+
 } // namespace meta
 
 namespace impl::ts {
+
 	//
 	template <class TS, usize idx>
 	struct At;
@@ -95,14 +98,14 @@ namespace impl::ts {
 	template <class T>
 	struct IndexOf<TypeSeq<>, T> {
 		enum : isize {
-			kValue = -1
+			kValue = -1,
 		};
 	};
 
 	template <class T, class... Ts>
 	struct IndexOf<TypeSeq<T, Ts...>, T> {
 		enum : isize {
-			kValue = 0
+			kValue = 0,
 		};
 	};
 
@@ -117,7 +120,7 @@ namespace impl::ts {
 
 	public:
 		enum : isize {
-			kValue = kTemp == -1 ? -1 : 1 + kTemp
+			kValue = kTemp == -1 ? -1 : 1 + kTemp,
 		};
 	};
 
@@ -533,11 +536,11 @@ inline namespace meta {
 		using This = TypeSeq;
 
 		enum : usize {
-			kSize = sizeof...(Ts)
+			kSize = sizeof...(Ts),
 		};
 
 		enum : bool {
-			kIsEmpty = kSize == 0
+			kIsEmpty = kSize == 0,
 		};
 
 		template <class T, usize count>

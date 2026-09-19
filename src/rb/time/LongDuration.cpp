@@ -119,6 +119,7 @@ std::ostream& operator<<(std::ostream& os, LongDuration dur) {
 	}
 
 	auto const&& exp = split(dur, getUnits(dur));
+	// ReSharper disable once CppUseStructuredBinding
 	auto const& result = exp.unwrap();
 	if (!result.isPositive) {
 		os << "-";
